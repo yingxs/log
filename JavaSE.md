@@ -206,4 +206,105 @@ String虽然是引用数据类型但是当它作为参数传递时，和基本�
 	* while(m.find())
 	* System.out.println(m.group());
 
+## Math类
+### 成员方法
+* public static int abs(int a)求绝对值
+* public static double ceil(double a)向上取整结果为boolean
+* public static double floor(double a)向下取整，结果为boolean
+* public static int max(int a,int b)获取最大值
+* public static double pow(double a,double b)指数运算
+* public static double random();伪随机生成0.0到1.0之间的小数包含0.0不包含1.0
+* public static int round(float a)四舍五入
+* public static double sqrt(double a)开方
+
+## Random类
+### 构造
+* Random()创建一个新的随机数生成器
+* Random(long seed)使用单个种子创建一个新的随机数生成器
+## 常用方法
+* int nextInt(int n) 生成0到(n-1)之间均匀分布的int数据
+
+## System类
+> System类包含一些有用的类字段和方法，他不能被实例化
+
+
+## 成员方法
+* public static void gc()运行垃圾回收器
+* public static void exit(int status)退出java虚拟机
+* public static long currentTimeMillis()返回以毫秒值伪单位的当前时间
+* public static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
+	* 复制数组 
+	* src 原数组
+	* srcPos 原数组中的起始位置
+	* dest 目标数组
+	* destPos 目标数组中的起始位置
+	* length 要复制的数组元素数量
+
+## BigInteger类
+> 可以让超过Integer范围内的数据进行运算
+
+
+### 构造
+* public BigInteger(String val)
+###常用方法
+* public BigInteger add(BigInteger val) 加
+* public BigInteger subtract(BigInteger val)减
+* public BigInteger multiply(BigInteger val)乘
+* public BigInteger divide(BigInteger val)除
+* public BigInteger[] divi deAndRemainder(BigInteger val)取除数和余数
+
+## BigDecimal类
+> 更精确的表示浮点型数据
+
+### 常用构造
+* public BigDecimal(String Val)
+
+
+
+### 常用方法
+* public BigDecimal add(BigInteger val) 加
+* public BigDecimal subtract(BigInteger val)减
+* public BigDecimal multiply(BigInteger val)乘
+* public BigDecimal divide(BigInteger val)除
+* public static BigDecimal valueof(double val)将数据包装成Bigdecimal对象并返回
+
+
+## Date类
+> 表示日期时间的类 表示特定瞬间
+
+
+## 常用构造
+* public Date()当前时间对象
+* public Date(long date)通过毫秒值传递时间对象（如果传入0，则代表1970年1月1日）
+## 常用方法
+* public long getTime()返回自1970年一月一日00:00:00 GMT至此Date对象所表示的毫秒数
+* public void setTime(long time)设置从1970/1/1的毫秒值，改变时间对象
+
+## SimpleDateFormat类
+> DateFormat 是日期/时间格式化子类的抽象类，它以与语言无关的方式格式化解析日期或时间
+
+### 常用构造
+* public SimpleDateFormat()创建日期格式化类对象，空参表示默认格式
+* public SimpleDateFormat(String pattern)创建日期格式化类对象，例如参数课为指定格式"yyyy年MM月dd日 HH:mm:ss"
+
+
+### 常用方法
+* public final String format(Date date)将时间对象转换成字符串
+* public Date parse(String source)将字符串转换成事件对象
+
+## Calendar
+> Calendar是一个抽象类，为日历类
+> Canlendar c = Canlendar.getInstance()
+
+### 常用方法
+* public static Calendar getInstance()
+* public int get(int field)获取制定字段的值c.get(Calendar.YEAR)
+	* c.get(Calendar.YEAR)通过字段获取年
+	* c.get(Calendar.MONTH)通过字段获取月（月份从零开始编号）
+	* c.get(Calendar.DAY_OF_MONTH)月中第几天
+	* c.get(Calendar.DAY_OF_WEEK)获取星期值 周日是1，周六是7
+* public void add(int field,int amount)对指定字段进行加减运算
+* public final void set(int year,int month,int date)设置指定字段
+
+
 
