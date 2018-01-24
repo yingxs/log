@@ -32,3 +32,40 @@
 
 ### Criteria接口
 > 用于执行基于对象的查询(QBC查询)
+
+### hibernate工具类
+```
+package com.yingxs.utils;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+/**
+ * Hibernate工具类
+ * @author admin
+ *
+ */
+public class HibernateUtils {
+	
+	private static Configuration cfg = null;
+	private static SessionFactory factory = null;
+	
+	static{
+		cfg = new Configuration();
+		cfg.configure();
+		factory = cfg.buildSessionFactory();
+	}
+	
+	public static Session getSession(){
+		return factory.openSession();
+	}
+	
+}
+
+```
+
+
+
+
+
