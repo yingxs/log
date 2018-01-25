@@ -64,7 +64,22 @@ public class HibernateUtils {
 }
 
 ```
-
+### generator主键生成策略
+* 三类策略
+    * 由数据库维护
+        * identity
+            * 利用数据库自增长的能力，例如mysql的auto_increment 
+        * sequence
+            * 利用数据库序列生成的能力，例如oracle的sequence  
+        * native
+            * 本地策略，由hibernate自动根据不同的数据库选择最优策略
+    * 由hibernate维护
+        * uuid
+            * 生成32位16进制的无序字符串 
+        * increment
+            * 生成递进的数值类型(每次+1)
+    * 由开发者维护
+        * assigned 
 
 
 
