@@ -122,3 +122,147 @@
 * IFNULL(v1,v2)函数 如果表达式v1不为空，则显示v1的值，否则显示v2的值
 * VERSION()函数 系统信息函数，获取数据库版本号
 * 
+### 定义数据库
+#### 创建数据库
+```
+CRETE{DATABASE|SCHEMA}[IF NOT EXISTS] db_name
+[DEFAULT] CHARACTER SET [=] charset_name
+[[DEFAULT]COLLATE[=]collation_name];
+eg:创建一个名为mysql_test的数据库
+CREATE DATABASE mysql_test;
+```
+
+#### 选择数据库
+USE db_name;
+只有使用USE命令指定某数据库为当前数据库，才能对该数据库及其存储对象执行各种后续操作
+
+#### 查看数据库
+```
+SHOW {DATABASES|SCHEMAS};
+```
+
+查看当前可用数据库，只会列出当前用户权限范围内所能查看到的数据库的名称
+
+##### 修改数据库
+```
+CRETE{DATABASE|SCHEMA} [db_name]
+[DEFAULT] CHARACTER SET [=] charset_name
+[DEFAULT] COLLATE [=] collation_name;
+```
+
+#### 删除数据库
+```
+DROP {DATABASE|SCHEMA} [IF EXISTS] db_name
+eg：删除数据库mytest
+DROP DATABASE IF EXISTS mytest;
+```
+
+### 定义表
+#### 数据类型
+* 数值
+* 日期和时间
+* 字符串类型
+
+#### 创建表
+```
+CREATE TABLE tbl_name
+(字段名1 数据类型 [列级完整性约束条件] [默认值]
+[,字段名2 数据类型 [列级完整性约束条件] [默认值]]
+[,表级完整约束条件]
+)[ENGLISH=引擎类型];
+```
+* 指定表名和字段名
+* 完整性约束条件
+    * 实体完整性约束(PRIMARY KEY ,UNIQUE) 
+    * 参加完整性约束(FOREIGN KEY)
+    * 用户定义约束(NOT NULL , DEFAULT ,CHECK)
+* NULL和NOT NULL
+* AUTO_INCREMENT
+* DEFAULT
+* 存储引擎类型
+
+#### 查看表
+##### 查看有哪些表(表名)
+```
+SHOW TABLES [{ FROM | IN } db_name]
+eg:查看当前数据库可见的表
+SHOW TANLES;
+```
+
+##### 查看数据表的基本结构
+```
+SHOW COLUMNS {FROM | IN} tbl_name [{FROM|IN} db_name];
+
+DESC tbl_name;
+```
+
+##### 查看数据表的详细结构
+```
+SHOW CREATE TABLE tb_name
+Eg:查看数据库db_school中表tb_student的详细信息
+SHOW CREATE TABLE tb_student
+使用该语句不仅可以查看创建表时的详细语句，还可以查看存储引擎和字符编码
+
+```
+#### 修改表
+ALTER TABLE语句
+##### 添加字段
+```
+ADD [COLUMN]子句
+增加新列，可同时增加多个列
+ALTE RTABLE tb_name ADD [COLUMN] 新字段名 数据类型 [约束条件][FIRST|AFTER 已有字段名] 
+```
+![](http://www.yingxs.com/markimg/xiugaibiao1.PNG)
+![](http://www.yingxs.com/markimg/xiugaibiao2.PNG)
+##### 修改字段
+```
+CHANGE [COLUMN]子句
+同时修改表中指定列的名称和数据类型，多个CHANGE[COLUMN]子句，彼此见用逗号分隔
+ALTER TABLE tb_name CHANGE [COULUMN] 原字段名 新字段名 数据类型 [约束条件]；
+```
+
+```
+ALTER [COLUMN]子句
+修改或删除表中指定列的默认值
+ALTER TABLE tb_name ALTER [COLUMN] 字段名 {SET|DROP} DEFAULT'
+```
+
+```
+MODIFY [CULUMN]子句
+只修改指定列的数据类型，可通过FIRST或AFTER指定列在表中的位置
+ALTER TABLE tb_name MODIFY [COLUMN] 字段名 数据类型 [约束条件] [FIRST|AFTER 已有字段名];
+```
+![](http://www.yingxs.com/markimg/xiugaibiao3.PNG)
+![](http://www.yingxs.com/markimg/xiugaibiao4.PNG)
+![](http://www.yingxs.com/markimg/xiugaibiao5.PNG)
+![](http://www.yingxs.com/markimg/xiugaibiao6.PNG)
+##### 删除字段
+
+DROP [COLUMN]子句
+删除列的同时列中的一切内容也被删除
+ALTER TABLE tb_name DROP [COLUMN] 字段名;
+```
+Eg：删除数据库db_school.tb_student2的字段
+ALTER TABLE db_school.tb_student2 DROP COLUMN id;
+```
+##### 重命名表
+RENAME [TO]子句
+```
+ALTER TABLE tbl_name RENAME [TO] new_tabl_name;
+Eg:使用RENAME [TO]子句将数据库db_school中的表tb_student重新命名为backup_tb_student
+ALTER TABLE db_school.tb_student RENAME TO db_school.backup_tb_student;
+```
+
+RENAME TABLE子句
+```
+RENAME TABLE tbl_name TO new_tbl_name [,tbl_name2 TO new_tbl_name2]...;
+Eg:使用RENAME TABLE语句，将数据库db_school中的表backup_tb_student重命名为tb_student
+RENAME TABLE db_school.backup_tb_student TO db_school.tb_student
+```
+##### 删除表
+```
+DPOR TABLE [IF EXISTS] tbl_name[,tbl_name]...;
+表被删除时，存储的数据和分区信息均会被删除
+Eg：删除数据库db_school中的tb_student、tb_student1和tb_student2
+DPOR TABLE db_school.tb_student,db_student1,db_school.tb_student1,db_school.tb_student2;
+```
