@@ -81,6 +81,194 @@ public class HibernateUtils {
     * 由开发者维护
         * assigned 
 
+### 对象关系映射之一对多映射
+> 需求：客户与订单之间的关系
+
+
+#### 关系(数据库)设计
+* 结论：一对多关系在数据库中是依靠外键维护的
+```
+--客户表--
+create table t_customer( 
+    id int primary key auto_increment,
+    name varchar(20),
+    gender char(1)
+);
+```
+```
+--订单表--
+ create table t_order(
+    id int primary key auto_increment,
+    orderno varchar(20)
+    ,product_name varchar(20),
+    cust_id int,
+    constraint order_customer_fk foreign key(cust_id) references t_customer(id)
+);
+	
+```
+#### 对象设计
+* 结论：一对多关系在对象层面是依靠JavaBean和Set集合的
+```
+package com.yingxs.one2many;
+
+import java.util.HashSet;
+import java.util.Set;
+/**
+ * 客户对象(一方)
+ * @author admin
+ *
+ */
+public class Customer {
+	private Integer id;
+	private String name;
+	private String gender;
+	
+	//关联订单
+	private Set<Order> orders = new HashSet<Order>();
+	
+	public Set<Order> getOrders() {
+		return orders;
+	}
+	public void setOrders(Set<Order> orders) {
+		this.orders = orders;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	
+	/**
+	 create table t_customer( id int primary key auto_increment,name varchar(20),gender char(1));
+	 */
+}
+
+```
+```
+
+package com.yingxs.one2many;
+/**
+ * 订单对象(多方)
+ * @author admin
+ *
+ */
+public class Order {
+	private Integer id;
+	private String orderno;
+	private String productName;
+	//关联客户
+	private Customer customer;
+	
+	
+	public Customer getCustomer() {
+		return customer;
+	}
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getOrderno() {
+		return orderno;
+	}
+	public void setOrderno(String orderno) {
+		this.orderno = orderno;
+	}
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	/**
+	  create table t_order(id int primary key auto_increment,orderno varchar(20),product_name varchar(20),cust_id int,constraint order_customer_fk foreign key(cust_id) references t_customer(id));
+	 */
+}
+
+```
+#### 映射配置
+* Customer.hbm.xml 客户对象映射
+```
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping package="com.yingxs.one2many">
+	<!-- 
+		name:类名
+		table:表名
+	 -->
+	<class name="Customer" table="t_customer">
+		<!-- 主键 -->
+		<id name="id" column="id">
+			<generator class="native"></generator>
+		</id>
+		<!-- 其他属性 -->
+		<property name="name" column="name"></property>
+		<property name="gender" column="gender"></property>
+		
+		<!-- 一对多配置 -->
+		<set name="orders">
+			<!-- 外键字段名称 -->
+			<key column="cust_id"></key>
+			<one-to-many class="Order"/>
+		</set>
+	</class>
+
+</hibernate-mapping>    
+    
+
+```
+* Order.hbm.xml 订单对象映射
+```
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping package="com.yingxs.one2many">
+	<!-- 
+		name:类名
+		table:表名
+	 -->
+	<class name="Order" table="t_order">
+		<!-- 主键 -->
+		<id name="id" column="id">
+			<generator class="native"></generator>
+		</id>
+		<!-- 其他属性 -->
+		<property name="orderno" column="orderno"></property>
+		<property name="productName" column="product_name"></property>
+		
+		<!-- 多对一 -->
+		<many-to-one name="customer" class="Customer" column="cust_id" ></many-to-one>
+	</class>
+
+</hibernate-mapping>    
+    
+
+```
+
 
 
 
