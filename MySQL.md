@@ -504,4 +504,201 @@ ALTER TABLE <表名> ADD [CONSTRAINT <约束名>] UNIQUE KEY(字段名);
     * 完整性约束不能直接被修改
     * ALTER TABLE 值删除完整性约束 DROP TABLE删除一个表
     
+## 数据库查询
+### SELECT语句
+SELECT [ALL | DISTINCT | DISTINCTROW] 
+<目标表达式> [,<目标表达式2>]...FROM 表名1或视图名1[,<表名2或视图名2>]...
+[WHERE <条件表达式>]
+[GROUP BY <列名1> [HAVING <条件表达式>]
+[ORDER BY <列名2> ASC|DESC]]
+[LIMIT [m,]n];
 
+#### 单表查询
+SELECT 目标表达式1,目标表达式2,...目标表达式n FROM 表名;
+```
+查询指定字段
+例如：查询所有班级的班级编号，所属学院和班级名称
+SELECT classno,department,classname FROM tb_class;
+
+例如：
+从班级表tb_class中查询出所有的院系名称
+SELECT department FROM tb_class;
+
+//去重复
+SELECT DISTINCT department FROM tb_class;
+SELECT DISTINCTROW department FROM tb_class;
+
+```
+#### 查询所有字段
+SELECT * FROM 表名;
+
+#### 查询列出经过计算的值
+目标表达式出了字段名，可以是字段、字符串常量、函数
+```
+例如：查询全体学生的姓名、性别和年龄
+SELECT studentname,sex,'age',YEAR(NOW())-YEAR(birthday) FROM tb_student;
+```
+#### 定义字段别名
+字段名 [AS] 字段别名
+```
+例如：查询全日学生的姓名、性别、年龄，要求给目标字段取别名
+SELECT studentnam AS 姓名,sex AS 性别,YEAR(NOW())-YEAR(birtday) AS 年龄 FROM tb_student;
+
+```
+#### 选择指定记录
+WHERE子句指定过滤条件
+SELECT 目标列表达式1,目标列表达式2,...,目标列表达式n
+FROM 表名 WHERE 查询条件
+
+* 比较大小
+    * 比较运算符 
+```
+查询课时大于等于48学时的课程名称和学分
+SELECT coursename,credit,FROM tb_score WHERE coursename >= 48;
+或
+SELECT coursename,credit,FROM tb_score WHERE NOT coursename < 48;
+
+```
+* BETWEEN...AND 或 [NOT] BETWEEN ...AND
+```
+查询出生日期在1997-01-01和1997-12-31之间的学生，姓名和出生日期
+SELECT studentname,sex,birthday
+FROM tb_student
+WHERE birthday BETWEEN '1997-01-01' AND '1997-13-31'
+```
+##### 带IN关键字的集合查询( [NOT] IN )
+查找字段值属于指定集体范围内的记录
+```
+查询籍贯是北京、天津、上海的学生信息
+SELECT * FROM tb_student
+WHERE native IN ('北京','天津','上海')；
+```
+##### 带LIKE关键字的字符串匹配查询
+[NOT] LIKE '<匹配串>' [ESCAPE '<换码字符>']
+常用通配符 "%"和 "_"
+```
+例如：查询学号为2014210102的学生的详细情况
+SELECT * FROM tb_student
+WHERE studentno LIKE '2014210102';
+
+查询所有姓王的学生的学号、姓名和班号
+SELECT studentno,studentname,classno FROM tb_student
+WHERE studentname LIKE '王%';
+
+查询姓名中包含林的学生的学号、姓名、和班号
+SELECT studentno,studentname,classno FROM tb)student
+WHERE studentname LIKE '%林%';
+
+查询姓陈且姓名长度为三个中文的学生的学号、姓名和班号
+SELECT studentno,studentname,class FROM tb_student
+WHERE studentame LIKE '陈__';
+
+```
+##### 换码字符
+当被检索的数据中含有通配符时
+使用 ESCAPE '<换码字符>' 把通配符转换成普通字符
+注意：%不能匹配控制NULL
+```
+查询课程名称中含有下划线“——”的课程信息
+SELECT * FROM tb_course
+WHERE coursename LIKE '%#_%' ESCAPE'#';
+
+```
+
+##### 使用正则表达式查询
+检索或替换符合某个模式的文本内容
+[NOT][ REGEXP | RLIKE ]<正则表达式>
+```
+查询课程名称中带有中文“系统”的课程信息
+SELECT * FROM tb_course
+WHERE coursename REDEXP '系统';
+
+查询课程名称重含有管理 信息 系统 中文字符的所有课程信息
+SELECT * FROM tb_course
+WHERE coursename REGEXP '管理|信息|系统'；
+```
+##### IS NULL 或 IS NOT NULL
+```
+查询缺少先行课的课程信息
+SELECT * FROM tb_course
+WHERE priorcourse IS NULL;
+```
+##### 带AND或OR的多条件查询
+AND 满足所有的查询条件的记录才会被返回
+OR 满足其中一个查询条件的记录即可被返回
+```
+查询学分大于或等于3且学时数大于32的课程名称，学分和学时数
+SELECT coursename,cresit,coursehour FROM tb_scourse
+WHERE credit>=3 AND coursehour>32;
+
+查询籍贯是北京或湖南的少数民族男生的姓名、籍贯和民族
+SELECT studentname,,native,nation,FROM tb_student
+WHERE (native='北京' OR native='湖南')AND nation!='汉' 
+AND sex='男';
+```
+
+##### 对单表查询结果进行排序
+ORDER BY
+ASC 升序 DESC降序
+```
+例如：查询学生的姓名、籍贯和民族，并将查询结果按姓名升序排列
+SELECT studentname,native,nation FROM tb_student
+OEDER BY studentname;
+
+例如：查询学生选课成绩大于85分的学号、课程号和成绩信息，并将查询结果先按学号升序排序再按成绩降序排序
+SELECT * FROM tb_score WHERE score>85 
+ORDER  BY studentno,score DESC;
+注意:空值作为最小值进行排序
+
+```
+##### 限制查询结果的数量
+LIMIT [位置偏移量,] 行数 或 LIMIT 行数 OFFSET 位置偏移量
+第一行的位置偏移量是0，第二条是1
+```
+例如：查询成绩排名第三至第五的学生学号，课程号，成绩
+SELECT studentno,courseno,score FROM tb_score ORDER BY score DESC LIMIT 2，3;
+
+或
+
+SELECT studentno,courseno,score FROM tb_score ORDER BY score DESC LIMIT 3 OFFSET 2;
+注意:LIMIT子句必须位于ORDER BY 子句之后
+
+```
+##### 分组聚合查询
+###### 使用聚合函数查询
+COUNT() MAX() MIN() SUM() AVG()
+```
+例如：查询学生的总人数
+SELECT COUNT(*) FROM tb_student;
+
+例如: 查询选修了课程的学生总人数
+SELECT COUNT(DISTINCT studentno) FROM tb_score;
+//对去除重复之后的记录进行计数
+
+计算学号2013110203的平均成绩
+SELECT AVG(score) FROM tb_score WHERE studentno=2013110203  ;
+
+计算学号2013110203的最高分
+SELECT MAX(score) FROM tb_score WHERE studentno=2013110203;
+```
+######　分组聚合查询
+GROUP BY 分组运算
+```
+[GROUP BY 字段列表][HAVING <条件表达式>]
+查询各个课程号及相应的选课人数
+SELECT courseno,COUNT(studentno) FROM tb_score
+GROUP BY courseno;
+
+查询每个学生的选课门数、平均分和最高分
+SELECT studentno,COUNT(*) 选课门数,AVG(score) 平均分,
+MAX(score) 最高分 FROM tb_score GROUP BY studentno;
+
+查询平均分在85分以上的每个同学的选课门数、平均分和最高分
+SELECT studentno,COUNT(*)选课门数,AVG(score)平均分,MAX(score) 最高分
+FROM tb_score GROUP BY studentno
+HAVING AVG(score)>=85;
+
+查询所有学生选课的平均成绩 但只有当平均成绩大于等于85的情况下才输出
+SELECT AVG(score)平均分 FROM tb_score HAVING AVG(score)>=85;
+
+```
