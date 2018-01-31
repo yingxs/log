@@ -268,6 +268,89 @@ public class Order {
     
 
 ```
+#### cascade和inverse配置详解
+
+##### cascade配置
+> 级联操作，就是操作一个对象的时候，相同时操作它的关联对象
+
+```
+<!-- 一对多配置 -->
+<set name="orders" cascade="save-update">
+	<!-- 外键字段名称 -->
+	<key column="cust_id"></key>
+	<one-to-many class="Order"/>
+</set>
+```
+级联保存：save-update
+级联删除：delete
+级联保存与删除：all
+```
+/**
+ * 简单的一对多的保存操作
+ */
+@Test
+public void test3(){
+	//准备数据
+	//需求：一个客户 两张订单
+	Customer cust = new Customer();
+	cust.setName("小王");
+	cust.setGender("男");
+	
+	Order o1 = new Order();
+	o1.setOrderno("2018013001");
+	o1.setProductName("《那晚》");
+	
+	Order o2 = new Order();
+	o2.setOrderno("2018013002");
+	o2.setProductName("《空姐秘史》");
+	
+	Session session = HibernateUtils.getSession();
+	Transaction tx = session.beginTransaction();
+	
+	//建立一对多单项关联
+	cust.getOrders().add(o1);
+	cust.getOrders().add(o2);
+
+	
+	session.save(cust);
+
+	
+	tx.commit();
+	session.close();
+}
+```
+```
+/**
+ * 级联删除操作
+ * ps:
+ * 		1.如果没有级联删除，那么在删除客户的时候，会把订单表的cust_id外键值设置为null
+ * 		2.有了级联删除，再删除客户的时候，会同时把该客户的所有订单删除
+ */
+@Test
+public void test4(){
+	
+	
+	Session session = HibernateUtils.getSession();
+	Transaction tx = session.beginTransaction();
+	
+	Customer cust = session.get(Customer.class, 2);
+	session.delete(cust);
+
+	
+	tx.commit();
+	session.close();
+}
+
+```
+
+##### inverse配置
+> 是否把关联关系的维护权反转(放弃)
+
+flase 不放弃
+true 放弃
+
+* 结论
+    * 通常在一对多的关联配置中，多方是无法放弃关系维护权，建议放弃一方的维护权，意味着在一方加上inverse="true"配置
 
 
 
