@@ -163,3 +163,86 @@ String.prototype.addstring = function(){
  var box = 'Lee';
  alert(box.addstring());
 ```
+
+#### 组合构造函数+原型模式
+```
+funciton Box(name,age){         //保持独立的用构造函数
+    this.name = name;
+    this.age = age;
+    this.family = ['哥哥','姐姐','妹妹'];
+}
+
+Box.prototype = {               //保持共享的用原型
+    constructor:Box,
+    run:function(){
+       return this.name + this.age + "运行中..."; 
+    }
+}
+```
+
+#### 动态原型模式(推荐)
+第一种
+```
+//这种方式将原型封装进构造函数中，
+//但是原型的初始化，只要第一次初始化就够了，没必要每一次函数实例化的时候都初始化
+funtion Box(name,age){
+    this.name = name;
+    this.age = age;
+    this.family = ['哥哥','姐姐','妹妹'];
+    
+    Box.prototype.run = function(){
+        return this.name + this.age + "运行中..."; 
+    }
+}
+
+```
+*第二种
+```
+funtion Box(name,age){
+    this.name = name;
+    this.age = age;
+    this.family = ['哥哥','姐姐','妹妹'];
+    
+    if(typeof this.run != 'function'){          //判断this.run是否存在，如果存在就不初始化了
+        Box.prototype.run = function(){
+            return this.name + this.age + "运行中..."; 
+        }
+    }
+    
+}
+```
+
+#### 寄生构造函数(工厂模式+构造函数)
+```
+function Box(name,age){
+    var obj = new Object();
+    obj.name = name;
+    obj.age = age;
+    obj.run = function(){
+        return this.name + this.age + "运行中..."; 
+    };
+    return obj;
+    
+}
+
+```
+#### 稳妥构造函数
+> 在一些安全的环境中，比如禁止使用this和new,这里的this是构造函数里不使用this，这里的new实在外部实例化构造函数时不使用new。这种创建方式叫做稳妥构造函数
+
+```
+function Box(name,age){
+    var obj = new Object();
+    obj.name = name;
+    obj.age = age;
+    obj.run = function(){
+        return this.name + this.age + "运行中..."; 
+    };
+    return obj;
+}
+
+var box1 = Box('Lee',100);
+alert(box1.run());
+var box2 = Box('Jack',200);
+alert(box2.run());
+
+```
