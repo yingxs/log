@@ -34,3 +34,132 @@ eval('alert(100)');
 eval("function box(){return 123}");
 alert(box());
 ```
+
+### 工厂模式
+```
+function createObject(name,age){
+    var obj = new Object();
+    obj.name = name;
+    obj.age = age;
+    obj.run() = function(){
+        return this.name + this.age +'运行中...'
+    };
+    return obj;     //返回对象引用
+}
+```
+### 原型
+```
+function Box(){}
+Box.prototype.name = 'lee';
+Box.prototype.age = 100;
+Box.prototype.run = function(){
+    return this.name + this.age + "运行中..."
+};
+
+
+var box1 = new Box();
+var box2 = new Box();
+
+//如果是实例方法，不同的实例对象，他们的方法地址是不一样的，是唯一的
+//如果是原型方法，那么他们的地址是共享的，大家都是一样的
+
+alert(box1 == box2); //true
+
+```
+
+* alert(box1.prototype);
+    * 这个属性是一个对象，访问不到
+* alert(box1.\_\_proto\_\_);
+    * 这个属性是一个指针，指向prototype对象(IE不支持)
+* alert(box1.constructor);
+    * 构造属性,可以获取构造函数本身
+    * 作用是被原型指针定位，然后得到构造函数本身
+    * 其实就是对象实例对应的原型对象的作用
+
+* alert(Box.prototype.isPrototypeOf(box));
+* 判断一个对象实例(对象引用是否指向了原型对象，基本上，只要实例化了，都是自动指向的)
+
+* 删除实例或原型中的属性
+```
+    alert(box1.name);
+    delete box1.name;               //删除实例中属性
+    delete Box.prototype.name;      //删除原型中的属性
+    Box.prototype.name;             //覆盖原型中的属性
+    alert(box1.name)
+```
+* 判断实例中是否存在指定属性
+```
+alert(box1.hasOwnProperty('name'));
+```
+* 不管实例属性或原型属性是否存在，只要有就返回true,两边都没有，返回false
+```
+alert('name' in box1);
+```
+* 只判断原型中是否有属性
+```
+function isPropery(object,property){
+    return !object.hasOwnProperty(property) && (property in object)
+}
+```
+
+```
+//原型
+function Box(){}
+Box.prototype.name = 'Lee';
+Box.prototype.age = 100;
+Box.prototype.run = function(){
+    return this.name + this.age + "运行中..."
+};
+var box1 = new Box();
+//alert(box.prototype)    //使用对象实例无法访问到prototype
+//alert(box.__proto__)    //使用对象实例访问__prototype__
+//alert(Box.prototype)    //使用构造函数名(对象名)访问prototype
+
+
+
+
+//使用字面量的方式创建原型对象，这里{}就是对象，是Object , new Object就相当于{}
+
+function Box(){}
+Box.prototype={
+    constructor:Box,            //强制指向Box
+    name:'Lee',
+    age:100,
+    run:function(){
+        return this.name + this.age + '运行中...';
+    }
+};
+
+
+```
+使用构造函数创建原型对象和使用字面量创建原型对象在使用上基本相同，但还是有一些区别，字面量创建的方式使用constructor属性不会指向实例，而会指向Object，构造函数创建的方式则相反
+
+#### 重写了原型对象
+```
+function Box(){}
+Box.prototype={
+    constructor:Box,            //强制指向Box
+    name:'Lee',
+    age:100,
+    run:function(){
+        return this.name + this.age + '运行中...';
+    }
+};
+
+
+Box.prototype={
+    age:200     //这里不会保留之前原型的任何信息了，把原来的原型对象和构造函数对象实例之间的关系切断了
+};
+
+var box = new Box();
+alert(box.name);
+
+```
+#### 内置引用类型的功能扩展
+```
+String.prototype.addstring = function(){
+    return this + ',被添加了！'; 
+};
+ var box = 'Lee';
+ alert(box.addstring());
+```
