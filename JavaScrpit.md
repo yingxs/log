@@ -34,6 +34,35 @@ eval('alert(100)');
 eval("function box(){return 123}");
 alert(box());
 ```
+### apply和call
+```
+function box(num1,num2){
+    return num1+num2;
+}
+
+function sum(num1,num2){
+    return box.apply(this,[num1,num2])   //this代表window作用域，[]表示传递的参数
+}
+
+function sum2(){
+    return box.apply(this.arguments)    //可以当做数组传递，代表函数参数
+}
+
+alert(sum(10,10));
+```
+eg
+```
+var color = '红色的';
+var box = {
+    color:'蓝色的'
+};
+
+function sayColor(){
+    alert(this.color);
+}
+//用call是实现对象冒充，冒充box下
+sayColor.call(box);
+```
 
 ### 工厂模式
 ```
