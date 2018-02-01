@@ -353,5 +353,356 @@ true 放弃
     * 通常在一对多的关联配置中，多方是无法放弃关系维护权，建议放弃一方的维护权，意味着在一方加上inverse="true"配置
 
 
+### 对象关系映射之一对多映射
+> 需求：用户与角色是多对多的关系！
 
+#### 数据库设计
+* 结论：多对多关系是依靠中间表维护的
+
+#### 对象设计
+```
+package com.yingxs.many2many;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+/*
+ * 用户
+ * 
+ */
+public class User implements Serializable {
+	private Integer id;
+	private String name;
+	
+	//关联角色
+	private Set<Role> roles = new HashSet<Role>(); 
+	
+	public Set<Role> getRoles() {
+		return roles;
+	}
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+
+}
+
+
+
+package com.yingxs.many2many;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * 角色
+ */
+public class Role implements Serializable {
+	private Integer id;
+	private String name;
+	
+	//关联用户
+	private Set<User> users = new HashSet<User>();
+	
+	public Set<User> getUsers() {
+		return users;
+	}
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+}
+
+
+
+```
+
+#### 映射配置
+* 用户方 User.hbm.xml
+```
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping package="com.yingxs.many2many">
+	<!-- 
+		name:类名
+		table:表名
+	 -->
+	<class name="User" table="t_user">
+		<!-- 主键 -->
+		<id name="id" column="id">
+			<generator class="native"></generator>
+		</id>
+		<!-- 其他属性 -->
+		<property name="name" column="name"></property>
+		
+		<!-- 多对多映射 
+			table:中间表名
+		-->
+		<set name="roles" table="t_user_role">
+			<!-- 当前方在中间表的外键 -->
+			<key column="user_id"></key>
+			<!-- 
+				class:set集合中类型，也就是对方的类型
+				column:对方在中间表的外键 
+			-->
+			<many-to-many class="Role" column="role_id"></many-to-many>
+		</set>
+	</class>
+
+</hibernate-mapping>    
+    
+
+```
+
+* 角色方 Role.hbm.xml
+```
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping package="com.yingxs.many2many">
+	<!-- 
+		name:类名
+		table:表名
+	 -->
+	<class name="Role" table="t_role">
+		<!-- 主键 -->
+		<id name="id" column="id">
+			<generator class="native"></generator>
+		</id>
+		<!-- 其他属性 -->
+		<property name="name" column="name"></property>
+		
+		<!-- 多对多映射 
+			table:中间表名
+		-->
+		<set name="users" table="t_user_role" inverse="true">
+			<!-- 当前方在中间表的外键 -->
+			<key column="role_id"></key>
+			<!-- 
+				class:set集合中类型，也就是对方的类型
+				column:对方在中间表的外键 
+			-->
+			<many-to-many class="User" column="user_id"></many-to-many>
+		</set>
+	</class>
+
+</hibernate-mapping>    
+    
+
+```
+##### 添加操作(无级联)
+```
+/**
+	 * 添加操作
+	 */
+	@Test
+	public void test1(){
+		/**
+		 * 需求：建立两个用户，两个角色
+		 */
+		User u1 = new User();
+		u1.setName("小苍");
+	
+		User u2 = new User();
+		u2.setName("小泽");
+		
+		Role r1 = new Role();
+		r1.setName("超级管理员");
+		
+		Role r2 = new Role();
+		r2.setName("普通管理员");
+		
+		//建立双向关系
+		u1.getRoles().add(r1);
+		u1.getRoles().add(r2);
+		r1.getUsers().add(u1);
+		r2.getUsers().add(u1);
+
+		u2.getRoles().add(r2);
+		r2.getUsers().add(u2);
+		
+		Session session = HibernateUtils.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		session.save(u1);
+		session.save(u2);
+		session.save(r1);
+		session.save(r2);
+		
+		tx.commit();
+		session.close();
+	}
+```
+#### 演示操作
+```
+package com.yingxs.many2many;
+
+import java.util.Set;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.junit.Test;
+
+import com.yingxs.utils.HibernateUtils;
+
+/**
+ * 演示多对多操作
+ */
+public class Demo3 {
+	
+	/**
+	 * 添加操作
+	 */
+	@Test
+	public void test1(){
+		/**
+		 * 需求：建立两个用户，两个角色
+		 */
+		User u1 = new User();
+		u1.setName("小苍");
+	
+		User u2 = new User();
+		u2.setName("小泽");
+		
+		Role r1 = new Role();
+		r1.setName("超级管理员");
+		
+		Role r2 = new Role();
+		r2.setName("普通管理员");
+		
+		//建立双向关系
+		u1.getRoles().add(r1);
+		u1.getRoles().add(r2);
+		r1.getUsers().add(u1);
+		r2.getUsers().add(u1);
+
+		u2.getRoles().add(r2);
+		r2.getUsers().add(u2);
+		
+		Session session = HibernateUtils.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		session.save(u1);
+		session.save(u2);
+		session.save(r1);
+		session.save(r2);
+		
+		tx.commit();
+		session.close();
+	}
+	
+	/**
+	 * 查询操作
+	 */
+	@Test
+	public void test2(){
+		Session session = HibernateUtils.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		//需求：查询一个用户，以及该用户的所有角色
+		User user = session.get(User.class, 1);
+		Set<Role> roles = user.getRoles();
+		System.out.println("当前用户为："+user.getName());
+		System.out.println("角色为：");
+		for (Role role : roles) {
+			System.out.print(role.getName()+",");
+		}
+		tx.commit();
+		session.close();
+	}
+	
+	/**
+	 * 查询操作2
+	 */
+	@Test
+	public void test3(){
+		Session session = HibernateUtils.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		//需求：查询一个角色，以及该角色的所有用户
+		Role role = session.get(Role.class, 2);
+		Set<User> users = role.getUsers();
+		System.out.println("当前角色为："+role.getName());
+		System.out.println("当前角色的用户有：");
+		for (User user : users) {
+			System.out.println(user.getName()+",");
+		}
+		
+		
+		session.close();
+	}
+	/**
+	 * 级联添加操作
+	 */
+	@Test
+	public void test4(){
+		Session session = HibernateUtils.getSession();
+		Transaction tx = session.beginTransaction();
+		User u = new User();
+		u.setName("老王");
+		
+		Role r = new Role();
+		r.setName("基础管理员");
+		
+		//级联添加操作
+		u.getRoles().add(r);
+		session.save(u);
+		tx.commit();
+		session.close();
+	}
+	/**
+	 * 级联删除操作 
+	 */
+	@Test
+	public void test5(){
+		Session session = HibernateUtils.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		User user = session.get(User.class, 3);
+		session.delete(user);
+		/**
+		 * 删除用户，同时还删除了中间表和用户相关的数据，还删除了对应的角色数据
+		 * 在实际开发中，多对多关系中通常不使用级联删除！！！
+		 */
+		tx.commit();
+		session.close();
+	}
+}
+
+
+```
 
