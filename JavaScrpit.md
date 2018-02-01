@@ -275,3 +275,74 @@ var box2 = Box('Jack',200);
 alert(box2.run());
 
 ```
+## 继承
+
+使用原型链继承
+```
+function Box(){         //被继承的函数叫做超类型(父类，基类)
+    this.name = 'Lee';
+}
+
+function Desk(){        //继承的函数叫做子类型(子类，派生类)
+    this.age = 100;
+}
+
+function Table(){
+    this.level = 'AAAA';
+}
+
+//通过原型链继承，超类型实例化后的对象实例，赋值给子类型的原型属性
+//new Box()会将Box构造里的信息和原型里的信息都交给Desk
+//Desk的原型得到的事Box的构造+原型里的信息
+Desk.prototype = new Box();
+Table.prototype = new Desk();
+
+var desk = new Desk();
+alert(desk.name);
+
+var table = new Table();
+alert(table.name);
+alert(table.age);
+
+```
+
+使用对象冒充继承
+```
+function Box(name,age){
+    this.name = name;
+    this.age = age;
+}
+
+function Desk(name,age){
+    Box.call(this,name,age);        //对象冒充，只能继承构造中的信息
+}
+
+var desk = new Desk('lee',100);
+alert(desk.name);
+```
+组合模式继承(原型链+借用构造函数)
+```
+
+```
+原型式继承(临时中转函数)
+```
+function obj(o){            //o表示将要传递进来的一个对象
+    function F(){}          //F构造是一个临时新建的对象，用来存储传递过来的对象
+    F.prototype = o;        //将o对象实例赋值给F构造的原型对象
+    return new F();         //最后返回这个得到传递过来对象的对象实例
+}
+
+//这是字面量的声明方式，
+var box = {
+    name :'Lee',
+    age:100
+}
+//box1等于new F()
+var box1 = obj(box);
+alert(box1.name);
+```
+
+
+
+
+
