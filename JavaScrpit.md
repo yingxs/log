@@ -343,6 +343,319 @@ alert(box1.name);
 ```
 
 
+## 匿名函数和闭包
+> 匿名函数就是没有名字的函数，闭包是可访问一个函数作用域里变量的函数
+
+```
+//匿名函数
+function (){            //单独的匿名函数是无法运行的
+    return 'yingxs';    //就算能运行也无法调用，因为没有名称
+}
+
+//把匿名函数赋值给变量
+var box = function(){   //将匿名函数赋值给变量
+    return 'yingxs';
+};
+alert(box());
+
+
+//通过表达式自我执行匿名函数
+(function (){           //(匿名函数)();
+    return 'yingxs';
+})();
+
+//自我执行的传参
+(function (age){          
+    alert(age);
+})(100);
+
+//一个函数中放一个匿名函数
+function box (){
+    return function(){      //闭包
+        return 'yingxs';
+    }
+}
+alert(box);
+alert(box());
+alert(box()());
+```
+### 闭包
+> 闭包是指有权访问另一个函数作用域中的变量的函数，创建闭包的常见方式，就是在一个函数内部创建另一个函数，通过另一个函数访问这个函数的局部变量
+
+* 使用闭包有一个优点，但也是他的缺点：就是可以把局部变量驻留在内存中，可以避免使用全局变量。(全局变量污染导致应用程序不可预测性，每个模块都可调用必将引发灾难，所以推荐使用私有的封装的局部变量)
+```
+//通过匿名函数返回局部变量
+function box(){
+    var age = 100;
+    return function(){
+        retrun age;
+    };
+}
+
+alert(box());
+```
+* 累加演示
+```
+//全局变量实现累加
+var age = 100;
+function box(){
+    age++;
+}
+alert(age);
+box();
+alert(age);
+
+
+//使用局部变量无法实现累加
+function box(){
+    var age = 100;
+    age++;
+    return age;
+}
+
+alert(box());
+alert(box());
+//每次执行，变量age都会初始化，无法实现累加
+
+```
+```
+//使用匿名函数实现局部变量驻留内存从而实现累加
+function box(){
+    var age = 100;
+    return function (){
+        age++;
+        return age;
+    }
+}
+var b = box();
+alert(b());
+alert(b());
+alert(b());
+alert(b());
+
+b=null;         //解除引用，等待垃圾回收
+alert(b());
+
+```
+* 闭包循环问题
+```
+function box(){
+    var arr = [];
+    for(var i = 0 ; i< 5;i++){
+        arr[i] = function(){
+            return i;
+        };
+    }
+    return arr;
+}
+var b = box();      //返回arr数组
+for(var i=0;i<5;i++){
+    alert(b[i]());      //5 5 5 5 5
+}
+
+```
+```
+
+
+//改1
+ function box(){
+ var arr = [];
+ for(var i = 0 ; i< 5;i++){
+ arr[i] = (function(num){
+ return num;
+ })(i);
+ }
+ return arr;
+ }
+ var b = box();      //返回arr数组
+ for(var i=0;i<5;i++){
+ alert(b[i]);
+ }
+ alert(typeof b);
+
+```
+
+```
+//改2
+function box(){
+    var arr = [];
+    for(var i = 0 ; i< 5;i++){
+        arr[i] = (function(num){        //因为闭包可以将变量驻留在内存中，和累加类似
+           return function(){
+               return num;
+           }
+        })(i);
+    }
+
+    //已經執行完畢，num为什么可以0，1，2，3，4
+    return arr;
+}
+var b = box();      //返回arr数组
+for(var i=0;i<5;i++){
+    alert(b[i]());
+}
+```
+
+#### this
+> 闭包中this指针指向window
+
+```
+var user = 'The Window';
+var box = {
+    user:'The Box',
+    getUser : function(){
+        return function(){
+            return this.user;
+        }
+    }
+};
+alert(box.getUser()());
+
+```
+* 解决方案
+    * 对象冒充 
+    ```
+    var user = 'The Window';
+    var box = {
+        user:'The Box',
+        getUser : function(){
+            return function(){
+                return this.user;
+            }
+        }
+    };
+    //alert(box.getUser()());           // The Window
+    alert(box.getUser().call(box));     // The box
+    ```
+    * 另行赋值
+    ```
+    var user = 'The Window';
+    var box = {
+        user:'The Box',
+        getUser : function(){
+            //这里作用域的this是Box
+            var that = this;
+            return function(){
+                //这里作用域的this是window
+                return that.user;
+            }
+        }
+    };
+    //alert(box.getUser()());             // The Window
+    alert(box.getUser().call(box));     // The box
+    ```
+#### 模仿块级作用域
+> javascript中没有块级作用域的概念
+
+* 在全局作用域总使用块级作用域可以减少闭包占用的内存问题，因为没有指向匿名函数的引用，只要函数执行完毕，就可以立即销毁起作用域链
+
+```
+function box(){
+    for(var i=0;i<5;i++){}
+    alert(i);
+}
+box();
+
+```
+* 使用自我执行的匿名函数实现私有作用域
+```
+function box(){
+    (function(){
+        for(var i=0;i<5;i++){}
+    })();
+    alert(i);   //报错，无法访问
+}
+box();
+```
+#### 私有属性
+> javascript没有私有属性，所有的属性都是公有的，却有一个私有变量的概念，任何在函数中定义的变量，都可以认为是私有变量，因为不能在函数的外部访问这些变量
+
+```
+function Box(){
+    var age=100;                //私有变量
+    function run(){             //私有函数，因为没有名字，无法调用
+        return '运行中...';
+    }
+    this.publicGo = function(){ //对外的可见的公共接口
+        return age+run();
+    };
+    this.getAge = function(){
+        return age;
+    }
+}
+
+var box = new Box();
+alert(box.getAge());
+```
+
+
+#### 静态私有变量
+```
+(function(){
+    var user = '';
+    //function Box(){}    //构造函数，但在函数里写构造函数，不支持，因为私有作用域里的函数，外部访问不到
+    Box = function(value){   //全局构造函数
+        user = value;
+        this.getUser = function(){
+            return user; 
+        }
+    };
+})();
+
+var box = new Box('yingxs');
+alert(box.getUser());
+var box2 = new Box("123");
+alert(box.getUser());
+
+
+
+
+(function(){
+    var user = '';
+    //function Box(){}    //构造函数，但在函数里写构造函数，不支持，因为私有作用域里的函数，外部访问不到
+    
+    Box = function(value){   //全局构造函数
+        user = value;
+       
+    };
+    Box.prototype.getUser = function(){
+        return user;
+    }
+    Box.prototype.setUser = function(value){
+        user=value;
+    }
+})();
+
+var box = new Box('yingxs');
+alert(box.getUser());
+var box2 = new Box("123");
+alert(box.getUser());
+
+
+//以上两种方式均可实现私有变量user的共享
+```
+
+```
+var box = {         //只实例化一次，为单例
+    
+}
+
+var box = function(){
+    var user = 'Lee';
+    function run(){
+        return '运行中...';
+    }
+    
+    return {
+        publicGo : function(){      //对外公共接口的特权方法
+            return user+run();
+        }
+    };
+}();
+
+
+```
+
 
 
 
