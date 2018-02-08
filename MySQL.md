@@ -702,3 +702,192 @@ HAVING AVG(score)>=85;
 SELECT AVG(score)平均分 FROM tb_score HAVING AVG(score)>=85;
 
 ```
+##### 连接查询
+如果一个查询同时涉及两个或多个表，则称为连接查询
+* 交叉查询
+* 内连接
+* 外连接
+* 
+
+
+######  交叉连接
+会产生一些没有意义的记录 很少使用
+SELECT * FROM 表1 CROSS JOIN 表2；
+SELECT * FROM 表1，表2；
+查询结果集的记录和等于所连接的两张表记录行数乘积
+```
+例如：查询学生表与成绩表的交叉连接
+SELECT * FROM tb_student,tb_score;
+```
+###### 内连接(INNER JOIN)
+```
+SELECT 目标表达式1，目标表达式2，目标表达式3，...，目标表达式n
+FROM 表1 [INNER] JOIN 表2 ON 连接条件 [WHERE 过滤条件];
+
+
+SELECT 目标表达式1，目标表达式2，...，目标表达式n
+FROM 表1,表2 WHERE 连接条件 [AND 过滤条件];
+```
+###### 等值连接与非等值连接
+```
+[<表名1>.]<字段名1> <比较运算符> [<表名2>.]<字段名2>
+
+例如：查询每个学生选修课程的情况
+SELECT tb_student.*,tbscore.*FROM tb_student,tb_score
+WHERE tb_student.studentno=tb_score.studentno;
+
+查询会计学院全体同学的学号、姓名、籍贯、班级编号和所在班级名称
+SELECT studentno,studentname,native,tb_student.classno,classname
+FROM tb_student,tb_clss
+WHERE tb_student.classno=tb_class.classno AND
+department='会计学院';
+
+查询选修了课程名为管理学"的学生学号、姓名和成绩
+SELECT a.studentno,studentname,score
+FROM tb_student AS a,tb_course b,tb_score c
+WHERE a.studentno=c.studentno AND b.courseno=c.courseno AND
+coursename="管理学";
+```
+自连接
+某个表与自身进行连接，需要为表指定多个不同的别名，且对所有查询字段的引用必须使用表别名限定
+```
+查询与"会计学"这门课程学分相同的课程信息
+SELECT c1.* FROM tb_course c1,tb_course c2
+WHERE c1.credit=c2.credit AND c2.coursename='会计学';
+或
+SELECT c1.* DORM tb_course c1. JOIN tb_course c2
+ON c1.credit=c2.crdit
+WHERE c2.coursename='会计学';
+```
+自然连接(NATURAL JOIN )
+只有当连接字段在两张表中的字段名都相同时才可以使用，不需要指定连接条件
+```
+用自然连接查询每个学生及其选修课程的情况，要求显示学号 姓名 选修的课程和成绩
+SELECT a.studentno,studentname,courseno,score
+FROM tb_student a NATURAL JOIN tb_score b;
+```
+##### 外链接
+左外连接(LEFT OUTER JOIN或LEFT JOIN)
+```
+例如：使用左外连接查询所有学生及其选修课程的情况，包括没有选修课程的学生，要求西安市
+学号、姓名、性别、班号、选修课程号和成绩
+SELECT a.studentno,studentname,sex,classno,courseno,score
+FROM tb_student a LEFT OUTER JOIN tb_score b
+ON a.studentno=b.studentno
+```
+右外连接(RIGHT OUTER JOIN 或 RIGHT JOIN)
+```
+例如:使用右外连接连接查询所有学生及其选修课程的 情况，包括没有选修的学生
+要求显示学号、姓名、班号、选修的课程号和成绩
+
+SELECT couseno,score,b.studentno,studentname,sex,classno
+FROM tb_score a RIGHT OUTER JOIN tb_student b
+ON a.studentno=b.studentno;
+```
+#### 子查询
+##### 带IN关键字的子查询
+```
+查询选修了课程的学生姓名
+
+SELECT studentname FROM tb_student
+WHERE tb_student.studentno IN (SELECT DISTINCT tb_score.studentno FROM tb_score);
+
+
+
+查询没选修课程的学生姓名
+
+SELECT studentname FROM tb_student
+WHERE tb_student.studentno NOT IN (SELECT DISTINCT tb_score.studentno FROM tb_score);
+
+```
+
+##### 带比较运算符的子查询
+```
+查询班级"会计13-1"所有学生的学号，姓名
+SELECT studentno,studentname FROM tb_student
+WHERE classno = (SELECT classno FROM tb_class WHERE classname='会计13-1班')
+
+查询与'孟颖'在同一个班的学生的学号、姓名
+SELECT studentno,studentname,classno FROM tb_student s1
+WHERE clasno = (SELECT classno FROM tb_student s2 WHERE studentname=)
+AND studentname!='孟颖';
+
+查询男生中比某个女生出生年份晚的学生姓名和出生年份
+SELECT studentname,YEAR(birthday) FROM tb_student
+WHERE sex='男' AND YEAR(birthday)> ANY
+(SELECT YEAR(birthday) FROM tb_student WHERE sex='女')
+
+查询男生中比所有女生出生年份晚的学生姓名和出生年份
+SELECT studentname,YEAR(birthday) FROM tb_student
+WHERE sex='男' AND YEAR(birthday)> ALL
+(SELECT YEAR(birthday) FROM tb_student WHERE sex='女')
+
+```
+##### 带EXISTS 或 NOT EXISTS关键字的子查询
+带EXISTS子查询只返回TRUE和FALSE，内层查询的SELECT子名给出字段名没有实际意义
+目标列表达式通畅用*
+```
+查询选修了课程11003的学生姓名
+SELECT studentname FROM tb_student a
+WHERE EXISTS
+(SELECT * FROM tb_score b WHERE a.studentno = b.studentno
+AND courseno = 11003);
+
+
+查询选修了课程11003的学生姓名
+SELECT studentname FROM tb_student
+WHERE studentno IN
+(SELECT studentno FROM tb_score WHERE
+courseno=11003);
+
+查询没有选修课程11003的学生姓名
+SELECT studentname FROM tb_student a 
+WHERE NOT EXISTS
+(SELECT * FROM tb_score b WHERE a.studentno=b.studentno AND 
+courseno=11003);
+
+查询没有选修课程11003的学生姓名
+SELECT studentname FROM tb_student a 
+WHERE NOT IN
+(SELECT * FROM tb_score b WHERE a.studentno=b.studentno AND 
+courseno=11003);
+
+```
+
+##### 联合查询
+可把来自多个SELECT语句的结果组合到一个结果集中
+合并时，多个SELECT子句对应的字段数和数据类型必须相同
+```
+SELECT-FROM-WHERE
+UNION [ALL]
+SELECT-FROM-WHERE
+[...UNION[ALL]]
+SELECT-FROM-WHERE]
+
+
+使用UNION ALL联合查询选修了会计学或计算机基础学生学号
+SELECT studentno FROM tb_score,tb_course
+WHERE tb_score.courseno=tb_coursee.courseno AND
+coursename='会计学'
+UNION //不加ALL则会去除重复
+SELECT studentno FROM tb_score,tb_course
+WHERE tb_score.courseno=tb_course.courseno AND
+coursename='计算机基础';
+
+查询选修了 会计学 和 计算机基础 学生学号
+SELECT studentno FROM tb_score,tb_course
+WHERE tb_score.courseno=tb_course.courseno AND
+coursename='会计学' AND studentno IN (
+SELECT studentno FROM tb_score,tb_course
+WHERE tb_score.courseno=tb_course.courseno AND
+coursename='计算机基础');
+
+
+查询选修了 会计学 但没有选修 计算机基础 学生学号
+SELECT studentno FROM tb_score,tb_course
+WHERE tb_score.courseno=tb_course.courseno AND
+coursename='会计学' AND studentno NOT IN (
+SELECT studentno FROM tb_score,tb_course
+WHERE tb_score.courseno=tb_course.courseno AND
+coursename='计算机基础');
+```
