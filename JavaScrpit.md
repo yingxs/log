@@ -655,7 +655,101 @@ var box = function(){
 
 
 ```
+#### 浏览器嗅探器
+```
+var client=function(){
+     var client=function(){
+   //引擎
+   var engine={
+       ie:false,
+       gecko:false,
+       webkit:false,
+       khtml:false,
+       opera:false,
+       ver:0           //引擎版本
+   };
 
+   //浏览器
+   var browser={
+       ie:false,
+       firefox:false,
+       chrome:false,
+       safari:false,
+       opera:false,
+       //浏览器版本
+       ver:0,
+       //浏览器通用名称
+       name:''
+   };
+   //系统
+   var system={
+       win:false,
+       mac:false,
+       x11:false,
+
+       sysname:''
+   };
+
+   //核心监测区域
+   var ua = navigator.userAgent;
+   var p = navigator.platform;
+
+   if(p.indexOf('Win')==0){
+       system.win=true;
+       system.sysname='Windows';
+   }else if(p.indexOf('Mac')==0){
+       system.mac=true;
+       system.sysname='Macintosh';
+   }else if(p.indexOf('X11')==0 || p.indexOf('Linux')==0){
+       system.x11=true;
+       system.sysname='Linux';
+   }
+
+   if(window.opera){
+       engine.opera = true;
+       browser.opera = true;
+       engine.ver=browser.ver=window.opera.version();
+       browser.name='Opera';
+   }else if(/AppleWebKit\/(\S+)/.test(ua)){
+       engine.webkit=true;
+       engine.ver=RegExp['$1'];
+       if(/Chrome\/(\S+)/.test(ua)){
+           browser.chrome = true;
+           browser.ver = RegExp['$1'];
+           browser.name='Chrome';
+       }else{
+           browser.safari = true;
+           if(/Version\/(\S)/.test(ua)){
+               browser.ver = RegExp['$1'];
+           }
+           browser.name='safari';
+       }
+
+   } else if(/rv:([^\)]+)\) Gecko\/\d{8}/){
+   engine.gecko=true;
+   engine.ver=RegExp['$1'];
+   if(/Firefox\/(\S+)/.test(ua)){
+       browser.firefox = true;
+       browser.ver = RegExp['$1'];
+       browser.name='Firefox';
+   }
+}else if(/MSIE ([^;]+)/.test(ua)){
+   engine.ie=true;
+   browser.ie = true;
+   engine.ver=browser.ver=RegExp['$1'];
+   browser.name='IE';
+}
+
+return {
+   engine:engine,
+   browser:browser,
+   system:system
+}
+}();
+
+alert(client.system.sysname +"\n"+ client.browser.name+client.browser.ver);
+
+```
 
 
 
