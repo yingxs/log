@@ -705,4 +705,220 @@ public class Demo3 {
 
 
 ```
+### 对象关系映射之一对一映射
+> 需求：公民和身份证是一对一关系
+
+#### 数据库设计
+* 唯一外键关联设计 
+* 主键关联
+
+#### 对象设计
+* 公民对象Person
+```
+package com.yingxs.one2one_fk;
+
+import java.io.Serializable;
+
+public class Person implements Serializable {
+	private Integer id;
+	private String name;
+	
+	//关联身份证号
+	private Card card;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Card getCard() {
+		return card;
+	}
+
+	public void setCard(Card card) {
+		this.card = card;
+	}
+	
+}
+
+```
+* 身份证号对象Card
+```
+package com.yingxs.one2one_fk;
+
+import java.io.Serializable;
+
+public class Card implements Serializable {
+	private Integer id;
+	private String name;
+	
+	//关联公民
+	private Person person;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
+	
+}
+
+```
+
+#### 映射配置
+* 唯一外键关系映射
+    * 公民方映射
+    ```
+    
+    
+    <?xml version="1.0" encoding="utf-8"?>
+    <!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    
+    <hibernate-mapping package="com.yingxs.one2one_fk">
+    	<!-- 
+    		name:类名
+    		table:表名
+    	 -->
+    	<class name="Person" table="t_person_fk">
+    		<!-- 主键 -->
+    		<id name="id" column="id">
+    			<generator class="native"></generator>
+    		</id>
+    		<!-- 其他属性 -->
+    		<property name="name" column="name"></property>
+    		
+    		<!-- 一对多 -->
+    		<one-to-one name="card" class="Card"></one-to-one>
+    		
+    	</class>
+    
+    </hibernate-mapping>    
+        
+    
+    ```
+    * 身份证号方的映射
+    ```
+    <?xml version="1.0" encoding="utf-8"?>
+    <!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    
+    <hibernate-mapping package="com.yingxs.one2one_fk">
+    	<!-- 
+    		name:类名
+    		table:表名
+    	 -->
+    	<class name="Card" table="t_card_fk">
+    		<!-- 主键 -->
+    		<id name="id" column="id">
+    			<generator class="native"></generator>
+    		</id>
+    		<!-- 其他属性 -->
+    		<property name="name" column="name"></property>
+    		
+    		<!-- 唯一外键(一对一) -->
+    		<many-to-one name="person" class="Person" column="person_id" update="true" />
+    		
+    		
+    	</class>
+    
+    </hibernate-mapping>    
+        
+
+    ```
+* 主键关联
+    * 公民方配置
+    ```
+    <?xml version="1.0" encoding="utf-8"?>
+    <!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+    
+    <hibernate-mapping package="com.yingxs.one2one_pk">
+    	<!-- 
+    		name:类名
+    		table:表名
+    	 -->
+    	<class name="Person" table="t_person_pk">
+    		<!-- 主键 -->
+    		<id name="id" column="id">
+    			<generator class="native"></generator>
+    		</id>
+    		<!-- 其他属性 -->
+    		<property name="name" column="name"></property>
+    		
+    		<!-- 一对多 -->
+    		<one-to-one name="card" class="Card"></one-to-one>
+    		
+    	</class>
+    
+    </hibernate-mapping>    
+    
+    ```
+    * 身份证号码方配置
+    ```
+    <?xml version="1.0" encoding="utf-8"?>
+    <!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+        
+    <hibernate-mapping package="com.yingxs.one2one_pk">
+    	<!-- 
+    		name:类名
+    		table:表名
+    	 -->
+    	<class name="Card" table="t_card_pk">
+    		<!-- 主键 -->
+    		<id name="id" column="id">
+    			<generator class="native"></generator>
+    		</id>
+    		<!-- 其他属性 -->
+    		<property name="name" column="name"></property>
+    		
+    		<!-- 主键关联(一对一) -->
+    		<one-to-one name="person" class="Person" constrained="true"/>
+    		
+    	</class>
+    
+    </hibernate-mapping>    
+        
+
+    ```
+    
+
+
 
