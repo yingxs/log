@@ -891,3 +891,165 @@ SELECT studentno FROM tb_score,tb_course
 WHERE tb_score.courseno=tb_course.courseno AND
 coursename='计算机基础');
 ```
+#### 插入数据
+##### 插入完整的数据记录
+```
+INSERT INTO tb_name(column_list)VALUES(value_list)
+tb_name 表名
+colum_list 字段，如向所有列插入数据，列名可省略
+但不安全，日过只是部分列插入数据，需要明确指定字段
+VALUES 子句 数据顺序与列的顺序相对应
+
+例如 向表tb_student中插入一条记录('2014210102','王玲','女','1998-02-12','安徽','汉','CS1401')
+
+INSERT INTO tb_student VALUES ('2014210102','王玲','女','1998-02-12','安徽','汉','CS1401')
+这些值的顺序必须和表中定义的顺序完全相同
+
+向表tb_student中插入一条记录('2014210102','赵婷婷','女'，'1996-11-30','天津','汉','AC1301')
+INSERT INTO tb_student(student,studentname,seex,birthday,native,nation,classno)
+VALUES
+('2014210102','赵婷婷','女'，'1996-11-30','天津','汉','AC1301')
+
+
+向表tb_student中插入一条记录,学号为2014310103，姓名为孙新，性别为男，民族傣，班号为IS1401
+
+INSERT INTO tb_student
+(studentno,studentname,sex,nation,classno)
+VALUES
+('2014310103','孙新','男','傣','IS1401');
+```
+##### 同时插入多条记录
+向数据表中插入多条记录时，每个值列表之间用逗号分隔
+
+```
+INSERT INTO tb_name(column_list)
+VALUES(values_list1),(value_list2)...(value_listn);
+```
+##### 插入查询结果
+INSERT 语句还可将SELECT语句查询的结果插入到表中
+```
+INSERT INTO tb_name1(column_list1)
+SELECT solumn_list2 FROM tb_name2 WHERE(condition)
+两个列表(column_list1,column_list2)中的字段个数必须相同，且数据类型匹配
+
+例如:假设要为表tb_student制作一个备份表tb_student_copy两个表结构完全一致
+使用INSERT...SELECT语句将表tb_student中的数据备份到表tb_student_copy中
+
+CREATE TABLE tb_student_copy(
+studentno CHAR(10),
+studentname VARCHAR(20) NOT NULL
+sex CHAR(2) NOT NULL
+birthday DATE,
+narive VARCHAR(20),
+nation VARCHAR(20),
+classno char(6),
+CONSTRAINT pk_student PRIMARY KEY (studentno);
+)
+
+INSERT INTO
+tb_student_copy(studentno,studentname,sex,birthday,native,nation,classno)
+SELECT
+studentno,studentname,sex,birthday,native,nation,classno FROM tb_student;
+``` 
+
+##### 使用REPLACE语句插入表数据
+使用REPLACE语句可在插入数据之前将表中与待插入的新纪录相冲突的旧记录删除，从而保证新纪录能正常插入
+```
+REPLACE INTO tb_name(column_list)
+VALUES(value_list);
+
+当前表tb_student_copy中已存在一条记录('2014310107','赵鹏','男','1997-10-16','吉林','朝鲜','IS1401')其中sttudentno是主键，现向表再次插入一行数据('2014310107','周旭','男','1997-10-17','湖南','朝鲜','AC1301')
+
+REPLACE INTO
+tb_student_copy(studentno,studentname,sex,birthday,native,nation,classno)
+VALUES('2014310107','周旭','男','1997-10-17','湖南','朝鲜','AC1301')
+
+Ps：如果数据表中的某个字段上定义了外码，使用REPLACE INTO插入数据时依然会出错
+
+```
+
+##### 修改数据记录
+```
+UPADTE tb_name
+SET
+column1=value1,column2=value2...,columnn=valuen
+[WHERE <condition>]
+
+修改特定数据记录
+例如 通过WHERE子句指定被修改的记录所需满足的条件
+将表tb_student中学号为"2014210102" 的学生姓名改为"黄涛"
+籍贯修改为"湖北",民族修改为缺省值。
+
+UPDATE tb_student
+SET studentname="黄涛",native="湖北",nation="汉"
+WHERE studentno='2014210102';
+
+
+不需要指定WHERE子句的情况
+例如：将表tb_score所有学生的成绩提高5%
+UPDATE tb_score
+SET score=score*1.05;
+
+
+如果待修改数据的表与设置修改条件的表不相同，需要用子查询来构造修改条件
+例如:将选修"程序设计"这门课程的学生成绩置零
+UPDATE tb_score
+SET score=0
+WHERE courseno=(SELECT course FROM  
+tb_course WHERE coursename="程序设计");
+
+
+实操题目
+ 使用UPDATE语句将数据库db_test的表content中留言人姓名为"MYSQL初学者"的留言内容修改为"如何使用INSERT语句"
+ USE db_test;
+ UPDATE content
+ SET words='如何使用INSERT语句' WHERE
+ username='MYSQL初学者';
+
+实操题目
+使用UPDATE语句将数据库mysql_test的表customers中姓名为'李四'的cust_contact的值更新为"武汉"
+UPDATE mysql_test.customers
+SET cust_contact='武汉' WHERE cust_name='李四';
+
+```
+
+##### 删除数据记录
+```
+DELETE FROM tb_name [WHERE <conditions>]
+```
+```
+删除特定的数据记录
+通过WHERE子句指定被删除的记录所需满足的条件
+例如:删除表tb_student中姓名为"孟颖"学生记录
+DELETE FROM tb_student WHERE studentname="孟颖";
+
+如果待删除的数据表与设置删除条件的表不相同
+需要用子查询来构造删除条件
+
+例如：将"程序设计"这门课程的所有选课记录删除
+DELETE FROM tb_score WHERE courseno
+=(SELECT courseno FROM tb_score WHERE
+coursename='程序设计')；
+```
+##### 删除所有的数据记录
+```
+DELETE语句删除的是表中数据,而不会删除表的定义
+例如：
+删除所有学生的选课记录
+DELETE FROM tb_score;
+```
+```
+TRUNCATE语句，执行的速度比DETELE操作更快
+使用TRUNCATE语句删除数据表tb_student的备份tb_student_copy中的所有记录
+TRUNCATE tb_student_copy;
+
+```
+```
+实操题目
+使用DETELE语句将数据库db_test的表content中留言人姓名为"MYSQL初学者"的留言信息删除
+DETELE FROM db_test.contect WHERE
+username='MYSQL初学者';
+
+使用DETELE语句将数据库mysql_test.customers WHERE cust_address='南京';
+
+```
