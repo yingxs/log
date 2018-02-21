@@ -752,4 +752,79 @@ alert(client.system.sysname +"\n"+ client.browser.name+client.browser.ver);
 ```
 
 
+#### 忽略空白节点
+```
+window.onload = function(){
+    var box = document.getElementById('box');
+    alert(filterWhiteNode(box.childNodes).length);
+}
 
+function filterWhiteNode(node){
+    var ret=[];
+    for(var i=0;i < node.length;i++){
+        if(node[i].nodeType === 3 && /^\s+$/.test(node[i].nodeValue)){
+            countinue;
+        }else{
+            ret.push(node[i]);
+        }
+    }
+    return ret;
+}
+```
+
+#### 移除空白节点
+```
+window.onload = function(){
+    var box = document.getElementById('box');
+    alert(removerWhiteNode(box.childNodes).length);
+}
+
+function removerWhiteNode(node){
+
+    for(var i=0;i < node.length;i++){
+        if(node[i].nodeType === 3 && /^\s+$/.test(node[i].nodeValue)){
+            node[i].parentNode.removeChild(node[i]);
+        }
+    }
+    return node;
+}
+```
+
+```
+window.onload = function(){
+    var box = document.getElementById('box');
+    alert(removerWhiteNode(box.childNodes).firstChild.nodeName);
+}
+
+function removerWhiteNode(node){
+    
+    for(var i=0;i < node.length;i++){
+        if(node[i].nodeType === 3 && /^\s+$/.test(node[i].nodeValue)){
+            node[i].parentNode.removeChild(node[i]);
+        }
+    }
+    return node;
+}
+
+```
+
+#### contains方法兼容
+```
+function contains(refNode,otherNode){
+    if(typeof refNode.contains != 'undefined'){
+        return refNode.contains(otherNode);
+    }else if(typeof refNode.compareDocumentPosition=='function'){
+        return refNode.compareDocumentPosition(otherNode)>16;
+    }else{
+        var node = otherNode.paretNode;
+        do{
+            if(node==refNode){
+                return true;
+            }else{
+                node = otherNode.paretNode;
+            }
+        }while(node != null);
+        return false;
+    }
+}
+```
