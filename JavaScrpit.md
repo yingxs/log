@@ -828,3 +828,23 @@ function contains(refNode,otherNode){
     }
 }
 ```
+#### innerText与textContent兼容
+```
+function getInnerText(element){
+    if(typeod element.textContent == 'string'){
+        return element.textContent;
+    }else{
+        return element.innerText;
+    }
+}
+
+
+function setInnerText(element,text){
+    if(typeof element.textContent == 'string'){
+        element.textContent = text;
+    }else{
+        element.innerText = text;
+    }
+}
+
+```
