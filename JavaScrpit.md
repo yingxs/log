@@ -848,3 +848,29 @@ function setInnerText(element,text){
 }
 
 ```
+#### hasClass()
+```
+window.onload = function(){
+    hasClass(box,'aaa');
+};
+
+//判断一个class是否存在
+function hasClass(element,cName){
+    return !!element.className.match(new RegExp('(\\s|^)'+cName+'(\\s|$)'));
+}
+
+//添加一个class
+function addClass(element,cName){
+    if(!hasClass(element,cName)){
+        element.className += ' '+cName;
+    }
+}
+
+//移除一个class
+function removeClass(element,cName){
+    if(hasClass(element,cName)){
+        element.className = element.className.replace(new RegExp('(\\s|^)'+cName+'(\\s|$)'),' ');
+    }
+}
+
+```
