@@ -874,3 +874,73 @@ function removeClass(element,cName){
 }
 
 ```
+
+
+#### sheet
+```
+var link = document.getElementByTagName('link')[0];
+//alert(link);  //HTMLLinkElement
+//var sheet = link.sheet;   //CSSStyleSheet,表示链接的CSS样式表对象，IE不支持
+
+//为了兼容IE
+var sheet = link.sheet || link.styleSheet;
+
+```
+
+```
+
+//更加简便的获取sheet的方法
+var sheet = document.styleSheets[0];
+alert(sheet);       //document.styleSheets得到的是StyleSheetList集合
+```
+
+```
+var sheet = document.styleSheets[0];
+alert(sheet.cssRules);      //CSSRuleList，是样式规则集合，一群样式的集合表示一个规则
+alert(sheet.cssRules[0]);   //获取第一条规则 CSSStyleRule
+alert(sheet.cssRules[0].cssText);   //获取第一条规则的CSS文本
+alert(sheet.cssRules[0].selectorText);  //得到第一个规则的选择符
+
+```
+
+```
+//跨浏览器兼容获取CSSRuleList
+var rules = sheet.cssRules || sheet.rules;
+
+//跨浏览器兼容删除第一条规则
+deleteRule(sheet,0);
+
+//跨浏览器兼容添加第一条规则
+insertRule(sheet,'body','background-color:red',0);
+
+//跨浏览器兼容删除第一条规则
+function deleteRule(sheet,postion){
+    if(sheet.deleteRule){
+        sheet.deleteRule(position);
+    }else if(sheet.removeRule){
+        sheet.removeRule(postiion);
+    }
+}
+
+//跨浏览器兼容添加第一条规则
+function insertRule(sheet,selectorText,cssText,position){
+    if(sheet.insertRule){
+        sheet.insertRule(selectorText+' {'+ cssText +'}',position);
+    }else if(sheet.addRule){
+        sheet.addRule(selectorText,cssText,position);
+    }
+}
+
+```
+
+
+```
+var sheet = document.stySheets[0];
+var rules = sheet.cssRules || sheet.rules;
+var rule1 = rules[0];
+alert(rule1.cssText);    //获取当前样式文本，IE不支持
+alert(rule1.selectorText);    //获取当前样式选择符文本
+alert(rule1.style.color);
+rule1.style.color='blue';   //控制的是样式规则，而不是行内样式
+
+```
