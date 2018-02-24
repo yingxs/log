@@ -944,3 +944,97 @@ alert(rule1.style.color);
 rule1.style.color='blue';   //控制的是样式规则，而不是行内样式
 
 ```
+### DOM元素尺寸和位置
+```
+//style获取行内的css大小
+var box = document.getElementById('box');
+alert(box.style.width);
+alert(box.style.height);
+
+```
+```
+//获取计算后的CSS大小，如果没有设置值，非IE会获取默认大小，IE会理解为0，返回auto
+var style = window.getComputedStyle? window.getComputedStyle(box,null):null ||  box.currentStyle; 
+alert(style.width);
+alert(style.height);
+
+```
+
+```
+//使用CSSStyleSheet对象中的cssRule属性
+var box = document.getElementById('box');
+var sheet = document.styleSheets[0];
+var rule = (sheet.cssRules || sheet.rules)[0];
+alert(rule.style.width);
+alert(rule.style.height);
+```
+
+> 这三种方式都无法获取元素的实际大小
+
+### 获取元素实际大小
+#### clientWidth和clientHeight
+> 这组属性可以获取元素可视区的大小，可以得到元素内容以及内边距所占据的空间大小 
+
+```
+var box = document.getElementById('box');
+alert(box.clientWidth);
+alert(box.clientHeight);
+//返回number 没有单位，但是默认是px
+//如果设置了其他的单位，返回来的结果还是会转换为px像素
+//忽略边框和外边距
+//内边距会增加大小，而滚动条会减少实际大小，不把滚动大小条算进实际大小
+//在没有内边距和滚动条的情况下，没有设置CSS大小，IE浏览器会理解为0
+
+```
+#### scrollWidth和scrollHeight
+> 这组属性可以获取滚动内容的元素实际大小 
+
+```
+var box = document.getElementById('box');
+alert(box.scrollWidth);
+alert(box.scrollHeight);
+//IE浏览器在指定的高度下获取srcollHeight会理解为获取有效内容的高度
+//如果文本溢出了，没加滚动条，不同的浏览器也不太兼容
+```
+#### offsetWidth和offsetHeight
+> 这组属性可以返回元素的实际大小，包含边框，内边距和滚动条
+
+> 对于元素大小的获取，一般是块级(block)元素并且设置的CSS大小的元素较为方便，如果是内联元素(inline)或者没有设置大小的元素就尤为麻烦。
+
+### 获取元素周边大小
+
+* clientLeft和clientTop
+    * 这组属性可以获取元素设置了左边框和上边框的大小
+* offsetParent和offsetParnet
+
+> IE浏览器理解的根上的父元素为HTML，非IE理解的根上的父元素为BODY，但问题不大，如果没有设置定位，问题多多
+
+#### 求出元素与页面口之间的距离
+```
+alert(offsetTop(box));
+
+function offsetTop(element){
+    var top = element.offsetTop;
+    var parent = element.offsetParent;
+    
+    while(parent !== null){
+        top += parent.offsetTop;
+        parent = parent.offsetParent;
+    }
+    
+    return top;
+}
+```
+* scrollTop和scrollLeft
+    * 这组属性可以获取滚动条被隐藏的区域大小，也可以定位到该区域
+    
+```
+scrollInit(box);
+//滚动条回到初始位置
+function scrollInit(element){
+    if(element.scrollTop != 0){
+        element.scrollTop=0;
+    }
+}
+```
+
