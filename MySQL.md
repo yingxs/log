@@ -1053,3 +1053,169 @@ username='MYSQL初学者';
 使用DETELE语句将数据库mysql_test.customers WHERE cust_address='南京';
 
 ```
+
+
+### 索引
+> 索引是一张描述索引的列值与原表中的记录行之间一一对应关系的有序表，好比是一本书的目录，可加快数据库的查询速度，用来定位。
+
+根据用途，索引分为：
+* 普通索引(INDEX) ,INDEX或KEY创建，可以取空值或者重复
+* 唯一性索引(UNIQUE),索引列中所有值只能出现一次，可以使空值
+* 主键(PRIMARY KEY),每个表中只能有一个主键，不能为空
+* 全文索引(FULLTEXT) 只能在VARCHAR或TEXT MyISAM中创建
+* 聚簇索引，物理存储顺序
+索引在实际应用中又可分为； 
+* 单列索引
+* 组合索引，也称复合索引或多列索引
+
+##### 查看数据表上建立的索引
+SHOW {INDEX|INDEXS|KEYS} {FROM|IN} tbl_name
+[{FROM|IN} db_name]
+
+```
+例如:
+SHOW INDEX FROM db_school.tb_score \G;
+```
+
+##### 创建索引
+1.使用CREATE TABLE创建索引
+```
+CREATE TABLE tbl_name [col_name data_type]
+[CONSTRAINT index_name] [UNIQUE] [INDEX | KEY]
+[index_name] (index_col_name [length]) [ASC|DESC]
+```
+
+```
+例如:
+在创建新表的同时建立普通索引，建立一个表tb_student1,在创建表的同时在studentname字段上建立普通索引
+CREATE TABLE tb_student1(
+studentno CHAR(10) NOT NULL,
+studentname CHAR(10) NOT NULL,
+sex CHAR(2) NOT NULL,
+birthday DATE,
+native VARCHAR(20),
+nation VARCHAR(10) DEFAULT '汉',
+classno char(6),
+INDEX (studentname));
+```
+
+```
+在创建新表的同时建立唯一索引,建立一个表tb_student2,
+在创建表的同时在studentno字段上建立唯一性索引
+CREATE TABLE tb_student2(
+studentno CHAR(10) NOT NULL UNIQUE,
+studentname VARCHAR(20) NOT NULL,
+sex CHAR(2) NOT NULL
+birthday DATE,
+native VARCHAR(20),
+nation VARCHAR(10) DEFAULT '汉',
+classno char(6)
+);
+```
+
+```
+在创建新表的同时建立主键索引
+CREATE TABLE tb_score1(
+studentno CHAR(10),
+courseno char(5),
+score float
+);
+
+在MYSQL中,创建表时,若指定表的主键或外键系统自动建立索引
+
+
+在创建新表的同时建立主键索引
+CREATE TABLE tb_score2(
+studentno CHAR(10),
+courseno char(5),
+score float,
+CONSTRAINT pl_score PRIMARY KEY (studentno,corse),
+CONSTRAINT fl_score1 FOREIGN KEY(studentno) REFERENCES
+tb_student(studentno),
+CONSTRAINT fl_score2 FOREIGN KEY(courseno) REFERENCES
+tb_course(courseno)
+
+);
+
+```
+
+##### 2.使用CREATE INDEX创建普通索引
+```
+CREATE [UNIQUE] INDEX index_name
+ON tbl_name(col_name [(length] [ASC | DESC],...);
+
+例如:在表tb_student上建立一个普通索引，索引字段是学号studentno
+
+CREATE INDEX index_stu ON
+db_school.tb_student(studentno);
+
+
+```
+
+```
+创建基于字段值前缀字符的索引
+在表tb_course上建立一个索引，按课时名称coursename值的前三个字符建立降序索引
+
+CREATE INDEX index_course ON
+db_school.tb_course(coursename(3) DESC);
+
+```
+
+```
+
+创建组合索引
+在表tb_book上建立图书类别(升序)和书名(降序)
+组合索引,索引名称为index_book
+CREATE INDEX index_book ON
+db_school.tb_book(bclassno,bookname DESC);
+
+```
+
+```
+用CREATE INDEX在db_test数据库的content表中,根据留言标题列的前三个字符采用默认的索引类型建立一个升序索引index_subject
+
+USE db_test;
+CREATE INDEX index_subject
+ON content(subject(3) ASC);
+```
+
+##### 使用ALTER TABLE创建索引
+ALTER TABLE tbl_name ADD [UNIQUE|FULLTEXT]
+[INDEX|KEY] [index_name]
+(col_name[length] [ASC|DESC],...)
+
+```
+使用 ALTER TABLE 语句建立普通索引,在tb_student1表studentname列上建立一个普通索引，索引名为idx_studentname
+ALTER TABLE db_school.tb_student1
+ADD INDEX idx_studentname(studentname);
+```
+创建普通索引时 通常使用的饿关键字是INDEX或KEY
+创建唯一性索引时，通常使用的关键字是UNIQUE
+
+### 删除索引
+#### 使用DROP INDEX删除索引
+```
+DROP INDEX index_name ON tbl_name
+
+例如:删除索引index_studentname
+DROP INDEX index_studentname ON
+db_school.tb_student1;
+```
+
+#### 使用ALTER TABLE删除索引
+```
+ALTER TABLE tbl_name DROP INDEX index_name
+
+例如:使用ALTER TABLE 删除索引
+ALTER TABLE db_school.tb_student
+DROP INDEX index_stu;
+
+
+```
+
+PS:所删除的列是索引的组成部分，则该列也会从索引中删除
+    组成缩印的所有列都被删除，整个索引将被删除
+    
+索引弊端：
+在提高查询速度的同时，降低更新表中数据的速度
+索引以文件形式存储，增加存储空间 
