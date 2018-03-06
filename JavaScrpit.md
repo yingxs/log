@@ -1119,3 +1119,59 @@ function insertRule(sheet,selectorText,cssText,position){
 }
 ```
 
+### 事件入门
+```
+window.onload = function(){
+    var input = document.getElementsByTagName('input')[0];
+    
+    //input.onclick = box();
+    //让事件处理函数执行一个函数的时候，通过赋值方式，那么直接将函数名赋值给事件处理函数即可
+    input.onclick = box;
+}
+
+function box(){
+    alert('Lee');
+}
+```
+
+##### this
+```
+window.onload=function(){
+    document.onclick=function(){
+        alert(this);    //HTMLDocument,代表的是document
+    }
+}
+
+```
+
+```
+window.onload=function(){
+    document.onclick=box;   //因为box()函数被onclick绑定了，所以里面的this代表document
+}
+
+function box(){
+    alert(this);    //HTMLDocument,代表的是document
+}
+```
+##### 事件对象
+```
+window.onload=function(){
+    document.onclick = function(){
+        alert(arguments.length);    //如果是事件处理函数绑定的函数，浏览器会默认传递一个参数，这个参数就是event对象
+    }
+}
+```
+event的获取兼容
+```
+window.onload=function(){
+    document.onclick = function(evt){
+        var e = evt || window.event;    //W3C || IE
+        alert(e);    
+        //alert(e);
+        //alert(window.event);
+        
+    }
+    
+}
+```
+> window.event这个属性是IE所支持的，Chrome也是支持的，但是Chrome是支持W3C的，如果说IE和W3C都支持的话，以W3C为准
