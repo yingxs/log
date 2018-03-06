@@ -1,3 +1,185 @@
+# Hibernate
+> hibernate是一个对JDBC代码封装的ORM的持久层框架
+
+### 什么是ORM
+> ORM，Object-Relational-Mapping，对象关系映射，ORM思想，建立起Java对象和关系数据库之间的关系
+
+
+#### ORM的优点
+* java开发人员可以很轻松的操作对象，间接操作数据库
+* 可以更加方便封装数据
+* 不用编写SQL语句
+
+### Hibernate的HelloWorld
+> 需求：模拟商城的客户注册(客户添加)
+
+* 导入Hibernate的Jar包
+    * 导入hibernate目录下的lib/requires/下所有的jar包
+* 在数据库建立表
+    ```
+    create table t_customer(
+        c_id int primary key auto_increment,
+        c_name varchar(20),
+        c_gender char(1),
+        c_age int,
+        c_level varchar(20)
+    );
+    ```
+* 编写实体类
+    ```
+    package com.yingxs.domain;
+    import java.io.Serializable;
+    /**
+     * 客户实体类
+     * @author admin
+     *
+     */
+    public class Customer implements Serializable {
+    	private Integer id;
+    	private String name;
+    	private String gender;
+    	private Integer age;
+    	private String level;
+    	public Integer getId() {
+    		return id;
+    	}
+    	public void setId(Integer id) {
+    		this.id = id;
+    	}
+    	public String getName() {
+    		return name;
+    	}
+    	public void setName(String name) {
+    		this.name = name;
+    	}
+    	public String getGender() {
+    		return gender;
+    	}
+    	public void setGender(String gender) {
+    		this.gender = gender;
+    	}
+    	public Integer getAge() {
+    		return age;
+    	}
+    	public void setAge(Integer age) {
+    		this.age = age;
+    	}
+    	public String getLevel() {
+    		return level;
+    	}
+    	public void setLevel(String level) {
+    		this.level = level;
+    	}
+    }
+    ```
+* 编写*.hbm.xml文件(对象关系映射文件，参考hibernate-core-5.0.7.Final.jar/org.hibernate/hibernate-mapping-3.0.dtd 重点)
+    * 建议规则要求：
+        * 文件名称：实体名称.hbm.xml
+        * 文件存放的位置：和实体类存放到同一目录
+        ```
+        <?xml version="1.0" encoding="utf-8"?>
+        <!DOCTYPE hibernate-mapping PUBLIC 
+            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+            
+        <hibernate-mapping>
+        	<!--
+        		表示要映射的类
+        		name:类名
+        		table:表名
+        		
+        	  -->
+        	<class name="com.yingxs.domain.Customer" table="t_customer">
+        		<!-- 主键 -->
+        		<id name="id" column="c_id">
+        			<generator class="native"></generator>
+        		</id>
+        		<!-- 其他属性 -->
+        		<property name="name" column="c_name"></property>
+        		<property name="gender" column="c_gender"></property>
+        		<property name="age" column="c_age"></property>
+        		<property name="level" column="c_level"></property>
+        	</class>
+        </hibernate-mapping>
+    
+        ```
+* 编写hibernate.cfg.xml文件(hibernate的核心配置文件,参考hibernate-core-5.0.7.Final.jar/org.hibernate/hibernate-configuration-3.0.dtd和hibernate-release-5.0.7.Final/project/etc/hibernate.properties)
+    * 建议规则要求 
+        * 文件名称: hibernate.cfg.xml
+        * 存放位置：项目的src下
+        ```
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE hibernate-configuration PUBLIC
+        	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+        	
+        <hibernate-configuration>
+        	<!-- 连接数据库的相关参数 -->
+        	<session-factory>
+        		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        		<property name="hibernate.connection.url">jdbc:mysql://localhost:3308/hibernate</property>
+        		<property name="hibernate.connection.username">root</property>
+        		<property name="hibernate.connection.password">123456</property>
+        		
+        		<!-- hibernate方言 -->
+        		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        		
+        		<!-- *.hbm.xml -->
+        		<mapping resource="com/yingxs/domain/Customer.hbm.xml" />
+        		
+        	</session-factory>
+        </hibernate-configuration>
+        ```
+* 编写测试代码
+```
+package com.yingxs.test;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.junit.Test;
+
+import com.yingxs.domain.Customer;
+
+/**
+ * hibernate的helloworld
+ * @author admin
+ *
+ */
+public class Demo1 {
+	
+	@Test
+	public void test1(){
+		Customer customer = new Customer();
+		customer.setName("老王");
+		customer.setAge(40);
+		customer.setGender("男");
+		customer.setLevel("VIP客户");
+		
+		
+		
+		//1.读取hibernate.cfg.xml文件
+		Configuration cfg = new Configuration();
+		cfg.configure();
+		//2.创建SessionFactory工厂
+		SessionFactory factory = cfg.buildSessionFactory();
+		//3.创建Session事务
+		Session session = factory.openSession();
+		//4.开启事务,打开事务并返回事务对象
+		Transaction tx = session.beginTransaction();
+		//5.执行添加操作
+		session.save(customer);
+		//6.提交事务
+		tx.commit();
+		//7.关闭资源
+		session.close();
+		
+	}
+
+}
+
+```
 ### Configuration类
 > 启动hibernate程序，加载hibernate.cfg.xml配置文件
 
