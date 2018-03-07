@@ -196,7 +196,27 @@ public class Demo1 {
         *  update ： 会维护表结构，没有表的时候创建，有表的时候就不创建
 * 映射信息
 
+### *.hbm.xml对象映射文件详解
+> *.hbm.xml这个文件是hibernate对象关系映射文件
 
+* hibernate-mapping标签：根标签
+    * package属性：类所在的包 
+* class标签： 代表映射一个类
+    * 属性
+        * name : 类的限定名(包名+类名)，如果根标签有了package属性，那么name只写类名即可
+        * table: 表名
+    * 子标签
+        * id标签：代表映射一个表的主键字段 (必须)
+            * 属性
+                * name属性 ：类的属性名称，属性名称指定的是实体里面的getter和setter方法的名称，而不是私有成员名称。 
+                * column属性：表的主键字段名称
+            * 子标签
+                * generator标签：主键策略
+        * property标签：代表映射的是一个普通字段
+            * 属性
+                * name属性 ：类的属性名称，属性名称指定的是实体里面的getter和setter方法的名称，而不是私有成员名称。 
+                * column属性：表的字段名称
+  
 ### Configuration类
 > 启动hibernate程序，加载hibernate.cfg.xml配置文件
 
