@@ -180,6 +180,23 @@ public class Demo1 {
 }
 
 ```
+
+### hibernate.cfg.xml配置详解
+* 数据库连接参数
+    * hibernate.connection.driver_class
+    * hibernate.connection.url
+    * hibernate.connection.username
+    * hibernate.connection.psssword
+    * hibernate.dialect
+* hibernate扩展参数
+    * hibernate.show_sql 布尔值，是否输出hibernate生成的sql语句 
+    * hibernate.format_sql 布尔值，是否格式化hibernate输出的sql语句 
+    * hibernate.hbm2ddl_auto hibernate维护表的方式
+        *  create : 每次hibernate都会新的生成表结构
+        *  update ： 会维护表结构，没有表的时候创建，有表的时候就不创建
+* 映射信息
+
+
 ### Configuration类
 > 启动hibernate程序，加载hibernate.cfg.xml配置文件
 
