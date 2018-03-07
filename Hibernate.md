@@ -216,9 +216,16 @@ public class Demo1 {
             * 属性
                 * name属性 ：类的属性名称，属性名称指定的是实体里面的getter和setter方法的名称，而不是私有成员名称。 
                 * column属性：表的字段名称
-  
+
+## hibernate核心接口详解
+> hibernate核心API一共有6个
+
+
 ### Configuration类
 > 启动hibernate程序，加载hibernate.cfg.xml配置文件
+> 
+* cfg.configure();真正加载hibernate.cfg.xml配置文件
+* cfg.configure(new File("./src/hbm.cfg.xml"));当配置文件名称不是默认名称的时候，使用此API
 
 注意：
 * 通常情况下，Configuration对象只会创建一个对象，Configuration对象是单例的
@@ -283,6 +290,16 @@ public class HibernateUtils {
 }
 
 ```
+
+### 使用session进行增删改查
+* session接口常用的方法
+	* save(Object obj) 保存对象
+	* uopdate(Ibject obj) 更新对象
+	* saveOrUpdate(Object obj) 添加或修改对象
+	* delete(Object obj) 删除对象 
+	* get(Class clz,Serialize id): 获取对象
+	* load(Class clz,Serialize id): 获取对象
+
 ### generator主键生成策略
 * 三类策略
     * 由数据库维护
