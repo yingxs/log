@@ -1308,3 +1308,378 @@ window.onload = function(){
     //alert('yingxs.com');
 }
 ```
+
+解决覆盖问题
+```
+window.onload = function(){
+    alert('yingxs');
+}
+
+if(typeof window.onload=='function'){
+    var saved = null;           //保存上一个事件对象
+    saved = window.onload;
+}
+
+window.onload = function (){
+    if(saved) saved();                    //执行上一个事件
+    alert('yinxs.com');         //执行本事件
+}
+
+```
+事件切换器
+```
+window.onload = function(){
+    var box = document.getElementById('box');
+    box.onclick = toBlue;
+};
+
+function toRed(){
+    this.className = 'red';
+    this.onclick = toBlue;
+    
+}
+
+function toBlue(){
+    this.className = 'blue';
+    this.onclick = toRed;
+}
+//如果toBlue()绑定了box.onclick,里面的this代表box,如果是全局执行，那么，this代表window
+```
+事件切换器的覆盖问题
+```
+window.onload = function(){
+    var box = document.getElementById('box');
+//    box.onclick = function(){     //被覆盖
+//        alert('Lee');
+//    }
+    box.onclick = function (){
+        alert('Lee');           //只能执行第一次，第二次又被覆盖了
+        toBlue.call(this);       //通过匿名函数执行某一函数，函数中的this就代表的是window，可以通过call传递this
+    }
+};
+
+function toRed(){
+    this.className = 'red';
+    this.onclick = toBlue;
+    
+}
+
+function toBlue(){
+    this.className = 'blue';
+    this.onclick = toRed;
+}
+//如果toBlue()绑定了box.onclick,里面的this代表box,如果是全局执行，那么，this代表window
+```
+
+添加事件函数
+```
+function addEvent(obj,type,fn){
+    //用于保存上一个事件
+    var saved = null;
+    //用于判断事件是否存在
+    if(typeof obj['on'+type] == 'function'){
+        saved = obj['on'+type];
+    }
+    //执行事件
+    obj['on'+type] = function(){
+        if(saved) saved();
+        fn();
+    };
+}
+
+addEvent(window,'load',function(){
+    alert('yingxs');
+});
+addEvent(window,'load',function(){
+    alert('yingxs.com');
+});
+addEvent(window,'load',function(){
+    alert('www.yingxs.com');
+});
+```
+> 当不停的切换事件的时候，浏览器突然卡死，并且报错too much recursion 太多的递归，因为积累的太多的保存的时间，解决方案，就是用完的事件，就立即移除掉
+
+事件添加函数+事件删除函数+事件切换器
+```
+//事件添加函数
+function addEvent(obj,type,fn){
+    //用于保存上一个事件
+    var saved = null;
+    //用于判断事件是否存在
+    if(typeof obj['on'+type] == 'function'){
+        saved = obj['on'+type];
+    }
+    //执行事件
+    obj['on'+type] = function(){
+        if(saved) saved();
+        //alert('this:'+this);
+        fn.call(this);
+    };
+}
+
+//事件删除函数
+function removeEvent(obj,type){
+    if(obj['on'+type]) obj['on'+type]=null;
+}
+
+
+//事件切换器
+addEvent(window,'load',function(){
+    var box = document.getElementById('box');
+    addEvent(box,'click',toBlue);
+});
+
+function toRed(){
+    this.className = 'red';
+    removeEvent(this,'click');
+    addEvent(box,'click',toBlue);
+
+}
+
+function toBlue(){
+    this.className = 'blue';
+    removeEvent(this,'click');
+    addEvent(box,'click',toRed);
+}
+```
+> 以上的事件移除函数，只是简单的一刀切，虽然解决了递归和卡死的问题，但是也删除了其他的事件处理函数。导致得不到自己想要的效果，如果需要删除指定的事件处理函数，那么就 需要遍历查找
+
+
+#### IE事件处理
+* 覆盖问题 解决，但还是有不同，执行顺序是倒过来的
+    ```
+    window.attachEvent('onload',function(){
+        alert('yingxs');
+    });
+    window.attachEvent('onload',function(){
+        alert('yingxs.com');
+    });
+    window.attachEvent('onload',function(){
+        alert('www.yingxs.com');
+    });
+    ```
+* 未解决相同函数的屏蔽问题
+* 不能传递this
+* 
+
+
+#### IE切换器
+```
+window.attachEvent('onload',function(){
+    var box = document.getElementById('box');
+    box.attachEvent('onclick',toBlue);
+});
+
+function toRed(){
+    var that = window.event.srcElement;
+    that.className = 'red';
+    that.detachEvent('onclick',toRed);
+    that.attachEvent('onclick',toBlue);
+}
+
+function toBlue(){
+    var that = window.event.srcElement;
+    that.className = 'blue';
+    that.detachEvent('onclick',toBlue);
+    that.attachEvent('onclick',toRed);
+}
+```
+####  IE中事件对象的获取
+```
+window.attachEvent('onload',function(){
+    var box = document.getElementById('box');
+    //box.onclick = function (evt){     //传统方法低版本IE无法通过参数事件对象evt
+    //    alert(evt);
+    //};
+
+    box.attachEvent('onclick',function(evt){
+       alert(evt);
+        alert(evt.type);
+        alert(evt.srcElement.tagName);
+        alert(window.event.srcElement.tagName);     //两种方法都可以获取事件对象
+    });
+});
+```
+
+跨浏览器兼容
+```
+
+//跨浏览器添加事件
+function addEvent(obj,type,fn){
+    if(obj.addEventListener){
+        obj.addEventListener(type,fn,false);
+    }else if(obj.attachEvent){
+        obj.attachEvent('on'+type,fn);
+    }
+}
+
+//跨浏览器删除事件
+function removeEvent(obj,type,fn){
+    if(obj.removeEventListener){
+        obj.removeEventListener(type,fn,false);
+    }else if(obj.detachEvent){
+        obj.detachEvent('on'+type,fn);
+    }
+}
+//跨浏览器获取目标对象
+function getTarget(evt){
+    if(evt.target){                         //W3C
+        return evt.target;
+    }else if(window.event.srcElement){      //IE
+        return window.event.srcElement;
+    }
+}
+
+
+addEvent(window,'load',function(){
+    var box = document.getElementById('box');
+    addEvent(box,'click',toBlue);
+    addEvent(box,'click',function(){
+        alert('yingxs');
+    });
+    addEvent(box,'click',function(){
+        alert('yingxs.com');
+    });
+});
+
+
+
+function toRed(evt){
+    var that = getTarget(evt);
+    that.className = 'red';
+    removeEvent(that,'click',toRed);
+    addEvent(that,'click',toBlue);
+}
+
+function toBlue(evt){
+    var that = getTarget(evt);
+    that.className = 'blue';
+    removeEvent(that,'click',toBlue);
+    addEvent(that,'click',toRed);
+}
+
+```
+* 实践中基本不用attachEvent和detachEvent
+    * IE9全面支持W3C中的事件绑定函数
+    * IE的事件绑定函数无法传递this
+    * IE的事件绑定机制不支持捕获
+    * 同一个函数注册后，没有屏蔽掉
+    * 有内存泄漏问题
+
+
+事件对象中的relatedTarget
+
+```
+addEvent(window,'load',function(){
+    var box = document.getElementById('box');
+    
+    //W3C
+    addEvent(box,'mouseover',function(evt){
+        alert(evt.raletedTarget);               //得到移入box最近的DOM对象
+    });
+    addEvent(box,'mouseout',function(evt){
+        alert(evt.relatedTarget);               //从box移除最近的那个DOM对象
+    });
+
+    //IE
+    addEvent(box,'mouseover',function(){
+        alert(window.event.fromElement.tagName);    //得到移入box最近的DOM对象
+    });
+    addEvent(box,'mouseout',function(){
+        alert(window.event.toElement.tagName);      //从box移除最近的那个DOM对象
+    });
+
+    //兼容
+    addEvent(box,'mouseover',function(evt){
+        alert(getTarget(evt));
+    });
+
+});
+```
+
+阻止默认行为
+```
+addEvent(window,'load',function(){
+    var link = document.getElementByName('a')[0];
+    //link.onclick = function(){
+    //  return false;
+    //    alert('yingxs');
+    //};
+    /**
+     * return false ；必须在最后，但是又可能导致根本无法阻止默认行为，最好是放到前面，但是放到前面后，后面的代码又无法执行
+     */
+    /*
+    addEvent(link,'click',function(){
+        return false;                           //无效
+    });
+    */
+    addEvent(link,'click',function(evt){
+       evt.preventDefault();
+        alert('yingxs');
+        return true;                        //不会影响阻止默认事件
+    });
+
+    //兼容
+    addEvent(link,'click',function(evt){
+        preDef();
+    });
+
+});
+
+
+function preDef(){
+    var e = evt || window.event;
+    if(e.preventDefault){
+        e.preventDefault();
+    }else {
+        e.returnValue = false;
+    }
+}
+```
+
+#### 卸载前事件
+```
+addEvent(window,'beforeunload',function(evt){
+    preDef(evt);
+});
+
+```
+
+#### 鼠标滚轮事件
+```
+//非火狐
+addEvent(document,'mousewheel',function(evt){
+    var e = evt || window.event;
+    alert(e.wheelDelta);
+});
+
+//火狐
+addEvent(document,'DOMMouseScroll',function(evt){
+    alert(-evt.detail*40);
+
+});
+
+
+
+//兼容
+addEvent(document,'mousewheel',function(evt){
+    alert(WD(evt));
+});
+//兼容
+addEvent(document,'DOMMouseScroll',function(evt){
+    alert(WD(evt));
+
+});
+
+//兼容
+function WD(evt){
+    var  e = evt || window.event;
+    if(e.wheelDelta){
+        return e.wheelDelta;
+    }else if(evt.detail){
+        return -evt.detail*40;
+    }
+}
+
+
+```
