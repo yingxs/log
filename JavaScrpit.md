@@ -1683,3 +1683,134 @@ function WD(evt){
 
 
 ```
+
+##### 表单事件
+```
+addEvent(window,'load',function(){
+    //var fm = document.getElementById('myForm');
+    //var fm = document.getElementsById('myForm');
+    //var fm = document.forms['0'];    //HTML DOM通过下标0获取
+    //var fm = document.forms['yourForm'];    //HTML DOM通过name获取
+    var fm = document.yourForm;    //向下兼容，不推荐使用
+    alert(fm);
+
+    //阻止提交
+    addEvent(fm,'submit',function(evt){
+        //阻止提交
+        preDef(evt);
+    });
+    //PS：submit事件，用传统的方式：fm.onsubmit = function (){};
+
+    //使用fm.submit()方法，让非submit按钮实现提交
+    var button = document.getElementById('button');
+    addEvent(button,'click',function(){
+        fm.submit();                        //可以让非submit按钮提交表单
+    });
+
+    //实现ctrl+enter实现提交
+    addEvent(document,'keydown',function(evt){
+        var e = evt || window.event;
+        if(e.ctrlKey && e.keyCode==13) fm.submit();
+    });
+
+
+});
+```
+
+
+#### 阻止表单重复提交
+```
+addEvent(window,'load',function(){
+    /*
+    //只能阻止通过submit按钮进行的提交
+   var fm = document.getElementById('myForm');
+    //阻止提交
+    addEvent(fm,'submit',function(evt){
+        preDef(evt);
+        //模拟延迟
+        alert('提交');
+        //这种方法，仅限于通过提交按钮防止重复提交
+        document.getElementById('sub').disabled=true;   //第一次提交后，将按钮禁用
+        setTimeout(function(){
+            fm.submit();
+        },5000);
+    })
+    */
+
+    var fm = document.getElementById('myForm');
+    var flag = false;
+    //阻止提交
+    addEvent(fm,'submit',function(evt){
+        preDef(evt);
+        if(flag==true) return ;
+        flag=true;
+        alert('提交')
+        document.getElementById('sub').disabled=true;   //第一次提交后，将按钮禁用
+        setTimeout(function(){
+            fm.submit();
+        },5000);
+    })
+});
+
+```
+
+### 表单处理-文本框脚本
+```
+//文本域value的获取
+addEvent(window,'load',function(){
+    var fm = document.getElementById('myForm');
+    var user = fm.elements['user'];
+    var content = fm.elements['content'];
+
+    alert(user.value);
+    alert(content.value);
+    //PS:在HTML中input有value属性，textarea没有Value属性
+    //PS:在js中input和textarea都有Value属性
+    
+    //使用标准DOM获取
+    alert(user.getAttribute('value'));
+    alert(content.getAttribute('value'));   //兼容性会有一些问题，IE可以获取，非IE获取不到
+    //并且标准DOM无法获取更改后的value
+
+    alert(user.defaultValue);       //获取一开始设置的值，不会改变
+    
+    user.select();   //选定当前文本域所有文本
+});
+```
+```
+
+addEvent(window,'load',function(){
+    var fm = document.getElementById('myForm');
+    var user = fm.elements['user'];
+    var content = fm.elements['content'];
+
+   
+});
+```
+```
+//选择文本
+addEvent(window,'load',function(){
+    var fm = document.getElementById('myForm');
+    var user = fm.elements['user'];
+    var content = fm.elements['content'];
+
+    //选择部分文本
+    //user.setSelectionRange(0,1);                    //选择从第0个位置到第1个位置的文本
+    user.setSelectionRange(0,user.value.length);        //选择全部，IE不支持
+    user.focus();         //焦点移入
+    //非IE是从第N个到第M个位置
+
+
+    //IE想要选择部分文本，可以使用IE的范围操作
+    var range = user.createTextRange();         //创建range文本范围对象
+    range.collapse(true);                       //将文本光标指针移到开头
+    range.moveStart('character',0);     //逐字移动，从0开始
+    range.moveEnd('character',1);          //从第0个位置开始，选择一个
+    range.select();
+
+    //IE是从第N个开始选择M个
+
+
+});
+
+```
