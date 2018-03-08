@@ -1175,3 +1175,136 @@ window.onload=function(){
 }
 ```
 > window.event这个属性是IE所支持的，Chrome也是支持的，但是Chrome是支持W3C的，如果说IE和W3C都支持的话，以W3C为准
+
+跨浏览器鼠标按钮监测
+```
+window.onload=function(){
+    document.onmouseup = function(evt){
+        alert(getButton(evt));  
+    }
+    
+}
+
+function getButton(evt){
+    var e = evt || window.event;    //W3C || IE
+    if(evt){
+        return e.button;
+    }else if(window.event){
+        switch(e.button){
+            case 1 : return 0;
+            case 4 : return 1;
+            case 2 : return 2;
+            case 0 : return 2;      //360浏览器 onmouseup正常onmousedown右键会有bug
+        }
+    }
+}
+
+```
+##### 可视区和屏幕坐标
+> 事件对象提供了两组来获取浏览器坐标的属性，一组是页面可视区左边，另一组是屏幕坐标
+
+* clientX 可视区X坐标，距离左边框的位置
+* clientY 可视区Y坐标，距离上边框的位置
+* screenX 屏幕区X坐标，距离左屏幕的位置
+* screenY 屏幕区Y坐标，距离上屏幕的位置
+```
+window.onload = function(){
+    document.onclick = function(evt){
+        var e = evt || window.event;
+        alert(e.clientX +','+e.clientY);    //可视区坐标
+        //alert(e.clientX + document.documentElement.scrollTop+','+e.clientY);
+        //Chrome要用 alert(e.clientX + document.body.scrollTop+','+e.clientY);
+        alert(e.screenX +','+e.screenY);    //屏幕坐标
+        
+    }
+}
+```
+##### 修改键
+```
+window.onload = function(){
+    document.onclick = function(evt){
+        var e = evt || window.event;
+        alert(e.shiftKey);
+        //判断是否按下shift键
+    }
+}
+```
+
+```
+window.onload = function(){
+    document.onclick = function(evt){
+        alert(getKey(evt));
+       
+    }
+}
+
+function getKey(evt){
+    var e = evt || window.event;
+    var keys = [];
+    if(e.shiftKey) keys.push('shift');
+    if(e.ctrlKey) keys.push('ctrl');
+    if(e.altKey) keys.push('alt');      //360在单击+ALT键的识别上有bug，会和浏览器本身的快捷键冲突
+    
+    return keys;
+}
+```
+##### 键码
+> 键码可以返回任意键的编码，而且字母不区分大小写
+
+```
+window.onload = function(){
+    document.onkeydown = function(evt){
+        var e = evt || window.event;
+        alert(e.keyCode);   //返回键码
+    }
+}
+```
+> 如果用keypress返回KeyCode，发现Fixfor浏览器把所有字符键都返回0，Chrome支持keypress返回KeyCode，而且还区分大小写，，IE支持keypress返回KeyCode，而且还区分大小写
+
+
+#### 字符编码
+> charCode在使用keypress的情况下，Firefox会返回字符键盘的编码，支持大小写。IE和Opera不支持charCode这个属性
+
+跨浏览器兼容字符按键
+```
+window.onload = function(){
+    document.onkeypress = function(evt){
+        //alert(e.charCode);    //返回字符编码
+        alert(getCharCode(evt));
+        alert(String.fromCharCode(getCharCode(evt)));   //String.fromCharCode()将ASCII编码转换成字符
+    }
+}
+
+function getCharCode(evt){
+    var e = evt || window.event;
+    if(typeof e.charCode == 'number'){
+        return e.charCode;
+    }else{
+        return e.keyCode;
+    }
+}
+```
+
+跨浏览器取消事件冒泡
+```
+function setStop(evt){
+    var e = evt || window.event;
+    typeof e.stopPropagation == 'function' ? e.stoppropagation() : e.cancelBubble = true;
+}
+```
+
+```
+alert(typeof window.onload);
+//一开始没有window.onload，旧版火狐显示undefined,新版火狐显示object,IE和火狐也是Object
+
+window.onload = function(){
+    //alert('yingxs');
+}
+
+alert(typeof window.onload);
+//如果有的时候大家统一返回function
+
+window.onload = function(){
+    //alert('yingxs.com');
+}
+```
