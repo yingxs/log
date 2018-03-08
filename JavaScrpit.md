@@ -1814,3 +1814,204 @@ addEvent(window,'load',function(){
 });
 
 ```
+##### 跨浏览器兼容选定文本
+```
+//选择文本,兼容
+addEvent(window,'load',function(){
+    var fm = document.getElementById('myForm');
+    var user = fm.elements['user'];
+    var content = fm.elements['content'];
+
+    getSelectText(user,2,3);
+
+
+});
+//跨浏览器选定部分文本
+function getSelectText(text,start,num){
+    if(text.setSelectionRange){
+        text.setSelectionRange(start,num);
+        text.focus();
+    }else if(text.createTextRange()){
+        var range = text.createTextRange();
+        range.collapse(true);
+        range.moveStart('character',start);
+        range.moveEnd('character',num-start);       //个数=最后的位置-开始的位置
+        range.select();
+    }
+}
+
+```
+##### 文本选择事件
+```
+//文本选择事件
+addEvent(window,'load',function(){
+    var fm = document.getElementById('myForm');
+    var user = fm.elements['user'];
+    var content = fm.elements['content'];
+
+    addEvent(user,'select',function(){
+        alert('yingxs');
+    });
+
+    //非IE选定文本且释放鼠标后出发select事件
+    //IE是只要选定了一个字符，就会触发select事件，如果你的速度够快，就可以选择多个，但是不稳定
+});
+
+```
+##### 获取选择的文本
+```
+//获取选择的文本
+addEvent(window,'load',function(){
+    var fm = document.getElementById('myForm');
+    var user = fm.elements['user'];
+    var content = fm.elements['content'];
+
+    addEvent(user,'select',function(){
+        //alert('yingxs');
+        //alert(this.value);
+        //alert(this.selectionStart);   //选择开始的位置
+        //alert(this.selectionEnd);     //选择结束的位置
+
+
+        //非IE(IE9+)获取选择的文本
+        //alert(this.value.substring(this.selectionStart,this.selectionEnd));
+
+        //IE(IE8-)获取选择的文本，IE浏览器提供了document.selection对象
+        //document.selection对象createRange()方法可以创建文本范围对象
+        //该对象有一个属性是text,可以得到你选择的文本
+        //alert(document.selection.createRange().text);
+        document.getElementById("p").innerHTML = getSelectText(user);
+    });
+
+});
+
+//跨浏览器选择文本
+function getSelectText(text){
+    if(typeof text.selectionStart == 'number'){
+        return text.value.substring(text.selectionStart,text.selectionEnd);
+    }else if(document.selection){
+        return document.selection.createRange().text;
+    }
+}
+
+
+```
+
+##### 过滤输入
+```
+//过滤输入
+/**
+ * 过滤输入模式：纯数字
+ * 1.禁止或屏蔽非数字键的输入，阻止数字键的默认行为
+ * 2.验证后取消，你可以先输入非法字符，然后判断后，取消你刚输入的文本
+ */
+addEvent(window,'load',function(){
+    var fm = document.getElementById('myForm');
+    var user = fm.elements['user'];
+    var content = fm.elements['content'];
+
+    //屏蔽非数字键的输入
+    addEvent(content,'keypress',function(){
+        var e = evt || window.event;
+        var  charCode = getCharCode(evt);
+        //alert(charCode);
+        //正则表达式来获取文本是否为数字
+        if(!/\d/.test(String.fromCharCode(charCoded)) && charCode>8){
+            preDef(evt);
+        }
+    });
+
+});
+
+//跨浏览器获取字符编码
+function getCharCode(evt){
+    var e = evt || window.event;
+    if(typeof e.charCode == 'number'){
+        return e.charCode;
+    }else{
+        return e.keyCode;
+    }
+}
+
+```
+##### 阻止复制事件
+```
+addEvent(window,'load',function(){
+    var fm = document.getElementById('myForm');
+    var user = fm.elements['user'];
+    var content = fm.elements['content'];
+
+    //鼠标右击复制和Ctrl+c组合键时触发
+    addEvent(content,'copy',function(evt){
+       preDef(evt);     //阻止复制事件
+    });
+    addEvent(content,'cut',function(evt){
+       preDef(evt);     //阻止剪切事件
+    });
+    addEvent(content,'paste',function(evt){
+       preDef(evt);     //阻止粘贴事件
+    });
+    
+    //复制前触发
+    addEvent(content,'beforecopy',function(){
+       alert('复制前！');
+    });
+    
+});
+
+```
+
+##### 屏蔽中文输入法
+
+
+* css方式
+```
+style = "ime-mode:diabled"              //CSS直接编写
+areaField.style.imrMode = 'disabled';   //在js中设置也可以
+```
+> Chrome浏览器无法禁止输入法调出，所以为了解决谷歌浏览器的兼容问题，最好使用正则表达式验证已输入的文本,并且屏蔽到输入法的用户体验不是很好，用户会以为是电脑坏了
+
+#### 验证数据非法后取消输入
+> 过滤输入模式的第二种方式，即验证后取消
+
+```
+addEvent(window,'load',function(){
+    var fm = document.getElementById('myForm');
+    var user = fm.elements['user'];
+    var content = fm.elements['content'];
+
+    addEvent(content,'keyup',function(evt){
+        this.value = this.value.replace(/[^\d]/g,'');       //将非字符键替换为空白键
+    });
+
+});
+```
+
+##### 自动切换焦点
+```
+//自动切换焦点
+addEvent(window,'load',function(){
+    var fm = document.getElementById('myForm');
+    var user = fm.elements['user'];
+    var content = fm.elements['content'];
+
+    addEvent(fm.elements['a1'],'keyup',tabForWard);
+    addEvent(fm.elements['a2'],'keyup',tabForWard);
+    addEvent(fm.elements['a3'],'keyup',tabForWard);
+
+    function tabForWard(evt){
+        var e = evt || window.event;
+        //判断内容当前长度，是否和我们设置的一致
+        if(this.value.length == this.maxLength){
+            //遍历所有控件
+            for(var i=0;i < fm.elements.length ; i++){
+                if(fm.elements[i] == this){
+                    fm.elements[i+1].focus();
+                    return ;
+                }
+            }
+        }
+    }
+});
+
+```
