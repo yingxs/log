@@ -1219,3 +1219,152 @@ PS:所删除的列是索引的组成部分，则该列也会从索引中删除
 索引弊端：
 在提高查询速度的同时，降低更新表中数据的速度
 索引以文件形式存储，增加存储空间 
+
+
+### 视图
+
+#### 创建视图
+```
+CREATE [OR REPLACE] VIEW view_name[(column_list)]
+AS select_statement [WITH [CASCADED | LOCAL] CHECK OPTION]
+
+OR REPLACE 替换数据库中已有同名视图
+view_name 视图名称 数据库中唯一，不能与其他表或视图同名
+WITH CHECK OPTION 视图上所进行的修改都需要符合select_statement 中所限定的条件
+```
+```
+在数据库db_school中创建视图v_student,要求驶入包含tb_student表中所有男生的信息，并且要求保证今后对该图数据的修改都必须符合学生性别为男这个条件
+
+CREATE OR REPLACE VIEW db_school.v_student
+AS
+SELECT * FROM db_school.tbstudent
+WHERE sex='男'
+WITH CHECK OPTION;
+
+```
+
+```
+在数据库db_school中创建视图v_score_avg,要求视图tb_score表中所有学生的学号和平均成绩，并按学号studentno进行排序
+
+CREATE VIEW db_school.v_score_avg(studentno,score_avg)
+AS
+SELECT studentno,AVG(score) FROM tb_score
+GROUP BY studentno;
+
+```
+```
+在数据库db_test中创建视图content_view,要求该视图包含表content找那个所有留言人姓名为"MYSQL初学者"的信息，并且要求保证今后对该视图数据的修改都必须符合留言人姓名为"MYSQL"这个条件
+USE db_test;
+CREATE VIEW content_view AS
+SELECT * FROM content
+WHERE username='MYSQL初学者'
+WITH CHECK OPTION;
+```
+##### WITH CHECK OPTION
+```
+对数据库db_school中的表tb_score创建视图v_score,要求视图包含表tb_score中所有score<90的学生学号、课程号和成绩信息，分别使用WITH LOCAL CHECK OPTION 、
+WITH CASCADDED CHECK OPTION子句创建视图v_score_local和v_score_cascades要求改视图包含表tb_score中所有score>80的学生学号、课程号和成绩信息。
+
+CREATE VIEW v_score AS
+SELECT * FROM db_school.tb_score WHERE score<90
+WITH CHECK OPTION;
+
+
+CREATE VIEW v_score_local AS
+SELECT * FROM db_school.v_score WHERE score>80
+WITH LOCAL CHECK OPTION;//每次更新数据只检查数据是否满足自身条件
+
+CREATE VIEW v_score_cascaded AS
+SELECT * FROM db_school.v_score WHERE score>80
+WITH CASCADED CHECK OPTION;//每次更新数据除了检查是否满足自身条件外，还检查是否满足其他视图条件
+```
+##### 删除视图
+
+```
+DEOP VIEW［IF EXISTS］view_name[,view_name]...
+
+Eg:
+DROP VIEW IF EXIST db_school.v_student;
+```
+##### 修改视图
+```
+ALTER VIEW view_name [(column_list)]
+AS select_statement
+[WITH [CASCADED|LOCAL] CHECK OPTION]
+```
+```
+修改视图v_student的定义，要求视图包含学生表tb_student中性别为'男'
+民族为汉的学生学号、姓名和所属班级，并且要去保证今后对该视图数据的修改都
+必须符合学生性别为"男"，民族为汉这个条件
+ALTER VIEW
+db_school.v_student(studentno,studentname,classno)
+AS
+SELECT studentno,studentname,classno FROM
+db_school.tb_student
+WHERE sex='男' AND nation='汉'
+WITH CHECK OPTION;
+```
+```
+使用CREATE OR REPLACE VIEW语句修改视图v_student的定义，
+要求视图包含学生表tb_student中性别为'男'
+民族为汉的学生学号、姓名和所属班级，并且要去保证今后对该视图数据的修改都
+必须符合学生性别为"男"，民族为汉这个条件
+
+CREATE OR REPLACE VIEW
+db_school.v_student(studentno,studentname,classno)
+AS
+SELECT studentno,studentname,classno FROM
+db_school.tb_student
+WHERE sex='男' AND nation='汉'
+WITH CHECK OPTION;
+```
+
+##### 查看视图定义
+```
+SHOW CREATE VIEW view_name;
+```
+
+##### 更新视图数据
+只有满足可更新条件的视图才能进行更新 需要该视图中的行和基础表哦的行是一对一的关系
+
+下列情况视图不可更新
+聚合函数、DISTINCT关键字、GROUP BY子句
+ORDER BY子句 HAVING子句、UNION运算符
+选择列表中的子查询、FROM子句包含多个表、WHERE子句中的子查询
+SELECT语句中引用了不可更新的视图等。
+
+##### 更新视图数据
+
+```
+例如：想视图v_student插入下面一条记录(2014310108,'周明','男','1997-08-16','辽宁','汉','IS1401')
+
+INSERT INTO db_school.v_student VALUES (2014310108,'周明','男','1997-08-16','辽宁','汉','IS1401')
+
+```
+
+```
+使用UPDATE语句通过视图修改基础表的数据
+
+例如：
+将视图v_student中所有学生native列更新为"河南"
+UPDATE db_school.v_student SET native='河南';
+```
+
+```
+使用DELETE语句通过视图修改基础表的数据
+
+例如:
+删除视图v_student中姓名为'周明'的学生信息
+
+DETELE FROM db_school.v_student
+WHERE studentname='周明';
+
+```
+
+##### 查询视图数据
+```
+在v_student中查找classno为IS1401的学生学号和姓名
+SELECT studentno,studentname
+FROM v_student
+WHERE classno='IS1401';
+```
