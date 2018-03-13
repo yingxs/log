@@ -2015,3 +2015,29 @@ addEvent(window,'load',function(){
 });
 
 ```
+
+##### cookie与存储
+```
+alert(typeof  document.cookie);
+
+ //向本地磁盘写入cookie
+ document.cookie = 'user=王昊';
+ alert(document.cookie);
+
+
+ //编码
+ document.cookie = 'user='+encodeURIComponent('王昊');
+ //alert(document.cookie);
+ alert(decodeURIComponent(document.cookie));
+
+ 完整形式：
+ document.cookie = 'user=值;[expires=失效时间;path=路径访问;secure=安全的https限制通信]'
+ domain 限制域名访问
+ secure 指定必须通过https来通信访问
+
+ var date = new Date();
+ date.setDate((date.getDate()-7));      //删除cookie的方法，真正的额删掉了
+ document.cookie = 'user='+encodeURIComponent('王昊')+';expires='+date;
+
+```
+
