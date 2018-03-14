@@ -1414,7 +1414,401 @@ public class Demo2 {
 }
 
 ```
+
+
 #### 多表查询
 
+* 内连接查询 inner join
+* 左连接查询 left join
+* 右连接查询 right join
 
+```
+package com.yingxs.test;
+
+
+import java.util.List;
+import java.util.Set;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.junit.Test;
+
+import com.yingxs.domain.Customer;
+import com.yingxs.domain.Order;
+import com.yingxs.utils.HibernateUtil;
+
+/**
+ * 演示HQL的查询（多表查询）
+ * 1.内连接查询(inner join)
+ * 2.左链接查询(left join)
+ * 3.右连接查询(right join)
+ *
+ */
+
+public class Demo3 {
+
+	/**
+	 * 内连接查询
+	 * 只会显示满足条件的记录
+	 */
+	@Test
+	public void test1(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		//需求：显示客户名称和订单产品名称
+		Query query = session.createQuery("select c.name,o.productName from Customer c inner join c.orders o");
+		List<Object[]> list = query.list();
+	
+		for (Object[] objects : list) {
+			for (Object object : objects) {
+				System.out.print(object+"\t");
+			}
+			System.out.println();
+		}
+		
+		tx.commit();
+		session.close();
+		
+	}
+	
+	
+	
+	/**
+	 * 左连接查询
+	 * 左边的表会全部显示
+	 */
+	@Test
+	public void test2(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		//需求：显示客户名称和订单产品名称
+		Query query = session.createQuery("select c.name,o.productName from Customer c left join c.orders o");
+		List<Object[]> list = query.list();
+		
+		for (Object[] objects : list) {
+			for (Object object : objects) {
+				System.out.print(object+"\t");
+			}
+			System.out.println();
+		}
+		
+		tx.commit();
+		session.close();
+		
+	}
+	
+	
+	
+	/**
+	 * 右连接查询
+	 * 右边的表会全部显示
+	 */
+	@Test
+	public void test3(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		//需求：显示客户名称和订单产品名称
+		Query query = session.createQuery("select c.name,o.productName from Order o right join o.customer c");
+		List<Object[]> list = query.list();
+		
+		for (Object[] objects : list) {
+			for (Object object : objects) {
+				System.out.print(object+"\t");
+			}
+			System.out.println();
+		}
+		
+		tx.commit();
+		session.close();
+		
+	}
+	
+	
+	
+}
+
+```
+### QBC查询
+> QBC查询，Query By Criteria 使用Criteria对象进行查询,是面向对象的查询方式
+
+```
+package com.yingxs.test;
+
+
+import java.util.List;
+import java.util.Set;
+
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
+import org.junit.Test;
+
+import com.yingxs.domain.Customer;
+import com.yingxs.domain.Order;
+import com.yingxs.utils.HibernateUtil;
+
+/**
+ * 演示Criteria的查询（单表查询）
+ * 1.全表查询
+ * 2.条件查询
+ * 3.分页查询
+ * 4.查询排序
+ * 5.聚合查询
+ * 6.投影查询
+ * @author admin
+ *
+ */
+
+public class Demo2 {
+
+	/**
+	 * 全表查询
+	 */
+	@Test
+	public void test1(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		Criteria ce = session.createCriteria(Customer.class);
+		List<Customer> list = ce.list();
+		for (Customer customer : list) {
+			System.out.println(customer.getName());
+		}
+		
+		
+		tx.commit();
+		session.close();
+		
+	}
+	
+	/**
+	 * 条件查询
+	 */
+	@Test
+	public void test2(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		Criteria ce = session.createCriteria(Order.class);
+		//添加查询条件 orderno = '20170907003'
+		ce.add( Restrictions.eq("orderno", "201709070003") );
+		List<Order> list = ce.list();
+		for (Order order : list) {
+			System.out.println(order);
+		}
+		
+		tx.commit();
+		session.close();
+		
+	}
+	
+	/**
+	 * 条件查询2(多条件)
+	 */
+	@Test
+	public void test3(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		Criteria ce = session.createCriteria(Order.class);
+		
+		//添加查询条件 orderno like '%2017%' and productName like '%JavaWeb%'
+		ce.add( Restrictions.and(Restrictions.like("orderno", "%2017%"), Restrictions.like("productName", "%JavaWeb%")));
+		List<Order> list = ce.list();
+		for (Order order : list) {
+			System.out.println(order);
+		}
+		
+		tx.commit();
+		session.close();
+		
+	}
+	
+	/**
+	 * 分页查询
+	 */
+	@Test
+	public void test4(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		Criteria ce = session.createCriteria(Order.class);
+		//分页查询
+		ce.setFirstResult(0);	//起始行
+		ce.setMaxResults(2);	//查询行数
+		
+		
+		List<Order> list = ce.list();
+		for (Order order : list) {
+			System.out.println(order);
+		}
+		
+		tx.commit();
+		session.close();
+		
+	}
+	
+	/**
+	 * 查询排序
+	 */
+	@Test
+	public void test5(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		Criteria ce = session.createCriteria(Order.class);
+		
+		//排序 order by id desc
+		ce.addOrder( org.hibernate.criterion.Order.desc("id"));
+		
+		List<Order> list = ce.list();
+		for (Order order : list) {
+			System.out.println(order);
+		}
+		
+		tx.commit();
+		session.close();
+		
+	}
+	
+	/**
+	 * 聚合查询
+	 */
+	@Test
+	public void test6(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		Criteria ce = session.createCriteria(Order.class);
+		
+		//查询总记录数 select count (id)
+		//ce.setProjection(Projections.count("id"));
+		
+		//查询id中的最大值
+		ce.setProjection(Projections.max("id"));
+		
+		Integer count = (Integer)ce.uniqueResult();
+		System.out.println(count);
+		
+		tx.commit();
+		session.close();
+		
+	}
+	
+	/**
+	 * 投影查询
+	 */
+	@Test
+	public void test7(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		Criteria ce = session.createCriteria(Order.class);
+		
+		//投影操作
+		ProjectionList pList = Projections.projectionList();
+		pList.add(Property.forName("orderno"));
+		pList.add(Property.forName("productName"));
+		
+		ce.setProjection(pList);
+		
+		List<Object[]> list = ce.list();
+		System.out.println(list);
+		
+		/*for (Object[] objects : list) {
+			for (Object object : objects) {
+				System.out.print(object+"\t");
+			}
+			System.out.println();
+		}*/
+		
+		tx.commit();
+		session.close();
+		
+	}
+	
+}
+
+```
+
+
+### 本地SQl查询
+> 直接执行SQl语句
+
+```
+package com.yingxs.test;
+
+
+import java.util.List;
+import java.util.Set;
+
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.junit.Test;
+
+import com.yingxs.domain.Customer;
+import com.yingxs.domain.Order;
+import com.yingxs.utils.HibernateUtil;
+
+/**
+ * 演示本地SQl的查询
+ */
+
+public class Demo5 {
+
+	//以对象数组的形式封装
+	@Test
+	public void test1(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		
+		SQLQuery sqlQuery = session.createSQLQuery("select * from t_order");
+		List<Object[]> list = sqlQuery.list();
+		for (Object[] objects : list) {
+			for (Object object : objects) {
+				System.out.print(object+"\t");
+			}
+			System.out.println();
+		}
+		
+		tx.commit();
+		session.close();
+		
+	}
+	
+	
+	//以JavaBean对象的形式封装
+	@Test
+	public void test2(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		
+		SQLQuery sqlQuery = session.createSQLQuery("select * from t_order");
+		sqlQuery.addEntity(Order.class);
+		List<Order> list = sqlQuery.list();
+		for (Order order : list) {
+			System.out.println(order);
+		}
+		
+		tx.commit();
+		session.close();
+		
+	}
+	
+}
+
+```
 
