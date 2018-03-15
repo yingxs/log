@@ -1368,3 +1368,106 @@ SELECT studentno,studentname
 FROM v_student
 WHERE classno='IS1401';
 ```
+##### 触发器
+触发器用于保护表中的数据，当有操作影响到触发器所保护的数据时，触发器会自动执行
+保障数据库中国数据的完整性，以及一致性
+MYSQL响应INSERT、UPDATE和DELETE语句而自动执行的一条MYSQL语句，位于BEGIN和END语句之间
+
+##### 创建触发器
+```
+CREATE TRIGGER trigger_name trigger_time trigger_event
+ON tbl_name FOR EACH ROW trigger_body
+
+trigger_name 触发器名称唯一
+trigger_time 触发器被触发的时刻，分为BEFORE 和AFTER
+trigger_event 触发事件，分为INSERT UPDATE DELETE
+tbl_name引用永久性表，同一个表不能拥有两个相同触发时刻和事件的触发器
+FOR EACH ROW 每一行都能激活触发器
+trigger_body 动作主体，如执行多个语句，可用BEGIN...END结构
+
+
+在数据库db_school的tb_student表中创建一个触发器tb_student_insert_trigger用于每次向表tb_student钟插入一行数据时，将学生变量str的值设置为"one student added!""
+
+CREATE TRIGGER db_school.tb_student_insert_trigger
+AFTER INSERT ON db_school.tb_student
+FOR EACH ROW SET @str='one student added!'
+```
+
+##### 查看触发器
+```
+SHOW TRIGGERS [{FROM | IN} db_name]
+```
+
+##### 删除触发器
+DROP TRIGGER [IF EXISTS] [schema_name,]
+trigger_name
+
+删除表的同时删除触发器，触发器不能更新或覆盖，只能先删除再重新创建
+```
+删除数据库db_school中的触发器
+tb_student_insert_trigger
+
+DROP TRIGGER IF EXISTS db_school.tb_student_insert_trigger;
+```
+
+###### INSERT触发器
+可引用一个名为NEW的虚拟表，来访问被插入的行；在BEFORE INSERT触发器中，NEW中的值可更新
+
+```
+例如
+在数据库db_school的表tb_student上重新创建触发器tb_student_insert_trigger用于每次向表tb_student中插入一行数据，将用户变量str的值设置为新插入的学生的学号
+
+CREATE TRIGGER db_school.tb_student_insert_trigger
+AFTER INSERT
+ON db_school.tb_student FROM EACH ROW SET
+@str=NEW.studentno;
+
+
+假设有两个表tb1和tb2分别都只有一个字段tb1_id和tb2_id，通过触发器实现增加tb1中的记录后自动将记录增加到tb2
+
+CREATE TRIGGER t_afterinsert_on_tb1 AFTER INSERT ON
+tb1 FOR EACH ROW
+insert into tb2(tb2_id)values(NEW.tb1_id);
+
+检验：
+INSERT into tb1 values(1);
+select * from tb1;
+select * from tb2;
+```
+###### DELETE触发器
+可引用一个名为OLD的虚拟表来访问被删除的行，OLD中的值全部只读不能被更新
+
+```
+例如：
+在数据库db_test的表content中创建一个触发器content_delete_trigger用于每次
+删除表content中一行数据时，将用户变量设置成"old content deleted"
+
+USE db_test;
+CREATE TRIGGER content_delete_trigger AFTER DELETE ON
+content FOR EACH ROW SET @str="old content deleted!";
+
+通过触发器实现删除tb1中的记录后自动将tb2中的记录删除
+
+CRETAE TRIGGER t_afterdelete_on_tb1 AFTER DELETE
+ON tb1 FOR EACH ROW
+delete from tb2 where tb2.id=old.tb1.id;
+```
+###### UPDATE触发器
+可以引用OLD虚拟表访问以前的数据，也可以引用NEW虚拟表访问更新后的数据；
+在BEFORE UPDATE触发器中，NEW值可更新，触发器涉及对表自身的更改操作时
+只能使用BEFORE UPATE触发器
+```
+例题：
+在db_school的表tb_student中创建一个触发器
+tb_student_updent_trigger,用于每次更新表tb_student时将该表中nation列中的值设置为native列的值
+
+USE db_school;
+CREATE TRIGGER ttb_student_update_trigger
+BEFORE UPDATE ON tb_student FOR EACH ROW 
+SET NEW.nation=OLD.native;
+```
+MYSQL支持的触发器是比较低级的
+执行时自动的
+多用除非保证数据的一致性，完整性，和正确性
+可使用触发器吧表更改状态之前和之后的状态记录到另一张数据表中
+
