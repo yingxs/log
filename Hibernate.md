@@ -1811,4 +1811,42 @@ public class Demo5 {
 }
 
 ```
+# 本章的学习目标
+* Hibernate对象的三种状态
+* Hibernate的一级缓存与快照机制
+* 一级缓存的管理
+* 延迟加载策略
+* 抓取策略
+* 整合durid连接池
+* Hibernete的二级缓存
+
+
+
+### Hibernate对象的三种状态
+> 在Hibernate程序运行过程中，一个对象会存在以下三种状态
+
+* 临时状态：没有对象OID值，没有被session管理
+* 持久化状态：有对象OID值，已经被session管理
+* 游离状态：有对象OID值，已经脱离了session的管理
+```
+@Test
+	public void test1(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		Customer c = new Customer();	//这时的c对象没有OID值，没有被session管理，这时c对象就是临时状态的对象
+		c.setName("老王");
+		
+		session.save(c);			//这时的c对象有OID的值，被session管理 ，属于持久态对象
+		System.out.println(c.getId());
+		
+		tx.commit();
+		session.close();
+		
+		System.out.println(c);			//这时的c对象有OID的值，没有被session管理 ，属于游离态对象
+		
+	}
+```
+> 重点：在Hibernate的三种对象状态中，最为重要的状态是：持久态。持久态对象可以直接影响数据库的数据
+
 
