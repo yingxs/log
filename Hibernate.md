@@ -1941,3 +1941,89 @@ public class Demo3 {
 }
 
 ```
+#### Hibernate的延迟加载策略
+> 延迟加载是为了减少程序和数据库的访问次数，提高程序的执行性能
+
+* 延迟加载的执行机制
+     * 在查询一个对象的时候 ，不会去数据库查询对象的属性或者其关联的数据
+     * 在需要使用到数据的属性或者关联数据的时候才会去查询数据库
+     * 即，按需加载
+
+##### 类级别(属性)的延迟加载
+load():只有load方法才支持类级别的延迟加载(可修改)
+get():get方法不支持类级别的延迟加载
+```
+/***
+ * 类级别的延迟加载
+ */
+
+@Test
+public void test1(){
+	Session session = HibernateUtil.getSession();
+	Transaction tx = session.beginTransaction();
+	/*
+	//get():get方法不支持类级别的延迟加载
+	Customer cust = session.get(Customer.class, 1);
+	System.out.println(cust.getName());
+	*/
+	
+	
+	
+	//load():load():只有load方法才支持类级别的延迟加载
+	Customer cust = session.load(Customer.class, 1);
+	System.out.println(cust.getName());
+	
+	
+	tx.commit();
+	session.close();
+}
+	
+```
+
+##### 关联级别(属性)的延迟加载
+> 以一对多为例
+
+```
+/**
+ * 关联级别的延迟加载( 一对多: <set/> )
+ * 修改一对多的延迟加载配置：
+ * 		<set name="orders"  inverse="true" lazy="false">
+ */
+@Test
+public void test2(){
+	Session session = HibernateUtil.getSession();
+	Transaction tx = session.beginTransaction();
+	
+	Customer cust = session.get(Customer.class, 1);
+	//关联订单
+	System.out.println(cust.getOrders().size());	//延迟加载的
+	
+	
+	tx.commit();
+	session.close();
+}
+	
+```
+多对一
+```
+
+	/**
+	 * 
+	 * 关联级别的延迟加载( 多对一: <many-to-one/> )
+	 * 修改多对一的延迟加载配置：
+	 * 		<many-to-one name="customer" class="Customer" column="cust_id" lazy="false" ></many-to-one>
+	 */
+	@Test 
+	public void test3(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		Order order = session.get(Order.class, 1);
+		System.out.println(order.getCustomer().getName());		//非延迟加载
+		
+		tx.commit();
+		session.close();
+	}
+	
+```
+
