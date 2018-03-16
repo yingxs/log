@@ -1850,3 +1850,94 @@ public class Demo5 {
 > 重点：在Hibernate的三种对象状态中，最为重要的状态是：持久态。持久态对象可以直接影响数据库的数据
 
 
+### Hibernate的一级缓存和快照机制
+#### Hibernate的一级缓存
+> 什么是Hibernate的一级缓存？其实就是session对象的缓存,说白了就是Session内部的一个Map集合。他的作用就是为了减少程序和数据库的交互次数，从而提高程序执行的性能
+
+```
+    /**
+     * 使用代码来证明hibernate一级缓存的存在
+     */
+    @Test
+    public void test2(){
+    	Session session = HibernateUtil.getSession();
+    	Transaction tx = session.beginTransaction();
+    	
+    	//第一次查询
+    	Customer c1 = session.get(Customer.class, 1);
+    	System.out.println(c1);
+    	//第二次查询
+    	Customer c2 = session.get(Customer.class, 1);
+    	System.out.println(c2);
+    	
+    	
+    	tx.commit();
+    	session.close();
+    }
+```
+
+#### Hibernate的快照机制
+> 快照机制，其实就是Session内部的一个Map集合，用于备份数据库的数据，用于和以及缓存的数据进行对比，以便实现持久态对象更新数据库的效果
+
+为什么持久态对象可以影响数据库？
+* 因为Hiibernate的Session内部存在以及缓存和快照机制
+
+* commit方法的代码：
+    * 执行session.flush()方法，这个方法对比一级缓存和快照去的数据，如果发现有差异，就会产生SQL语句
+    * Hibernate就会发送SQl语句到数据库执行
+    * Hibernate执行提交事务的方法，数据提交到数据库
+    * 把快照的数据进行更新
+
+    
+#### 一级缓存的管理
+> 如果持久态对象不在一级缓存中，不能更新数据
+
+把对象移出一级缓存的方法
+* session.evict(object) 把一个对象移出一级缓存
+* session.clear() 把一级缓存中的所有对象移出
+
+```
+package com.yingxs.test;
+
+
+import java.util.Set;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.junit.Test;
+
+import com.yingxs.domain.Customer;
+import com.yingxs.domain.Order;
+import com.yingxs.utils.HibernateUtil;
+
+/**
+ * 演示一级缓存的管理
+ * @author admin
+ *
+ */
+
+public class Demo3 {
+
+
+	@Test
+	public void test1(){
+		Session session = HibernateUtil.getSession();
+		Transaction tx = session.beginTransaction();
+		
+		Customer cust = session.get(Customer.class, 1);		//cust是持久态对象，在一级缓存中
+		cust.setName("老王");
+		
+		//把cust对象移出一级缓存
+//		session.evict(cust);
+		
+		
+		//清空 一级缓存
+		session.clear();
+		
+		tx.commit();
+		session.close();
+	}
+	
+}
+
+```
