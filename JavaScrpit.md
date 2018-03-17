@@ -2109,9 +2109,201 @@ setCookie('user','王昊',setCookieDate(7));
 setCookie('usl','yingxs.com',setCookieDate(7));
 setCookie('email','admin@yingxs.com',setCookieDate(7));
 
+```
+### 跨浏览器获取XHR对象
+```
+function createXHR(){
+ if(typeof XMLHttpRequest!='undefined'){
+  return new XMLHttpRequest();
+ }else if(typeof ActiveXObject != 'undefined'){
+  var version = [
+      'MSXML2.XMLHttp.6.0',
+      'MSXML2.XMLHttp.3.0',
+      'MSXML2.XMLHttp'
+  ];
+  for(var i=0;i<version.length;i++){
+   try{
+    return new ActiveXObject(version[i]);
+   }catch(e){
+    //跳过
+   }
+  }
+ }else{
+  throw new Error("你的系统或浏览器不支持XHR对象");
+ }
 
+}
+```
 
 
 ```
+//使用同步方式
+addEvent(document,'click',function(){
+ var xhr = createXHR();               //创建XHR对象
+ xhr.open('get','demo.php?rand='+Math.random(),false);  //准备发送数据，false表示同步
+
+ xhr.send(null);                      //发送请求，get不需要数据提交，则填写为null
+ if(xhr.status==200){
+  alert(xhr.responseText);
+ }else{
+  alert('获取数据错误！错误代号：'+xhr.status+'错误信息：'+xhr.statusText);
+ }
+
+});
+
+//PS:IE浏览器第一次回想服务端请求，获取最新的数据，而第二次他就默认获取的缓存数据，导致数据不能及时更新
+//PS：怎么处理缓存，可以使用JS随机字符串
+
+```
+
+```
+//使用异步方式
+addEvent(document,'click',function(){
+ var xhr = createXHR();
+ xhr.onreadystatechange = function(){
+  //alert(xhr.readyState);
+  if(xhr.readyState == 4){
+    if(xhr.status==200){
+     alert(xhr.responseText);
+    }else{
+     alert('获取数据错误！错误代号：'+xhr.status+'错误信息：'+xhr.statusText);
+    }
+  }
+ };
+ xhr.open('get','demo.php?rand='+Math.random(),true);
+
+ xhr.send(null);
+ //xhr.abort();     //取消异步请求
+
+});
+```
+
+
+```
+//头信息
+addEvent(document,'click',function(){
+ var xhr = createXHR();
+ xhr.onreadystatechange = function(){
+  if(xhr.readyState == 4){
+   if(xhr.status==200){
+    //alert(xhr.getAllResponseHeaders());                 //获取全部请求头信息
+    alert(xhr.getResponseHeader('Content-Type'));         //获取单个请求头信息
+   }else{
+    alert('获取数据错误！错误代号：'+xhr.status+'错误信息：'+xhr.statusText);
+   }
+  }
+ };
+ xhr.open('get','demo.php?rand='+Math.random(),true);
+ xhr.setRequestHeader('myheader','Lee');                 //设置请求头信息，一般没什么用，在POST提交请求是时有用
+ xhr.send(null);
+
+});
+
+```
+
+
+##### Get请求
+```
+//GET请求
+addEvent(document,'click',function(){
+ var xhr = createXHR();
+ var url = 'demo.php?rand='+Math.random();
+ url = params(url,'name','Lee');
+ url = params(url,'gae',100);
+alert(url);
+
+ xhr.onreadystatechange = function(){
+  if(xhr.readyState == 4){
+   if(xhr.status==200){
+     alert(xhr.responseText);
+   }else{
+    alert('获取数据错误！错误代号：'+xhr.status+'错误信息：'+xhr.statusText);
+   }
+  }
+ };
+ xhr.open('get','demo.php?rand='+Math.random()+'&name=yingxs',true);
+ xhr.send(null);
+
+});
+
+
+function params(url,name,value){
+ url += url.indexOf('?') == -1 ? '?' : '&';
+ url +=  encodeURIComponent(name) + '=' + encodeURIComponent(value);
+ return url;
+ //特殊字符需要通过encodeURIComponent()来编码解决，
+}
+
+```
+
+
+##### post访问
+```
+//POST请求、
+addEvent(document,'click',function(){
+ var xhr = createXHR();
+ var url = 'demo.php?rand='+Math.random();
+ xhr.onreadystatechange = function(){
+  if(xhr.readyState == 4){
+   if(xhr.status==200){
+    alert(xhr.responseText);
+   }else{
+    alert('获取数据错误！错误代号：'+xhr.status+'错误信息：'+xhr.statusText);
+   }
+  }
+ };
+ xhr.open('post','demo.php?rand='+Math.random(),true);                                 //第一步，改为post
+ xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');             //第三步，模拟表单提交
+ xhr.send('name=yingxs&age=100');                                                      //第二步，将键值对放入send方法中
+
+});
+```
+
+
+##### JSON文件加载
+```
+//JSON加载
+addEvent(document,'click',function(){
+ var xhr = createXHR();
+ var url = 'demo.json?rand='+Math.random();
+ xhr.onreadystatechange = function(){
+  if(xhr.readyState == 4){
+   if(xhr.status==200){
+    //alert(xhr.responseText);
+    var box = JSON.parse(xhr.responseText);
+    alert(box);
+   }else{
+    alert('获取数据错误！错误代号：'+xhr.status+'错误信息：'+xhr.statusText);
+   }
+  }
+ };
+ xhr.open('get',url,true);
+ xhr.send(null);
+
+});
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
