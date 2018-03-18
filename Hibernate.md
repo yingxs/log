@@ -2094,3 +2094,60 @@ public void test3(){
 	session.close();
 }
 ```
+##### 整合连接池
+* 导包
+    * c3p0-0.9.2.1.jar                      c3p0核心包
+    * mchange-commons-java-0.2.3.4.jar      c3p0依赖包
+    * hibernate-c3p0-5.0.7.Final.jar        hibernate与c3p0整合包
+* 在hibernate.cfg.xml添加整合配置
+    ```
+	<!-- 整合c3p0 -->
+	<property name="hibernate.connection.provider_class">org.hibernate.c3p0.internal.C3P0ConnectionProvider</property>
+	
+	<!-- c3p0详细配置 -->
+	<property name="c3p0.min_size">10</property>
+	<property name="c3p0.max_size">20</property>
+
+
+    ```
+```
+package com.yingxs.test;
+
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.hibernate.Session;
+import org.hibernate.jdbc.Work;
+import org.junit.Test;
+
+import com.yingxs.utils.HibernateUtil;
+
+/**
+ * 演示连接池的整合是否成功
+ * @author admin
+ *
+ */
+
+public class Demo6 {
+
+	
+	@Test
+	public void test1(){
+		Session session = HibernateUtil.getSession();
+
+		session.doWork(new Work(){
+			@Override
+			public void execute(Connection connection) throws SQLException {
+
+				System.out.println(connection);
+			}
+		});
+		
+		session.close();
+	}
+	
+}
+
+```
+
