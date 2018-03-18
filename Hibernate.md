@@ -2151,3 +2151,78 @@ public class Demo6 {
 
 ```
 
+#### Hibernate二级缓存
+
+* Hibernate的一级缓存：
+    * 就是Session对象的缓存，而session对象在每次操作之后都会关闭，那么一级缓存就会丢失
+    * 结论：一级缓存只用于一次业务操作内的缓存
+
+
+* Hibernate的二级缓存：
+    * 就是SessionFactory的缓存，二级缓存和SessionFactory对象的生命周期是一致的，SessionFactory不销毁，那么二级缓存的数据就不会丢失 
+    * 结论：二级缓存可以用于多次业务操作
+
+##### 注意
+* Hibernate一级缓存默认是开启的，而且无法关闭
+* Hibernate二级缓存默认是关闭的，如果需要可以开启，而且需要引入第三方的缓存工具，例如EhCache等
+
+
+
+#### 使用Hibernate的二级缓存
+* 导入Ehcache
+* 在hibernate.cfg.xml中配置二级缓存
+    ```
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE hibernate-configuration PUBLIC
+    	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+    
+    <hibernate-configuration>
+    <session-factory>
+    	<!-- 1.连接数据库的参数 -->
+    	<property name="hibernate.connection.driver_class">
+    		com.mysql.jdbc.Driver
+    	</property>
+    	<property name="hibernate.connection.url">
+    		jdbc:mysql://localhost:3308/hibernate
+    	</property>
+    	<property name="hibernate.connection.username">root</property>
+    	<property name="hibernate.connection.password">123456</property>
+    	
+    	<!-- 整合c3p0 -->
+    	<property name="hibernate.connection.provider_class">org.hibernate.c3p0.internal.C3P0ConnectionProvider</property>
+    	<!-- c3p0详细配置 -->
+    	<property name="c3p0.min_size">10</property>
+    	<property name="c3p0.max_size">20</property>
+    
+    
+    
+    
+    	<!-- hibernate方言 -->
+    	<property name="hibernate.dialect">
+    		org.hibernate.dialect.MySQLDialect
+    	</property>
+    
+    	<!-- hibernate扩展参数 -->
+    	<property name="hibernate.show_sql">true</property>
+    	<property name="hibernate.format_sql">true</property>
+    	<property name="hibernate.hbm2ddl.auto">update</property>
+    
+    	<!-- 开启hibernate的二级缓存 -->
+    	<property name="hibernate.cache.use_second_level_cache">true</property>
+    	<!-- 引入Ehcache的工具 -->
+    	<property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+    
+    
+    	<!-- *.hbm.xml文件 -->
+    	<mapping resource="com/yingxs/domain/Customer.hbm.xml" />
+    	<mapping resource="com/yingxs/domain/Order.hbm.xml" />
+    	
+    	<!-- 需要缓存哪个类 -->
+    	<class-cache usage="read-only" class="com.yingxs.domain.Customer"/>
+    
+    </session-factory>
+    </hibernate-configuration>
+    ```
+
+
