@@ -2252,4 +2252,129 @@ public class Demo6 {
 	<property name="hibernate.connection.isolation">4</property>
 ```
 
+## 使用ThreadLocal管理Session
+> 为什么要使用TheadLocal管理Session，在业务层无法使用事务进行管理Session
+
+### 配置HIbernate得的ThreadLcoal
+* 修改hibernate.cfg.xml
+    ```
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE hibernate-configuration PUBLIC
+    	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+    
+    <hibernate-configuration>
+    <session-factory>
+    	<!-- 1.连接数据库的参数 -->
+    	<property name="hibernate.connection.driver_class">
+    		com.mysql.jdbc.Driver
+    	</property>
+    	<property name="hibernate.connection.url">
+    		jdbc:mysql://localhost:3308/hibernate
+    	</property>
+    	<property name="hibernate.connection.username">root</property>
+    	<property name="hibernate.connection.password">123456</property>
+    	
+    	<!-- 整合c3p0 -->
+    	<property name="hibernate.connection.provider_class">org.hibernate.c3p0.internal.C3P0ConnectionProvider</property>
+    	<!-- c3p0详细配置 -->
+    	<property name="c3p0.min_size">10</property>
+    	<property name="c3p0.max_size">20</property>
+    
+    	<!-- hibernate方言 -->
+    	<property name="hibernate.dialect">
+    		org.hibernate.dialect.MySQLDialect
+    	</property>
+    
+    	<!-- hibernate扩展参数 -->
+    	<property name="hibernate.show_sql">true</property>
+    	<property name="hibernate.format_sql">true</property>
+    	<property name="hibernate.hbm2ddl.auto">update</property>
+    
+    	<!-- 开启hibernate的二级缓存 -->
+    	<property name="hibernate.cache.use_second_level_cache">true</property>
+    	<!-- 引入Ehcache的工具 -->
+    	<property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+    
+    	<!-- 让Session能够被ThreadLocal管理  -->
+    	<property name="hibernate.current_session_context_class">thread</property>
+    	
+    	
+    	<!-- *.hbm.xml文件 -->
+    	<mapping resource="com/yingxs/domain/Customer.hbm.xml" />
+    	<mapping resource="com/yingxs/domain/Order.hbm.xml" />
+    	
+    	<!-- 需要缓存哪个类 -->
+    	<class-cache usage="read-only" class="com.yingxs.domain.Customer"/>
+    
+    </session-factory>
+    </hibernate-configuration>
+    ```
+### 修改HibernateUtiil工具类
+```
+	
+public static Session getSession(){
+//		return factoy.openSession();
+	return factoy.getCurrentSession();
+	
+}
+```
+
+Dao层代码
+```
+package com.yingxs.Threadlocation;
+
+import org.hibernate.Session;
+import com.yingxs.domain.Customer;
+import com.yingxs.utils.HibernateUtil;
+
+public class CustomerDao {
+	
+
+	
+	public void save(Customer cust){
+		Session session = HibernateUtil.getSession();
+		session.save(cust);
+		//不能关闭Session
+//		session.close();
+	}
+
+}
+
+```
+Service层代码
+```
+package com.yingxs.Threadlocation;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import com.yingxs.domain.Customer;
+import com.yingxs.utils.HibernateUtil;
+
+public class CustomerService {
+	private CustomerDao dao = new CustomerDao();
+	
+	public void save(Customer c1,Customer c2){
+		Session session = HibernateUtil.getSession();
+		//开启事务
+		Transaction tx = session.beginTransaction();
+		
+		
+		try {
+			dao.save(c1);
+//			int i = 100/0;		//这时候发生错误
+			dao.save(c2);		
+			tx.commit();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println("发生错误，事务已经回滚");
+		}
+	}
+
+}
+
+```
 
