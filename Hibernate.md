@@ -2225,4 +2225,31 @@ public class Demo6 {
     </hibernate-configuration>
     ```
 
+### hibernate隔离级别的配置
+
+#### 并发事务会存在的问题：
+* 脏读：一个事务读到另一个事务并发的未提交的数据
+* 不可重复读：一个事务读到了另一个并发事务的updata的数据
+* 幻读：一个事务读到了另一个并发事务的insert数据
+
+#### 数据库的隔离级别
+> 数据库的隔离级别可以防止以上三种现象
+
+* read uncommited：不能防止脏读，不可重复读，幻读
+* read committed：防止脏读，但是不能防止不可重复读，幻读(Oracle默认)
+* repeatable read：防止脏读，不可重复读，不能防止幻读(mysql默认)
+* serializable：防止脏读，不可重复读，幻读
+
+
+#### Hibernate通过配置修改数据的隔离级别
+* 1; read uncommited
+* 2: read committed
+* 4: repeatable read
+* 8: serializable
+
+```
+    <!-- 修改HIbernate的隔离级别 -->
+	<property name="hibernate.connection.isolation">4</property>
+```
+
 
