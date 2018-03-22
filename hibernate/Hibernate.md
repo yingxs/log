@@ -2404,5 +2404,522 @@ public class CustomerService {
 	<property name="hibernate.connection.isolation">4</property>
 ```
 
+### JPA与hibernate的关系
+> JPA是接口，是规范，Hibernate是实现，Hibernate框架从3.2开始完成支持JPA开发，这里只是用到了JPA的注解开发
+
+### JPA注解的基础入门
+#### 使用JPA映射类
+```
+@Entity
+@Table(name="t_customer")
+public class Customer  {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
+	private Integer id;
+	
+	@Column(name="name")
+	private String name;
+	
+	@Column(name="gander")
+	private String gender;
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	
+}
+```
+#### 修改配置文件
+```
+<class-cache usage="read-only" class="com.yingxs.domain.Customer"/>
+```
+
+
+### @Transient注解的使用
+> @Transient注解，用于给实体类添加临时属性(不映射到数据库中)
+
+```
+@Transient			//临时字段，不反映到数据库中
+	public Boolean getIsMarried() {
+		return isMarried;
+	}
+	public void setIsMarried(Boolean isMarried) {
+		this.isMarried = isMarried;
+	}
+```
+
+### JPA的主键策略
+> JPA的主键策略，没有HIbernate的主键策略丰富
+
+```
+@GeneratedValue(strategy=GenerationType.IDENTITY)
+```
+* 常见的主键策略
+    * IDENTITY:利用数据库的自增长能力，适合mysql
+    * SEQUENCE：利用数据库的序列机制，适合Oracle
+    * TABLE：利用JPA生成表维护主键值
+    * AUTO：自动选择一种合适的
+
+    
+### JPA的一对多关系映射
+> 需求：客户与订单是一对多的关系
+
+Customer:
+```
+package com.yingxs.domain;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+
+@Entity
+@Table(name="t_customer")
+public class Customer  {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
+	private Integer id;
+	
+	@Column(name="name")
+	private String name;
+	
+	@Column(name="gander")
+	private String gender;
+	
+	@Transient			//临时字段，不反映到数据库中
+	private Boolean isMarried;
+	
+	//关联多方
+	@OneToMany(targetEntity=Order.class,mappedBy="customer")
+	private Set<Order> orders = new HashSet<Order>();
+	
+	public Set<Order> getOrders() {
+		return orders;
+	}
+	public void setOrders(Set<Order> orders) {
+		this.orders = orders;
+	}
+	public Boolean getIsMarried() {
+		return isMarried;
+	}
+	public void setIsMarried(Boolean isMarried) {
+		this.isMarried = isMarried;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	
+}
+
+```
+
+Order；
+```
+package com.yingxs.domain;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="t_order")
+public class Order implements Serializable {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
+	private Integer id;
+
+	@Column(name="orderno")
+	private String orderno;
+	
+	//关联客户
+	@ManyToOne(targetEntity=Customer.class)
+	@JoinColumn(name="cust_id")
+	private Customer customer;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getOrderno() {
+		return orderno;
+	}
+
+	public void setOrderno(String orderno) {
+		this.orderno = orderno;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+}
+
+```
+
+### JPA的多对多关系映射
+> 需求：用户和角色是多对多的关系
+
+User：
+```
+package com.yingxs.domain;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="t_user")
+public class User implements Serializable{
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
+	private Integer id;
+	
+	@Column(name="user_name")
+	private String userName;
+	
+	//关联角色
+	@ManyToMany(targetEntity=Role.class)
+	//@JoinTable:用于映射中间表
+	//joinColumns:当前方在中间表的外键字段名称
+	//inverseJoinColumns:对方在中间表的外键字段名称
+	@JoinTable(
+			name="t_user_role",
+			joinColumns=@JoinColumn(name="user_id"),
+			inverseJoinColumns=@JoinColumn(name="role_id"))
+	private Set<Role> roles = new HashSet<Role>();
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+	
+}
+
+```
+
+Order:
+```
+package com.yingxs.domain;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="t_role")
+public class Role implements Serializable{
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
+	private Integer id;
+	
+	@Column(name="role_name")
+	private String roleName;
+	
+	//关联用户
+	@ManyToMany(targetEntity=User.class,mappedBy="roles")
+	private Set<User> users = new HashSet<User>();
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+}
+
+```
+测试代码
+```
+@Test
+public void test1(){
+	Session session = HibernateUtil.getSession();
+	Transaction tx = session.beginTransaction();
+	
+	User u1 = new User();
+	u1.setUserName("小泽");
+	
+	User u2 = new User();
+	u2.setUserName("小苍");
+	
+	Role r1 = new Role();
+	r1.setRoleName("视觉总监");
+	Role r2 = new Role();
+	r2.setRoleName("动作指导");
+	
+	
+	u1.getRoles().add(r1);
+	r1.getUsers().add(u1);
+	
+	u2.getRoles().add(r2);
+	r2.getUsers().add(u2);
+	
+	
+	session.save(u1);
+	session.save(u2);
+	session.save(r1);
+	session.save(r2);
+	
+	tx.commit();
+	
+	
+}
+
+```
+
+### JPA的一对一关系映射
+> 公民与身份证是一对一的关系
+
+
+Person:
+```
+package com.yingxs.domain;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="t_person")
+public class Person {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
+	private Integer id;
+	
+	@Column(name="name")
+	private String name;
+	
+	//关联身份证
+	@OneToOne(targetEntity=Person.class,mappedBy="person")
+	private Card card;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Card getCard() {
+		return card;
+	}
+
+	public void setCard(Card card) {
+		this.card = card;
+	}
+	
+}
+
+```
+
+Card:
+```
+package com.yingxs.domain;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="t_card")
+public class Card {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
+	private Integer id;
+	
+	@Column(name="card_no")
+	private String cardno;
+	
+	
+	//关联公民
+	@OneToOne(targetEntity=Card.class)
+	@JoinColumn(name="person_id")
+	private Person person;
+
+
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
+	public String getCardno() {
+		return cardno;
+	}
+
+
+	public void setCardno(String cardno) {
+		this.cardno = cardno;
+	}
+
+
+	public Person getPerson() {
+		return person;
+	}
+
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
