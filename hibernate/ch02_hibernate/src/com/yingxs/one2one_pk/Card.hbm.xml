@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping package="com.yingxs.one2one_pk">
+
+	<class name="Card" table="t_card_pk">
+		<id name="id" column="id">
+			<generator class="native"></generator>
+		</id>
+		<property name="name" column="name"></property>
+		
+		<!-- 主键关联 一对一配置 
+			name:关联的对方的变量名
+			class:关联的对方类型
+			column:外键
+			unique：唯一约束
+		-->
+		<one-to-one name="person" class="Person" constrained="true"/>
+	</class>
+	
+</hibernate-mapping>

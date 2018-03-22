@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping package="com.yingxs.one2many">
+
+	<class name="Order" table="t_order">
+		<!-- 主键 -->
+		<id name="id" column="id">
+			<generator class="native"></generator>
+		</id>
+		<!-- 其他属性 -->
+		<property name="orderno" column="orderno"></property>
+		<property name="productName" column="product_name"></property>
+		
+		<!-- 多对一配置 -->
+		<many-to-one name="customer" class="Customer" column="cust_id" cascade="all"></many-to-one>
+		
+	</class>
+	
+</hibernate-mapping>
