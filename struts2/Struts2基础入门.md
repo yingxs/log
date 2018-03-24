@@ -150,3 +150,129 @@ struts.action.extension = action,,
 
 ```
 
+
+
+### Action动作类的三种写法
+#### 1.不实现接口和继承类
+```
+package com.yingxs.action;
+/**
+ * 第一种写法：不实现任何接口和类
+ * @author admin
+ *
+ */
+public class Demo1Action {
+
+	public String hello(){
+		System.out.println("第一种写法：不实现接口和类");
+		return "success";
+	}
+}
+
+```
+#### 2.实现Action接口
+```
+package com.yingxs.action;
+
+import com.opensymphony.xwork2.Action;
+
+/**
+ * Action的第二种写法：实现Action接口
+ * 好处:
+ * 		1.提供默认的excute方法，让Action类更加规范
+ * 		2.提供了5个开发中常用的视图变量
+ * 	
+ * @author admin
+ *
+ */
+public class Demo2Action implements Action {
+	
+	@Override
+	public String execute() throws Exception {
+		System.out.println("Action的第二种写法：实现Action接口");
+		return SUCCESS;
+	}
+
+	
+	
+}
+
+```
+#### 3.继承ActionSupper类
+```
+package com.yingxs.action;
+
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
+
+/**
+ * Action的第三种写法：继承ActionSupport类
+ * 好处:
+ * 		1.有了Action接口的所有好处
+ * 		2.还拥有其他功能接口
+ * 	
+ * @author admin
+ *
+ */
+public class Demo3Action extends ActionSupport {
+	
+	@Override
+	public String execute() throws Exception {
+
+		System.out.println("Action的第三种写法：继承ActionSupport类");
+		return SUCCESS;
+	}
+	
+	
+}
+
+```
+### Action的三种访问方式
+#### 传统的访问方式
+```
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+	
+<struts>
+
+	<!-- 方式一：传统访问方式 -->
+	<package name="base" extends="struts-default" namespace="/demo1">
+		<action name="save" class="com.yingxs.action.Demo1Action" method="save">
+			<result>/succ.jsp</result>
+		</action>
+		<action name="update" class="com.yingxs.action.Demo1Action" method="update">
+			<result>/succ.jsp</result>
+		</action>
+	</package>
+</struts>
+```
+#### 通配符的访问方式
+```
+
+<!-- 方式二：通配符的访问方式 -->
+<package name="demo2" extends="struts-default" namespace="/demo2">
+	<action name="demo2_*" class="com.yingxs.action.Demo2Action" method="{1}">
+		<result>/succ.jsp</result>
+	</action>
+</package>
+	
+```
+#### 动态方法调用方式
+```
+<!-- 开启动态方法调用的配置 -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="true"></constant>
+	
+	<!-- 方式三：动态方法调用的访问方式 -->
+	<package name="demo3" extends="struts-default" namespace="/demo3">
+	<!-- 用户访问路径
+		demo3/demo3!save.action
+		demo3/demo3!update.action
+	 -->
+		<action name="demo3" class="com.yingxs.action.Demo2Action">
+			<result>/succ.jsp</result>
+		</action>
+	</package>
+```
+
