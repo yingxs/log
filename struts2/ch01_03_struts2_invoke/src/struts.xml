@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+	
+<struts>
+
+	<!-- 开启动态方法调用的配置 -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="true"></constant>
+	
+	<!-- 方式一：传统访问方式 -->
+	<package name="demo1" extends="struts-default" namespace="/demo1">
+		<action name="save" class="com.yingxs.action.Demo1Action" method="save">
+			<result>/succ.jsp</result>
+		</action>
+		<action name="update" class="com.yingxs.action.Demo1Action" method="update">
+			<result>/succ.jsp</result>
+		</action>
+	</package>
+	
+	
+	
+	<!-- 方式二：通配符的访问方式 -->
+	<package name="demo2" extends="struts-default" namespace="/demo2">
+		<action name="demo2_*" class="com.yingxs.action.Demo2Action" method="{1}">
+			<result>/succ.jsp</result>
+		</action>
+	</package>
+	
+	
+	
+	<!-- 方式二：动态方法调用的访问方式 -->
+	<package name="demo3" extends="struts-default" namespace="/demo3">
+	<!-- 用户访问路径
+		demo3/demo3!save.action
+		demo3/demo3!update.action
+	 -->
+		<action name="demo3" class="com.yingxs.action.Demo2Action">
+			<result>/succ.jsp</result>
+		</action>
+	</package>
+	
+	
+	
+	
+	
+</struts>
