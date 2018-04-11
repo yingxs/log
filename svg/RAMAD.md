@@ -23,3 +23,6 @@
 * element.getAttribute(name)
 
 ## SVG中的坐标系统
+* width,height 控制视窗
+* SVG代码 定义世界
+* viewBox,preserveAspectRation-控制视野
