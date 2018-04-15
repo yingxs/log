@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+ 
+<struts>
+	<!-- 这个项目的默认包：包含系统的十八个拦截器和自己定义的权限拦截器 -->
+	<package name="myDefault" extends="struts-default" abstract="true">
+		<interceptors>
+			<interceptor name="userLoginInter" class="com.yingxs.interceptor.UserLoginInterceptor"></interceptor>
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="userLoginInter"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<!-- 对当前所有action都有作用 -->
+		<default-interceptor-ref name="myStack"></default-interceptor-ref>
+	</package>
+
+	<!-- 业务包继承自己定义的默认包 -->
+	<package name="user" extends="myDefault" namespace="/user">
+		<global-results>
+			<result name='login'>/login.jsp</result>
+		</global-results>
+		
+		<action name="user_*" class="com.yingxs.web.UserAction" method="{1}">
+			<result>/WEB-INF/jsp/userIndex.jsp</result>
+			<result name="error">/error.jsp</result>
+		</action>
+		
+		<!-- 需要权限访问的压面 -->
+		<action name="*">
+			<result>/WEB-INF/jsp/{1}.jsp</result>
+		</action>
+	</package>
+
+
+	
+
+</struts>
