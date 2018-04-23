@@ -93,4 +93,135 @@
 		}
 	}
 	
+
 	```
+
+
+
+### 配置文件没有提示问题
+## Spring的bean管理(xml方式)
+> 在spring里面通过配置文件创建对象
+
+### bean实例化的三种实现方式
+* 1.使用类的无参构造创建(重点)
+	```
+	<bean id="user" class="com.yingxs.ioc.User"></bean>
+	```
+	* 类中没有无参构造，会出现异常
+* 2.使用静态工厂创建
+	* 创建静态的方法，返回类对象
+	```
+	<!-- 使用静态工厂创建对象 -->
+	<bean id="bean2" class="com.yingxs.bean.Bean2Factory" factory-method="getBean2"></bean> 
+	```
+	* bean2.java
+	```
+	package com.yingxs.bean;
+	
+	public class Bean2 {
+		
+		public void add(){
+			System.out.println("bean2.....");
+		}
+	
+	}
+	
+	```
+	* Bean2Factory.java
+	```
+	package com.yingxs.bean;
+	
+	public class Bean2Factory {
+		public static Bean2 getBean2(){
+			return new Bean2();
+		}
+	
+	}
+	
+	```
+	* TestIOC.java
+	```
+	package com.yingxs.bean;
+	
+	import org.junit.Test;
+	import org.springframework.context.ApplicationContext;
+	import org.springframework.context.support.ClassPathXmlApplicationContext;
+	
+	public class TestIOC {
+		
+		@Test
+		public void testUesr(){
+			//1.加载spring配置文件，根据创建对象
+			ApplicationContext context = new ClassPathXmlApplicationContext("bean1.xml");
+			
+			//2.得到配置创建的对象
+			Bean2 bean2 =  (Bean2) context.getBean("bean2");
+			System.out.println(bean2);
+			bean2.add();
+			
+		}
+	}
+	
+	```
+* 3.使用实例工厂创建
+	* xml
+	 ```
+		<!-- 使用实例工厂创建对象 -->
+		<!-- 创建工厂对象 -->
+		<bean id="Bean3Factory" class="com.yingxs.bean.Bean3Factory" ></bean> 
+		<bean id="bean3" factory-bean="Bean3Factory" factory-method="getBean3"></bean> 
+	 ``` 
+	* Bean3.java
+	```
+	package com.yingxs.bean;
+	
+	public class Bean3 {
+		
+		public void add(){
+			System.out.println("bean3.....");
+		}
+	
+	}
+	
+	```
+	* Bean3Factory.java
+	```
+	package com.yingxs.bean;
+	
+	public class Bean3Factory {
+		
+		public  Bean3 getBean3(){
+			return new Bean3();
+		}
+	
+	}
+	
+	```
+	* @Test
+	
+	```
+	@Test
+	public void testUesr2(){
+		//1.加载spring配置文件，根据创建对象
+		ApplicationContext context = new ClassPathXmlApplicationContext("bean1.xml");
+		
+		//2.得到配置创建的对象
+		Bean3 bean3 =  (Bean3) context.getBean("bean3");
+		System.out.println(bean3);
+		bean3.add();
+		
+	}
+	```
+### Bean标签的常见属性
+* id属性
+	* 名称，不能包含特殊字符，根据id得到配置对象 
+* class属性
+	* 创建的对象所在的类的全路径 
+* name属性
+	* 功能上和id属性是一样的，id不能包含特殊字符，但是在name属性里面可以包含特殊字符 
+* scope属性
+	* singleton 默认值，单例的
+	* prototype 多例的
+	* request   spring创建一个Bean对象，将对象存入request中
+	* session   spring创建一个Bean对象，讲对象存入session中
+	* globalSession     WEB项目中，应用在porlet环境，如果没有porlet环境那么globalSession就相当于session 
