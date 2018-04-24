@@ -447,3 +447,48 @@ public void testDemo3(){
 }
 ```
 
+### 注入复杂类型
+* 数组
+* list集合
+* map集合
+* properties类型
+
+```
+<!-- 注入复杂类型属性值 -->
+<bean id="person" class="com.yingxs.property.Person"  >
+	<!-- 数组 -->
+	<property name="arrs" > 
+		<list>
+			<value>小王</value>
+			<value>小吗</value>
+			<value>小怂</value>
+		</list>
+	</property>
+	<!-- list -->
+	<property name="list">
+		<list>
+			<value>大王</value>
+			<value>大妈</value>
+			<value>大宋</value>
+		</list>
+	</property>
+	
+	<!-- map -->
+	<property name="map">
+		<map>
+			<entry key="aa" value="AA"></entry>
+			<entry key="bb" value="BB"></entry>
+			<entry key="cc" value="CC"></entry>
+			<entry key="dd" value="DD"></entry>
+		</map>
+	</property>
+	<!-- properties -->
+	<property name="properties">
+		<props>
+			<prop key="diverclass">com.mysql.jdbc.Driver</prop>
+			<prop key="username">root</prop>
+		</props>
+		
+	</property>
+</bean>
+```
