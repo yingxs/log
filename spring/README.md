@@ -400,3 +400,50 @@ public class UserDao {
 </bean>
 ```
 
+### P名称空间注入
+* xml 
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- p名称空间注入 -->
+	<bean id="person" class="com.yingxs.property.Person" p:pname="yingxs" ></bean>
+        
+</beans>
+```
+* Person
+```
+package com.yingxs.property;
+
+public class Person {
+	private String pname;
+
+	public void setPname(String pname) {
+		this.pname = pname;
+	}
+	
+	public void test1(){
+		System.out.println("person..."+pname);
+	}
+
+}
+
+```
+* @Test
+```
+@Test
+public void testDemo3(){
+	//1.加载spring配置文件，根据创建对象
+	ApplicationContext context = new ClassPathXmlApplicationContext("bean1.xml");
+	
+	//2.得到配置创建的对象
+	Person person = (Person) context.getBean("person");
+	person.test1();
+	
+}
+```
+
