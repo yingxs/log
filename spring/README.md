@@ -225,3 +225,178 @@
 	* request   spring创建一个Bean对象，将对象存入request中
 	* session   spring创建一个Bean对象，讲对象存入session中
 	* globalSession     WEB项目中，应用在porlet环境，如果没有porlet环境那么globalSession就相当于session 
+
+### 属性注入
+> 创建对象的时候，向类里面的属性设置值
+
+
+#### 属性注入的三种方式
+* 使用set方法注入
+* 使用有参构造注入
+* 使用接口注入
+##### 在spring支持前两种方式
+* set方法注入（重点）
+* 有参构造注入
+
+### 使用有参构造注入属性
+* xml
+```
+<!-- 使用有参构造注入属性 -->
+<bean id="demo" class="com.yingxs.property.PropertyDemo1" >
+	<constructor-arg name="username" value="小王小马"></constructor-arg>
+</bean>
+```
+* PropertyDemo1.java
+```
+package com.yingxs.property;
+
+public class PropertyDemo1 {
+	private String username;
+
+	public PropertyDemo1(String username) {
+		this.username = username;
+	}
+	public void test1() {
+		System.out.println("demo1...."+username);
+	}
+	
+}
+
+```
+* @Test
+```
+@Test
+public void testDemo1(){
+	//1.加载spring配置文件，根据创建对象
+	ApplicationContext context = new ClassPathXmlApplicationContext("bean1.xml");
+	
+	//2.得到配置创建的对象
+	PropertyDemo1 demo1 = (PropertyDemo1) context.getBean("demo");
+	demo1.test1();
+	
+}
+```
+### 使用setr方法注入属性
+* xml
+```
+<!-- 使用set方法注入属性 -->
+<bean id="book" class="com.yingxs.property.Book">
+	<!-- 注入属性值 -->
+	<property name="bookname" value="《三体》"></property>
+</bean>
+```
+* Book.java
+```
+package com.yingxs.property;
+
+public class Book {
+	private String bookname;
+
+	//set方法
+	public void setBookname(String bookname) {
+		this.bookname = bookname;
+	}
+	
+	public void demobook() {
+		System.out.println("book......"+bookname);
+	}
+	
+}
+
+```
+* @Test
+```
+@Test
+public void testDemo2(){
+	//1.加载spring配置文件，根据创建对象
+	ApplicationContext context = new ClassPathXmlApplicationContext("bean1.xml");
+	
+	//2.得到配置创建的对象
+	Book book = (Book) context.getBean("book");
+	book.demobook();
+	
+}
+```
+### 注入对象类型属性（重点）
+#### 创建service类和dao类
+> 在service得到dao对象
+* service
+```
+package com.yingxs.ioc;
+
+public class UserService {
+	public  void add() {
+		System.out.println("service.....add()");
+		//在service里面得到dao类对象，才能调用dao里面的方法
+		//UserDao dao = new UserDao();
+		//dao.add();
+	}
+
+}
+
+```
+* dao
+```
+package com.yingxs.ioc;
+
+public class UserDao {
+	
+	public  void add() {
+		System.out.println("dao.....add()");
+	}
+}
+
+```
+#### spring注入对象类型属性具体实现过程
+* 1.在service里面把dao作为类型属性
+* 2.生成dao类型属性的set方法
+```
+package com.yingxs.ioc;
+
+public class UserService {
+	
+	//1.定义dao类型属性
+	private UserDao userDao;
+	//2.生成set方法
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
+	
+	public  void add() {
+		System.out.println("service.....add()");
+		//在service里面得到dao类对象，才能调用dao里面的方法
+		//UserDao dao = new UserDao();
+		//dao.add();
+		userDao.add();
+	}
+
+
+}
+
+
+```
+```
+package com.yingxs.ioc;
+
+public class UserDao {
+	
+	public  void add() {
+		System.out.println("dao.....add()");
+	}
+}
+
+```
+* 3.配置文件中注入关系
+```
+<!--注入对象类型属性 -->
+<bean id="userDao" class="com.yingxs.ioc.UserDao" ></bean>
+
+<bean id="userService" class="com.yingxs.ioc.UserService" >
+	<!-- 注入dao对象 
+		name:service里面的类属性名称
+		ref：引用的dao对象id
+	-->
+	<property name="userDao" ref="userDao"></property>
+</bean>
+```
+
