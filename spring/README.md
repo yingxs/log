@@ -492,3 +492,24 @@ public void testDemo3(){
 	</property>
 </bean>
 ```
+### IOC和DI的区别
+* IOC：控制反转，把对象创建交给spring进行配置
+* DI：依赖注入，向类里面的属性设置值
+* 关系：依赖注入不能单独存在，需要在ioc的基础之上完成操作
+
+### Spring整合到web项目
+> spring在执行过程中，需要通过new对象来读取配置文件，虽然功能上可以实现，但是效率很低
+
+#### 实现思想
+> 把加载配置文件和创建对象的过程，在服务器启动的时候完成
+
+#### 实现原理
+* 1.ServletContext对象
+* 2.监听器
+* 3.实现过程
+	*  在服务器启动的时候，为每一个项目创建一个ServletContext对象
+	*  在ServletContext对象创建时候，使用监听器可以监听到ServletContext对象在什么时候创建
+	*  使用监听器监听到ServletContext对象创建的时候
+	*  加载Spring配置文件，把配置文件配置的对象创建
+	*  把创建出来的对象放到ServletContext域对象里面(setAttribute方法)
+	*  获取对象的时候，到ServletContext域获得(getAttribute方法)
