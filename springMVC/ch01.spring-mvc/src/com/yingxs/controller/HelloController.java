@@ -18,4 +18,15 @@ public class HelloController {
 		mv.setViewName("/WEB-INF/jsp/success.jsp");
 		return mv;
 	}
+	@RequestMapping("/view")
+	public ModelAndView view(){
+		System.out.println("执行了view方法");
+		//把数据保存到ModelAndView（相当于保存到request域对象）
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("name", "yingxs");
+		
+		//返回逻辑路径
+		mv.setViewName("success");
+		return mv;
+	}
 }
