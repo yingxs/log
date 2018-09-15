@@ -1,0 +1,11 @@
+0:0:0:0:0:0:0:1 - - [15/Sep/2018:23:31:23 +0800] "GET /yingxs-management/custInput.jsp HTTP/1.1" 200 366 http-bio-6060-exec-1 4574
+0:0:0:0:0:0:0:1 - - [15/Sep/2018:23:31:27 +0800] "GET /favicon.ico HTTP/1.1" 404 - http-bio-6060-exec-3 0
+0:0:0:0:0:0:0:1 - - [15/Sep/2018:23:31:49 +0800] "POST /yingxs-management/customer_save.action HTTP/1.1" 200 6989 http-bio-6060-exec-5 553
+0:0:0:0:0:0:0:1 - - [15/Sep/2018:23:37:30 +0800] "GET /yingxs-management/custInput.jsp HTTP/1.1" 200 366 http-bio-5050-exec-1 414
+0:0:0:0:0:0:0:1 - - [15/Sep/2018:23:37:30 +0800] "GET /favicon.ico HTTP/1.1" 404 - http-bio-5050-exec-3 0
+0:0:0:0:0:0:0:1 - - [15/Sep/2018:23:37:38 +0800] "POST /yingxs-management/customer_save.action HTTP/1.1" 200 6989 http-bio-5050-exec-5 398
+0:0:0:0:0:0:0:1 - - [15/Sep/2018:23:40:31 +0800] "GET /yingxs-management/custInput.jsp HTTP/1.1" 200 366 http-bio-4040-exec-1 717
+0:0:0:0:0:0:0:1 - - [15/Sep/2018:23:40:31 +0800] "GET /favicon.ico HTTP/1.1" 404 - http-bio-4040-exec-4 0
+0:0:0:0:0:0:0:1 - - [15/Sep/2018:23:40:44 +0800] "POST /yingxs-management/customer_save.action HTTP/1.1" 200 148 http-bio-4040-exec-6 8982
+0:0:0:0:0:0:0:1 - - [15/Sep/2018:23:41:03 +0800] "GET /yingxs-management/custInput.jsp HTTP/1.1" 200 366 http-bio-4040-exec-8 7
+0:0:0:0:0:0:0:1 - - [15/Sep/2018:23:41:12 +0800] "POST /yingxs-management/customer_save.action HTTP/1.1" 200 148 http-bio-4040-exec-3 225
