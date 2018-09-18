@@ -1,6 +1,7 @@
 package com.yingxs.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -77,11 +78,20 @@ public class ParamterController {
 	}
 	
 	/**
-	 * 6.绑定数组类型
+	 * 6..绑定数组类型
 	 */
 	@RequestMapping(value="/test6",method=RequestMethod.POST)
 	public String test6(Integer[] id) {
 		System.out.println(Arrays.asList(id));
+		return "success";
+	}
+	
+	/**
+	 * 7..自定义类型转换
+	 */
+	@RequestMapping(value="/test7",method=RequestMethod.POST)
+	public String test7(Date birth) {
+		System.out.println(birth);
 		return "success";
 	}
 	

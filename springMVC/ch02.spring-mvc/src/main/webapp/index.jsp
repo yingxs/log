@@ -48,12 +48,18 @@
 	<input type="submit" value="提交" />
 	</form>
 	
-	<h3>6.绑定数组类型</h3>
+	<h3>6..绑定数组类型</h3>
 	<form action="${pageContext.request.contextPath}/param/test6.action" method="post">
 	<input type="checkbox" name="id" value="1" />数据1<br/>
 	<input type="checkbox" name="id" value="2" />数据2<br/>
 	<input type="checkbox" name="id" value="3" />数据3<br/>
 	<input type="submit" value="删除" />
+	</form>
+	
+	<h3>7..自定义参数类型转换</h3>
+	<form action="${pageContext.request.contextPath}/param/test7.action" method="post">
+	日期:<input type="text" name="birth" /></br/>
+	<input type="submit" value="提交" />
 	</form>
 
 </body>
