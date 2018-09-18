@@ -42,3 +42,13 @@
 0:0:0:0:0:0:0:1 - - [18/Sep/2018:13:42:23 +0800] "GET /ch02.spring-mvc HTTP/1.1" 302 - http-bio-6060-exec-1 0
 0:0:0:0:0:0:0:1 - - [18/Sep/2018:13:42:24 +0800] "GET /ch02.spring-mvc/ HTTP/1.1" 200 1623 http-bio-6060-exec-3 265
 0:0:0:0:0:0:0:1 - - [18/Sep/2018:13:42:40 +0800] "POST /ch02.spring-mvc/param/test5.action HTTP/1.1" 200 136 http-bio-6060-exec-5 2657
+0:0:0:0:0:0:0:1 - - [18/Sep/2018:14:03:23 +0800] "GET /ch02.spring-mvc HTTP/1.1" 302 - http-bio-5050-exec-1 0
+0:0:0:0:0:0:0:1 - - [18/Sep/2018:14:03:25 +0800] "GET /ch02.spring-mvc/ HTTP/1.1" 200 1957 http-bio-5050-exec-2 2516
+0:0:0:0:0:0:0:1 - - [18/Sep/2018:14:03:32 +0800] "POST /ch02.spring-mvc/param/test6.action HTTP/1.1" 200 136 http-bio-5050-exec-4 1925
+0:0:0:0:0:0:0:1 - - [18/Sep/2018:14:04:22 +0800] "POST /ch02.spring-mvc/param/test6.action HTTP/1.1" 200 136 http-bio-5050-exec-6 13
+0:0:0:0:0:0:0:1 - - [18/Sep/2018:14:04:26 +0800] "POST /ch02.spring-mvc/param/test6.action HTTP/1.1" 200 136 http-bio-5050-exec-8 5
+0:0:0:0:0:0:0:1 - - [18/Sep/2018:14:04:31 +0800] "POST /ch02.spring-mvc/param/test6.action HTTP/1.1" 200 136 http-bio-5050-exec-10 9
+0:0:0:0:0:0:0:1 - - [18/Sep/2018:14:10:31 +0800] "GET /ch02.spring-mvc HTTP/1.1" 302 - http-bio-4040-exec-1 0
+0:0:0:0:0:0:0:1 - - [18/Sep/2018:14:10:33 +0800] "GET /ch02.spring-mvc/ HTTP/1.1" 200 2152 http-bio-4040-exec-2 1949
+0:0:0:0:0:0:0:1 - - [18/Sep/2018:14:11:05 +0800] "POST /ch02.spring-mvc/param/test5.action HTTP/1.1" 200 136 http-bio-4040-exec-4 2477
+0:0:0:0:0:0:0:1 - - [18/Sep/2018:14:11:17 +0800] "POST /ch02.spring-mvc/param/test5.action HTTP/1.1" 200 136 http-bio-4040-exec-6 10

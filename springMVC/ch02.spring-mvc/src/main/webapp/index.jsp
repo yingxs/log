@@ -42,7 +42,18 @@
 	手机:<input type="text" name="user.userTelephone"/><br/>
 	性别:<input type="radio" name="gender" value="男"/>男
 		<input type="radio" name="gender" value="女"/>女
+	<input type="checkbox" name="user.id" value="1" />数据1<br/>
+	<input type="checkbox" name="user.id" value="2" />数据2<br/>
+	<input type="checkbox" name="user.id" value="3" />数据3<br/>
 	<input type="submit" value="提交" />
+	</form>
+	
+	<h3>6.绑定数组类型</h3>
+	<form action="${pageContext.request.contextPath}/param/test6.action" method="post">
+	<input type="checkbox" name="id" value="1" />数据1<br/>
+	<input type="checkbox" name="id" value="2" />数据2<br/>
+	<input type="checkbox" name="id" value="3" />数据3<br/>
+	<input type="submit" value="删除" />
 	</form>
 
 </body>

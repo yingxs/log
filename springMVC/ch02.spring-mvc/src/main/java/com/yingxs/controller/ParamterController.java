@@ -1,5 +1,7 @@
 package com.yingxs.controller;
 
+import java.util.Arrays;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -71,6 +73,15 @@ public class ParamterController {
 	@RequestMapping(value="/test5",method=RequestMethod.POST)
 	public String test5(UserVo userVo) {
 		System.out.println(userVo);
+		return "success";
+	}
+	
+	/**
+	 * 6.绑定数组类型
+	 */
+	@RequestMapping(value="/test6",method=RequestMethod.POST)
+	public String test6(Integer[] id) {
+		System.out.println(Arrays.asList(id));
 		return "success";
 	}
 	
