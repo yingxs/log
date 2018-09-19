@@ -23,5 +23,18 @@
 		<property name="suffix" value=".jsp"></property>
 	</bean>
 	
+	<!-- SimpleMappingExceptionResolver 配置-->
+	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<!-- 支持的异常列表 -->
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.ArithmeticException">error</prop>
+			</props>
+		</property>
+		<!-- 默认就会把异常信息封装到exception名称的属性中 -->
+		
+		<!-- 修改默认异常属性名称 -->
+		<property name="exceptionAttribute" value="ex"></property>
+	</bean>
 	
 </beans>

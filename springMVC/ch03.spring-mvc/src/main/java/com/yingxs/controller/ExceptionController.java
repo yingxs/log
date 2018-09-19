@@ -18,4 +18,15 @@ public class ExceptionController {
 		
 		return "success";
 	}
+	
+	@RequestMapping("/test2")
+	public String test2() {
+		System.out.println("ExceptionController的test2()");
+		int i = 100/0;
+		
+		return "success";
+	}
+	
+	
+	
 }
