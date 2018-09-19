@@ -16,6 +16,10 @@
 	<h3>1.2.SimpleMappingExceptionResolver处理异常</h3>
 	<a href="${pageContext.request.contextPath}/exception/test2.action">1.2.SimpleMappingExceptionResolver处理异常</a>
 	<hr/>
+	
+	<h3>1.3.HandlerExceptionResolver处理异常</h3>
+	<a href="${pageContext.request.contextPath}/exception/test3.action">1.3.HandlerExceptionResolver处理异常</a>
+	<hr/>
 
 </body>
 </html>

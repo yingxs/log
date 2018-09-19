@@ -28,5 +28,15 @@ public class ExceptionController {
 	}
 	
 	
+	@RequestMapping("/test3")
+	public String test3() {
+		System.out.println("ExceptionController的test3()");
+		int[] array = new int[2];
+		array[2] = 10;
+		
+		return "success";
+	}
+	
+	
 	
 }

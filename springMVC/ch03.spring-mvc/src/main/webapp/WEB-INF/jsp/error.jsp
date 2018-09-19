@@ -8,6 +8,6 @@
 </head>
 <body>
 异常提示页面<br/>
-异常信息：${exception}
+异常信息：${ex}
 </body>
 </html>
