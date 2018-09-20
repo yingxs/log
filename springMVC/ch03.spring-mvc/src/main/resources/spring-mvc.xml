@@ -51,6 +51,12 @@
 	 		<bean class="com.yingxs.controller.interceptor.MyInterceptor2"></bean>
 	 	</mvc:interceptor>
 	 </mvc:interceptors>
+	 
+	 <!-- 处理文件上传 -->
+	 <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	 	<!-- 限制最大文件大小 -->
+	 	<property name="maxUploadSize" value="102400"></property>
+	 </bean>
 
 	 
 </beans>

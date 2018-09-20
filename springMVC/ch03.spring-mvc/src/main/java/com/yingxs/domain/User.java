@@ -1,6 +1,5 @@
 package com.yingxs.domain;
 
-import java.util.Arrays;
 
 public class User {
 
