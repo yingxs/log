@@ -40,4 +40,17 @@
 	 
 	 <bean class="com.yingxs.exception.MyHandlerExceptionResolver"></bean>
 	 
+	 <!-- 配置拦截器 -->
+	 <mvc:interceptors>
+	 	<mvc:interceptor>
+	 		<mvc:mapping path="/interceptor/test1.action"/>
+	 		<bean class="com.yingxs.controller.interceptor.MyInterceptor1"></bean>
+	 	</mvc:interceptor>
+	 	<mvc:interceptor>
+	 		<mvc:mapping path="/interceptor/test1.action"/>
+	 		<bean class="com.yingxs.controller.interceptor.MyInterceptor2"></bean>
+	 	</mvc:interceptor>
+	 </mvc:interceptors>
+
+	 
 </beans>
