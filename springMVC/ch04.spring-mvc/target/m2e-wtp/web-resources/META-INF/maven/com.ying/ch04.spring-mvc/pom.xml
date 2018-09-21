@@ -107,7 +107,7 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.1</version>
 				<configuration>
-					<port>9074</port>
+					<port>9071</port>
 					<server>tomcat7</server>
 				</configuration>
 			</plugin>

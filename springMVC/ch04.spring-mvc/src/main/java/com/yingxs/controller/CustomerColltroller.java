@@ -76,4 +76,14 @@ public class CustomerColltroller {
 	}
 	
 	
+	/**
+	 * 	删除客户
+	 */
+	@RequestMapping(method=RequestMethod.DELETE)
+	public String delete(Long[] custIds,Map<String, Object> model) {
+		customerService.delete(custIds);
+		model.put("msg", "删除成功");
+		return "success";
+	}
+	
 }

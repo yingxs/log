@@ -9,4 +9,5 @@ public interface CustomerDao {
 	public abstract List<Customer> findAll();
 	public abstract Customer findById(Long custId);
 	public abstract void update(Customer customer);
+	public abstract void delete(Long custId);
 }
