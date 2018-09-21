@@ -7,6 +7,7 @@
 <title>SUCCESS</title>
 </head>
 <body>
-${msg }
+${msg }<br/>
+<a href="${pageContext.request.contextPath }/customer.action">客户列表</a>
 </body>
 </html>
