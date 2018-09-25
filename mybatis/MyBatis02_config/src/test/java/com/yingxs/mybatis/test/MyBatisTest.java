@@ -1,6 +1,18 @@
-## MyBatis-Helloworld
-* MyBatisTest.java
-```
+package com.yingxs.mybatis.test;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Test;
+
+import com.yingxs.mybatis.bean.Employee;
+import com.yingxs.mybatis.dao.EmployeeMapper;
+import com.yingxs.mybatis.dao.EmployeeMapperAnnotaion;
+
 public class MyBatisTest {
 
 	/**
@@ -83,58 +95,18 @@ public class MyBatisTest {
 		
 		
 	}
-
-}
-```
-* interface EmployeeMapper.java
-```
-public interface EmployeeMapper {
-
-	public abstract  Employee getEmpId(Integer id);
-}
-
-```
-* mybatis-config.xml
-```
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE configuration
-  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-config.dtd">
-<configuration>
-	<environments default="development">
-		<environment id="development">
-			<transactionManager type="JDBC" />
-			<dataSource type="POOLED">
-				<property name="driver" value="com.mysql.jdbc.Driver" />
-				<property name="url" value="jdbc:mysql://localhost:3308/mybatis" />
-				<property name="username" value="root" />
-				<property name="password" value="123456" />
-			</dataSource>
-		</environment>
-	</environments>
 	
-	<!-- 引入sql映射文件 -->
-	<mappers>
-		<mapper resource="EmployeeMapper.xml" />
-	</mappers>
-</configuration>
-```
-* EmployeeMapper.xml
-```
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yingxs.mybatis.dao.EmployeeMapper">
-<!-- 
-	namespace:名称空间,接口的全类名
-	id:唯一标识
-	resultType:返回值类型
-	#{id}:从传递过来的的参数中取出id值
- -->
-  <!-- public abstract  Employee getEmpId(Integer id); -->
-  <select id="getEmpId" resultType="com.yingxs.mybatis.bean.Employee">
-    select id,last_name lastName,email,gender from tbl_employee where id = #{id}
-  </select>
-</mapper>
-```
+	@Test
+	public void test02() throws IOException {
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		SqlSession openSession = sqlSessionFactory.openSession();
+		try {
+			EmployeeMapperAnnotaion mapper = openSession.getMapper(EmployeeMapperAnnotaion.class);
+			Employee empId = mapper.getEmpId(1);
+			System.out.println(empId);
+		} finally {
+			openSession.close();
+		}
+	}
+
+}
