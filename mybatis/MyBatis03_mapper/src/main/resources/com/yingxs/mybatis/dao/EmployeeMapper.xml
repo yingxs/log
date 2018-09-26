@@ -9,6 +9,14 @@
 	resultType:返回值类型
 	#{id}:从传递过来的的参数中取出id值
  -->
+ 
+ <!-- public abstract  Employee getEmpByIdAndLastName(Integer id,String lastName); -->
+ 	<select id="getEmpByIdAndLastName" resultType="com.yingxs.mybatis.bean.Employee">
+ 		select * from tbl_employee where id = #{id} and last_name=#{lastName}
+ 	</select>
+ 
+ 
+ 
   <!-- public abstract  Employee getEmpId(Integer id); -->
   <select id="getEmpId" resultType="com.yingxs.mybatis.bean.Employee" databaseId="mysql">
     select * from tbl_employee where id = #{id}
