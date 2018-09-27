@@ -5,6 +5,6 @@ import com.yingxs.mybatis.bean.Employee;
 public interface EmployeeMapperPlus {
 
 	Employee getEmpById(Integer id);
-	
+	Employee getEmpByIdStep(Integer id);
 	Employee getEmpAndDept(Integer id);
 }

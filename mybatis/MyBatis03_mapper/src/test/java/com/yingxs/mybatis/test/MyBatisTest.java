@@ -194,9 +194,15 @@ public class MyBatisTest {
 			EmployeeMapperPlus mapper = openSession.getMapper(EmployeeMapperPlus.class);
 			/*Employee empById = mapper.getEmpById(1);
 			System.out.println(empById);*/
-			Employee empAndDept = mapper.getEmpAndDept(1);
+			
+			/*Employee empAndDept = mapper.getEmpAndDept(1);
 			System.out.println(empAndDept);
-			System.out.println(empAndDept.getDept());
+			System.out.println(empAndDept.getDept());*/
+			
+			Employee employee = mapper.getEmpByIdStep(1);
+			System.out.println(employee);
+			System.out.println(employee.getDept());
+			
 			
 			
 		}finally {
