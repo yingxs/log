@@ -2,8 +2,6 @@ package com.yingxs.mybatis.test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
@@ -15,6 +13,7 @@ import org.junit.Test;
 import com.yingxs.mybatis.bean.Employee;
 import com.yingxs.mybatis.dao.EmployeeMapper;
 import com.yingxs.mybatis.dao.EmployeeMapperAnnotaion;
+import com.yingxs.mybatis.dao.EmployeeMapperPlus;
 
 public class MyBatisTest {
 
@@ -47,6 +46,7 @@ public class MyBatisTest {
 			openSession.close();
 		}
 	}
+	
 	
 	
 	public SqlSessionFactory getSqlSessionFactory() throws IOException {
@@ -129,11 +129,11 @@ public class MyBatisTest {
 			EmployeeMapper mapper = openSession.getMapper(EmployeeMapper.class);
 			
 			//测试添加
-			Employee employee = new Employee(null, "杰克", "jack@126.com", "1");
-			System.out.println("employee:"+employee);
-			Long addEmp = mapper.addEmp(employee);
-			System.out.println("employee:"+employee);
-			System.out.println("Long:"+addEmp);
+//			Employee employee = new Employee(null, "杰克", "jack@126.com", "1");
+//			System.out.println("employee:"+employee);
+//			Long addEmp = mapper.addEmp(employee);
+//			System.out.println("employee:"+employee);
+//			System.out.println("Long:"+addEmp);
 			
 			//测试修改
 			//boolean updateEmp = mapper.updateEmp(new Employee(1, "Tom", "jack@126.com", "1"));
@@ -165,14 +165,44 @@ public class MyBatisTest {
 			
 			System.out.println(employee);*/
 			
-			List<Employee> like = mapper.getEmployeeByLastNameLike("%克%");
+			/*List<Employee> like = mapper.getEmployeeByLastNameLike("%克%");
 			for (Employee employee : like) {
 				System.out.println(employee);
-			}
+			}*/
+			
+			/*Map<String, Object> map = mapper.getEmpIdReturnMap(1);
+			System.out.println(map.get("email"));
+			*/
+			
+			/*Map<String, Employee> map = mapper.getEmpBylastNameLikeReturnMap("%克%");
+			System.out.println(map);*/
+			
+			Employee emp = mapper.getEmpByIdAndLastName(1, "Tom");
+			System.out.println(emp);
 			
 		}finally {
 			openSession.close();
 		}
+	}
+	
+	@Test
+	public void test05() throws IOException {
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		SqlSession openSession = sqlSessionFactory.openSession();
+		
+		try {
+			EmployeeMapperPlus mapper = openSession.getMapper(EmployeeMapperPlus.class);
+			/*Employee empById = mapper.getEmpById(1);
+			System.out.println(empById);*/
+			Employee empAndDept = mapper.getEmpAndDept(1);
+			System.out.println(empAndDept);
+			System.out.println(empAndDept.getDept());
+			
+			
+		}finally {
+			openSession.close();
+		}
+		
 	}
 	
 	

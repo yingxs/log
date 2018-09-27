@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yingxs.mybatis.dao.EmployeeMapperPlus">
+
+	<!-- 自定义某个javaBean的封装规则 type:自定义规则的Java类型 id:唯一Id，方便引用 -->
+	<resultMap type="com.yingxs.mybatis.bean.Employee"
+		id="MySimpleEmp">
+		<!-- 指定主键列的封装 id标签定义主键会有底层优化 column:指定哪一列 property:指定对应的javaBean属性 -->
+		<id column="id" property="id"></id>
+		<!-- 定义普通列规则 -->
+		<result column="last_name" property="lastName" />
+		<!-- 其他不指定的列会自动封装 ，但是我们只要写resultMap，就推荐写上全部的映射规则 -->
+		<result column="email" property="email" />
+		<result column="gender" property="gender" />
+	</resultMap>
+
+	<!-- resultMap:自定义结果集映射规则 -->
+	<!-- Employee getEmpById(Integer id); -->
+	<select id="getEmpById" resultMap="MySimpleEmp">
+		select * from tbl_employee
+		where id=#{id}
+	</select>
+
+	<!-- 场景1： 
+		查询Employee的同时查询员工对应的部门 
+		Employee==>Department 一个员工有与对应的部门信息 id 
+		last_name gender d_id did dept_name 
+	-->
+
+	<!-- 联合查询：1.级联属性封装结果集 -->
+	<resultMap type="com.yingxs.mybatis.bean.Employee" id="MyDifEmp">
+		<id column="id" property="id" />
+		<result column="last_name" property="lastName" />
+		<result column="gender" property="gender" />
+		<result column="d_id" property="dept.id" />
+		<result column="dept_name" property="dept.departmentName" />
+	</resultMap>
+
+	<!-- 联合查询：2.使用association定义单个对象的封装规则 -->
+	<resultMap type="com.yingxs.mybatis.bean.Employee" id="MyDifEmp2">
+		<id column="id" property="id" />
+		<result column="last_name" property="lastName" />
+		<result column="gender" property="gender" />
+		
+		<!-- association可以指定联合的javaBean对象
+				property:指定哪个属性是联合的对象
+				javaType:指定这个属性独享的类型(不能省略)
+			 -->
+		<association property="dept" javaType="com.yingxs.mybatis.bean.Department">
+			<id column="did" property="id"/>
+			<result column="dept_name" property="departmentName"/>
+		</association>
+	</resultMap>
+
+	<!-- Employee getEmpAndDept(Integer id); -->
+	<select id="getEmpAndDept" resultMap="MyDifEmp2">
+		SELECT e.id id,e.last_name last_name,e.gender gender,
+		e.d_id d_id,d.id did,d.dept_name dept_name FROM tbl_employee e,
+		tbl_dept d WHERE e.d_id=d.id AND e.id=#{id}
+
+	</select>
+
+
+
+</mapper>
