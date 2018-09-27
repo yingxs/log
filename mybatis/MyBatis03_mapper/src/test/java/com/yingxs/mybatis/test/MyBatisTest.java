@@ -2,6 +2,9 @@ package com.yingxs.mybatis.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -155,8 +158,18 @@ public class MyBatisTest {
 		try {
 			EmployeeMapper mapper = openSession.getMapper(EmployeeMapper.class);
 
-			Employee employee = mapper.getEmpByIdAndLastName(1, "tom");
-			System.out.println(employee);
+			/*Map<String, Object> map = new HashMap<>();
+			map.put("id",3);
+			map.put("lastName","Tom");
+			Employee employee = mapper.getEmpByMap(map);
+			
+			System.out.println(employee);*/
+			
+			List<Employee> like = mapper.getEmployeeByLastNameLike("%克%");
+			for (Employee employee : like) {
+				System.out.println(employee);
+			}
+			
 		}finally {
 			openSession.close();
 		}
