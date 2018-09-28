@@ -229,7 +229,7 @@ public class MyBatisTest {
 			
 			Department deptByIdStep = mapper.getDeptByIdStep(1);
 			System.out.println(deptByIdStep.getDepartmentName());
-//			System.out.println(deptByIdStep.getEmps());
+			System.out.println(deptByIdStep.getEmps());
 			
 			
 		}finally {

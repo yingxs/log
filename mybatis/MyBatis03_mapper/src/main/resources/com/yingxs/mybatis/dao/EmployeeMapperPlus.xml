@@ -97,7 +97,8 @@
 	<select id="getEmpsByDeptId" resultType="com.yingxs.mybatis.bean.Employee">
 		select * from tbl_employee where d_id=#{deptId}
 	</select>
-
+	
+	
 
 
 

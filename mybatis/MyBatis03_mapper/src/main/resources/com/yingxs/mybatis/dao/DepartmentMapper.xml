@@ -51,7 +51,7 @@
 		<result column="dept_name" property="departmentName" />
 		<collection property="emps" 
 		select="com.yingxs.mybatis.dao.EmployeeMapperPlus.getEmpsByDeptId"
-		column="id"></collection>
+		column="id" fetchType="eager"></collection>
 	
 	
 	</resultMap>
@@ -59,7 +59,10 @@
 		select id,dept_name departmentName from tbl_dept where id=#{id} 
 	</select>
 	
-	
+	<!-- 扩展，多列的值的传递过去
+		将多列的值封装map传递
+		column="{key1=column1,key2=column2}"
+	 -->
 	
 	
 	
