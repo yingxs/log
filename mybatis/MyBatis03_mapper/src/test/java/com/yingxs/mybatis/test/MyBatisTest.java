@@ -201,8 +201,8 @@ public class MyBatisTest {
 			System.out.println(empAndDept);
 			System.out.println(empAndDept.getDept());*/
 			
-			Employee employee = mapper.getEmpByIdStep(1);
-			System.out.println(employee.getLastName());
+			Employee employee = mapper.getEmpByIdStep(3);
+			System.out.println(employee);
 			System.out.println(employee.getDept());
 			
 			
@@ -227,7 +227,7 @@ public class MyBatisTest {
 			System.out.println(deptartment);
 			System.out.println(deptartment.getEmps());*/
 			
-			Department deptByIdStep = mapper.getDeptByIdStep(1);
+			Department deptByIdStep = mapper.getDeptByIdStep(3);
 			System.out.println(deptByIdStep.getDepartmentName());
 			System.out.println(deptByIdStep.getEmps());
 			

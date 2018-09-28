@@ -23,14 +23,12 @@
 		where id=#{id}
 	</select>
 
-	<!-- 场景1： 
-		查询Employee的同时查询员工对应的部门 
-		Employee==>Department 一个员工有与对应的部门信息 id 
-		last_name gender d_id did dept_name 
-	-->
+	<!-- 场景1： 查询Employee的同时查询员工对应的部门 Employee==>Department 一个员工有与对应的部门信息 id 
+		last_name gender d_id did dept_name -->
 
 	<!-- 联合查询：1.级联属性封装结果集 -->
-	<resultMap type="com.yingxs.mybatis.bean.Employee" id="MyDifEmp">
+	<resultMap type="com.yingxs.mybatis.bean.Employee"
+		id="MyDifEmp">
 		<id column="id" property="id" />
 		<result column="last_name" property="lastName" />
 		<result column="gender" property="gender" />
@@ -39,67 +37,88 @@
 	</resultMap>
 
 	<!-- 联合查询：2.使用association定义单个对象的封装规则 -->
-	<resultMap type="com.yingxs.mybatis.bean.Employee" id="MyDifEmp2">
+	<resultMap type="com.yingxs.mybatis.bean.Employee"
+		id="MyDifEmp2">
 		<id column="id" property="id" />
 		<result column="last_name" property="lastName" />
 		<result column="gender" property="gender" />
-		
-		<!-- association可以指定联合的javaBean对象
-				property:指定哪个属性是联合的对象
-				javaType:指定这个属性独享的类型(不能省略)
-			 -->
-		<association property="dept" javaType="com.yingxs.mybatis.bean.Department">
-			<id column="did" property="id"/>
-			<result column="dept_name" property="departmentName"/>
+
+		<!-- association可以指定联合的javaBean对象 property:指定哪个属性是联合的对象 javaType:指定这个属性独享的类型(不能省略) -->
+		<association property="dept"
+			javaType="com.yingxs.mybatis.bean.Department">
+			<id column="did" property="id" />
+			<result column="dept_name" property="departmentName" />
 		</association>
 	</resultMap>
 
 	<!-- Employee getEmpAndDept(Integer id); -->
 	<select id="getEmpAndDept" resultMap="MyDifEmp2">
-		SELECT e.id id,e.last_name last_name,e.gender gender,
-		e.d_id d_id,d.id did,d.dept_name dept_name FROM tbl_employee e,
+		SELECT e.id id,e.last_name
+		last_name,e.gender gender,
+		e.d_id d_id,d.id did,d.dept_name dept_name
+		FROM tbl_employee e,
 		tbl_dept d WHERE e.d_id=d.id AND e.id=#{id}
 	</select>
-	
-	<!-- 使用association进行分步查询
-		1.先按照员工id查询员工信息
-		2.根据查询员工信息中的d_id值去部门表中查出部门信息
-		3.部门设置到员工中
-	   -->
-	<resultMap type="com.yingxs.mybatis.bean.Employee" id="MyEmpByStep">
+
+	<!-- 使用association进行分步查询 1.先按照员工id查询员工信息 2.根据查询员工信息中的d_id值去部门表中查出部门信息 3.部门设置到员工中 -->
+	<resultMap type="com.yingxs.mybatis.bean.Employee"
+		id="MyEmpByStep">
 		<id column="id" property="id" />
-		<result column="last_name" property="lastName"/>
-		<result column="email" property="email"/>
-		<result column="gender" property="gender"/>
-		<!-- association定义关联对象的封装规则
-			select:表明当前属性是调用select指定的方法查出的结果 
-			column:指定将哪一列的值传给这个方法
-			流程：使用select指定的方法(传入column指定的这列参数的值)查出对象,并封装给property指定的属性
-		 -->
-		<association property="dept" 
-			select="com.yingxs.mybatis.dao.DepartmentMapper.getDeptById" 
+		<result column="last_name" property="lastName" />
+		<result column="email" property="email" />
+		<result column="gender" property="gender" />
+		<!-- association定义关联对象的封装规则 select:表明当前属性是调用select指定的方法查出的结果 column:指定将哪一列的值传给这个方法 
+			流程：使用select指定的方法(传入column指定的这列参数的值)查出对象,并封装给property指定的属性 -->
+		<association property="dept"
+			select="com.yingxs.mybatis.dao.DepartmentMapper.getDeptById"
 			column="d_id">
 		</association>
 	</resultMap>
 	<!-- Employee getEmpByIdStep(Integer id); -->
-	<select id="getEmpByIdStep" resultMap="MyEmpByStep">
-		select * from tbl_employee where id=#{id}
+	<select id="getEmpByIdStep" resultMap="MyEmpDis">
+		select * from tbl_employee
+		where id=#{id}
 	</select>
-	
-	<!--  分步查询可以使用延迟加载 -->
-	
-	<!-- 
-		场景二:
-		查询部门的时候将部门对应的所有员工的信息也查询出来：注释在DepartmentMapper.xml中 
-		 -->
+
+	<!-- 分步查询可以使用延迟加载 -->
+
+	<!-- 场景二: 查询部门的时候将部门对应的所有员工的信息也查询出来：注释在DepartmentMapper.xml中 -->
 
 	<!-- List<Employee> getEmpsByDeptId(Integer deptId); -->
-	<select id="getEmpsByDeptId" resultType="com.yingxs.mybatis.bean.Employee">
+	<select id="getEmpsByDeptId"
+		resultType="com.yingxs.mybatis.bean.Employee">
 		select * from tbl_employee where d_id=#{deptId}
-	</select>
-	
-	
 
+	</select>
+
+	<!-- 
+		鉴别器：mybatis可以使用discriminator判断某列的是，然后根据某列的值改变其封装行为
+		 例如封装Employee: 
+		 	如果性别为女：就把这个部门的信息查询出来，负责不查询 
+			如果是男生：就把last_name这一列的值赋值为email -->
+	<resultMap type="com.yingxs.mybatis.bean.Employee" id="MyEmpDis">
+		<id column="id" property="id" />
+		<result column="last_name" property="lastName" />
+		<result column="email" property="email" />
+		<result column="gender" property="gender" />
+		
+		<!-- 
+		column：指定的列名
+		javaType ：列值对一女的java类型 -->
+		<discriminator javaType="string" column="gender">
+			<!-- 女  resultType:指定封装的结果类型 -->
+			<case value="0" resultType="com.yingxs.mybatis.bean.Employee">
+				<association property="dept"
+					select="com.yingxs.mybatis.dao.DepartmentMapper.getDeptById"
+					column="d_id">
+				</association>
+			</case>
+			<!-- 男 -->
+			<case value="1" resultType="com.yingxs.mybatis.bean.Employee">
+				<result column="last_name" property="email" />
+			</case>
+		</discriminator>
+	</resultMap>
 
 
 </mapper>
