@@ -88,6 +88,16 @@
 	
 	<!--  分步查询可以使用延迟加载 -->
 	
+	<!-- 
+		场景二:
+		查询部门的时候将部门对应的所有员工的信息也查询出来：注释在DepartmentMapper.xml中 
+		 -->
+
+	<!-- List<Employee> getEmpsByDeptId(Integer deptId); -->
+	<select id="getEmpsByDeptId" resultType="com.yingxs.mybatis.bean.Employee">
+		select * from tbl_employee where d_id=#{deptId}
+	</select>
+
 
 
 
