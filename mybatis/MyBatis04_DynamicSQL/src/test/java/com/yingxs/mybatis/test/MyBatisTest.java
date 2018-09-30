@@ -288,6 +288,31 @@ public class MyBatisTest {
 	}
 	
 	
+	@Test
+	public void testBatchSave() throws IOException {
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		SqlSession openSession = sqlSessionFactory.openSession();
+		
+		try {
+			EmployeeMapperDynamicSQL mapper = openSession.getMapper(EmployeeMapperDynamicSQL.class);
+			
+			Employee e1 = new Employee(null,"smith","smith@126.com","1",new Department(1));
+			Employee e2 = new Employee(null,"allen","allen@126.com","1",new Department(1));
+			
+			ArrayList<Employee> emps = new ArrayList<>();
+			emps.add(e1);
+			emps.add(e2);
+			
+			mapper.addEmps(emps);
+			openSession.commit();
+			
+			
+		}finally {
+			openSession.close();
+		}
+	}
+	
+	
 	
 	
 	

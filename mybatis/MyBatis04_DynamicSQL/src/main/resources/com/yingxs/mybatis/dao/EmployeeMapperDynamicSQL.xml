@@ -133,14 +133,41 @@
 			
 			#{变量名 }
 		 -->
-		 <foreach collection="list" item="item_id" separator="," open="(" close=")">
+		 <foreach collection="ids" item="item_id" separator="," open="(" close=")">
 		 	#{item_id}
 		 </foreach>
 		 
 	</select>
-
-
-
+	
+	<!-- 批量保存  -->
+	<!-- void addEmps(@Param("emps")List<Employee> emps); -->
+	<!-- MySQL下批量保存：可以foreach遍历 mysql支持values(),(),()语法 -->
+	<!-- 
+	<insert id="addEmps">
+		insert into tbl_employee(last_name,email,gender,d_id)
+		values
+		<foreach collection="emps" item="emp" separator=",">
+			(#{emp.lastName},#{emp.email},#{emp.gender},#{emp.dept.id})
+		</foreach>
+	</insert>
+ 	-->
+ 	
+ 	<!-- Oracle批量保存  不支持values(),(),()语法  -->
+	<!-- 1.多个insert放在begin - end里面 	
+		begin
+			...
+		end
+	-->
+	<!-- 2.使用中间表的方式 
+		insert into employees(employee_id,last_name,email)
+			select employees_seq.nextval,lastName,email from(
+				select 'test_a_01' lastName , 'test_a_e01' email from dual
+				union
+				select 'test_a_02' lastName , 'test_a_e02' email from dual
+				union
+				select 'test_a_03' lastName , 'test_a_e03' email from dual
+			)
+	 -->	
 
 
 

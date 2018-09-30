@@ -10,6 +10,16 @@ public class Department {
 	
 	
 	
+	
+	
+	public Department(Integer id) {
+		super();
+		this.id = id;
+	}
+	public Department() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	public List<Employee> getEmps() {
 		return emps;
 	}

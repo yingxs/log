@@ -11,22 +11,23 @@ public class Employee {
 	private Department dept;
 	
 	
-	/*public Employee(Integer id, String lastName, String email, String gender) {
+	public Employee() {
+		super();
+	}
+	
+	
+	
+	public Employee(Integer id, String lastName, String email, String gender, Department dept) {
 		super();
 		this.id = id;
 		this.lastName = lastName;
 		this.email = email;
 		this.gender = gender;
-	}*/
-	
-	/*
-	public Employee(Integer id,  String email) {
-		super();
-		this.id = id;
-		this.email = email;
+		this.dept = dept;
 	}
-	*/
-	
+
+
+
 	public Integer getId() {
 		return id;
 	}
