@@ -248,9 +248,9 @@ public class MyBatisTest {
 		try {
 			EmployeeMapperDynamicSQL mapper = openSession.getMapper(EmployeeMapperDynamicSQL.class);
 			Employee employee = new Employee();
-//			employee.setId(4);
+			employee.setId(1);
 //			employee.setEmail("jack@126.com");
-//			employee.setLastName("%e%");
+			employee.setLastName("Admin");
 			
 			/*List<Employee> emps = mapper.getEmpsByConditionIf(employee);
 			for (Employee emp : emps) {
@@ -264,10 +264,13 @@ public class MyBatisTest {
 			}*/
 			
 			//测试choose
-			List<Employee> emps = mapper.getEmpsByConditionChoose(employee);
+			/*List<Employee> emps = mapper.getEmpsByConditionChoose(employee);
 			for (Employee emp : emps) {
 				System.out.println(emp);
-			}
+			}*/
+			
+			mapper.updateEmp(employee);
+			openSession.commit();
 			
 			
 		}finally {

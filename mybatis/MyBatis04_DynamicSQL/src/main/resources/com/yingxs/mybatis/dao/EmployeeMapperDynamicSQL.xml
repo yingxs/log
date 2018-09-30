@@ -2,65 +2,61 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
-<mapper namespace="com.yingxs.mybatis.dao.EmployeeMapperDynamicSQL">
 
-	<!-- 查询员工 要求，携带了哪个字段查询条件就带上这个字段的值  -->
+<mapper
+	namespace="com.yingxs.mybatis.dao.EmployeeMapperDynamicSQL">
+
+	<!-- 查询员工 要求，携带了哪个字段查询条件就带上这个字段的值 -->
 	<!-- List<Employee> getEmpsByConditionIf(Employee employee); -->
-	<select id="getEmpsByConditionIf" resultType="com.yingxs.mybatis.bean.Employee">
-		select * from tbl_employee 
+	<select id="getEmpsByConditionIf"
+		resultType="com.yingxs.mybatis.bean.Employee">
+		select * from tbl_employee
 		where 1=1
-		<!-- test:判断表达式（OGNL）
-			从参数中取值判断
-		  -->
-		  <if test="id!=null">
-		  	 and id=#{id}
-		  </if>
-		  <if test="lastName!=null &amp;&amp; lastName!=&quot;&quot;">
-		 	 and last_name like #{lastName}
-		  </if>
-		  <if test="email!=null and email.trim()!=&quot;&quot;">
-		 	 and email=#{email}
-		  </if>
-		  <!-- ognl会进行字符串与数字的转换判断  -->
-		  <if test="gender==0 or gender==1">
-		 	 and gender=#{gender}
-		  </if>
+		<!-- test:判断表达式（OGNL） 从参数中取值判断 -->
+		<if test="id!=null">
+			and id=#{id}
+		</if>
+		<if test="lastName!=null &amp;&amp; lastName!=&quot;&quot;">
+			and last_name like #{lastName}
+		</if>
+		<if test="email!=null and email.trim()!=&quot;&quot;">
+			and email=#{email}
+		</if>
+		<!-- ognl会进行字符串与数字的转换判断 -->
+		<if test="gender==0 or gender==1">
+			and gender=#{gender}
+		</if>
 	</select>
-	
+
 	<!-- List<Employee> getEmpsByConditionTrim(Employee employee); -->
-	<select id="getEmpsByConditionTrim" resultType="com.yingxs.mybatis.bean.Employee">
-		select * from tbl_employee 
-		<!-- 后面多余的and或者or where不能解决
-			prefix="":前缀，给拼串后的整个字符串加一个前缀
-			prefixOverrides="":前缀覆盖，去掉整个字符串前面多余的部分
-			suffix="":后缀，给拼串后的整个字符串加一个后缀
-		  	suffixOverrides="":后缀覆盖，去掉整个字符串后面多余的部分
-			
-		
-		 -->
-		 <!-- 字符串的截取规则  -->
-		<trim prefix="where" suffixOverrides="and" > 
-		  <if test="id!=null">
-		  	  id=#{id} and
-		  </if>
-		  <if test="lastName!=null &amp;&amp; lastName!=&quot;&quot;">
-		 	  last_name like #{lastName} and
-		  </if>
-		  <if test="email!=null and email.trim()!=&quot;&quot;">
-		 	  email=#{email} and
-		  </if>
-		  <!-- ognl会进行字符串与数字的转换判断  -->
-		  <if test="gender==0 or gender==1">
-		 	  gender=#{gender}
-		  </if>
-	  </trim>
+	<select id="getEmpsByConditionTrim"
+		resultType="com.yingxs.mybatis.bean.Employee">
+		select * from tbl_employee
+		<!-- 后面多余的and或者or where不能解决 prefix="":前缀，给拼串后的整个字符串加一个前缀 prefixOverrides="":前缀覆盖，去掉整个字符串前面多余的部分 
+			suffix="":后缀，给拼串后的整个字符串加一个后缀 suffixOverrides="":后缀覆盖，去掉整个字符串后面多余的部分 -->
+		<!-- 字符串的截取规则 -->
+		<trim prefix="where" suffixOverrides="and">
+			<if test="id!=null">
+				id=#{id} and
+			</if>
+			<if test="lastName!=null &amp;&amp; lastName!=&quot;&quot;">
+				last_name like #{lastName} and
+			</if>
+			<if test="email!=null and email.trim()!=&quot;&quot;">
+				email=#{email} and
+			</if>
+			<!-- ognl会进行字符串与数字的转换判断 -->
+			<if test="gender==0 or gender==1">
+				gender=#{gender}
+			</if>
+		</trim>
 	</select>
-	
+
 	<!-- 如果携带了id就用id查，如果带了lastName就用lastName查，只使用一个条件 -->
 	<!-- List<Employee> getEmpsByConditionChoose(Employee employee); -->
-	<select id="getEmpsByConditionChoose" resultType="com.yingxs.mybatis.bean.Employee">
-		select * from tbl_employee 
+	<select id="getEmpsByConditionChoose"
+		resultType="com.yingxs.mybatis.bean.Employee">
+		select * from tbl_employee
 		<where>
 			<choose>
 				<when test="id!=null">
@@ -78,6 +74,72 @@
 			</choose>
 		</where>
 	</select>
+
+	<!-- update tbl_employee set last_name=#{lastName},email=#{email},gender=#{gender} 
+		where id=#{id} -->
+	<!-- void updateEmp(Employee employee); -->
+	<update id="updateEmp">
+	<!-- 
+	 	方式一 :(推荐)	-->
+	 	
+		update tbl_employee
+		<set>
+			<if test="lastName!=null">
+				last_name=#{lastName},
+			</if>
+			<if test="email!=null">
+				email=#{email},
+			</if>
+			<if test="gender!=null">
+				gender=#{gender},
+			</if>
+		</set> 
+		where id=#{id}
 	
+	
+	<!-- 方式二：	
+		update tbl_employee
+		<trim prefix="set" suffixOverrides=",">
+			<if test="lastName!=null">
+				last_name=#{lastName},
+			</if>
+			<if test="email!=null">
+				email=#{email},
+			</if>
+			<if test="gender!=null">
+				gender=#{gender},
+			</if>
+		</trim>
+		where id=#{id}
+ 	-->
+ 	
+	</update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </mapper>
   
