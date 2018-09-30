@@ -57,5 +57,27 @@
 	  </trim>
 	</select>
 	
+	<!-- 如果携带了id就用id查，如果带了lastName就用lastName查，只使用一个条件 -->
+	<!-- List<Employee> getEmpsByConditionChoose(Employee employee); -->
+	<select id="getEmpsByConditionChoose" resultType="com.yingxs.mybatis.bean.Employee">
+		select * from tbl_employee 
+		<where>
+			<choose>
+				<when test="id!=null">
+					id=#{id}
+				</when>
+				<when test="lastName!=null">
+					last_name like #{lastName}
+				</when>
+				<when test="email!=null">
+					email=#{email}
+				</when>
+				<otherwise>
+					gender=0
+				</otherwise>
+			</choose>
+		</where>
+	</select>
+	
 </mapper>
   

@@ -250,7 +250,7 @@ public class MyBatisTest {
 			Employee employee = new Employee();
 //			employee.setId(4);
 //			employee.setEmail("jack@126.com");
-			employee.setLastName("%e%");
+//			employee.setLastName("%e%");
 			
 			/*List<Employee> emps = mapper.getEmpsByConditionIf(employee);
 			for (Employee emp : emps) {
@@ -258,7 +258,13 @@ public class MyBatisTest {
 			}*/
 			
 			//测试Time
-			List<Employee> emps = mapper.getEmpsByConditionTrim(employee);
+			/*List<Employee> emps = mapper.getEmpsByConditionTrim(employee);
+			for (Employee emp : emps) {
+				System.out.println(emp);
+			}*/
+			
+			//测试choose
+			List<Employee> emps = mapper.getEmpsByConditionChoose(employee);
 			for (Employee emp : emps) {
 				System.out.println(emp);
 			}
