@@ -2,8 +2,9 @@ package com.yingxs.mybatis.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -247,10 +248,10 @@ public class MyBatisTest {
 		
 		try {
 			EmployeeMapperDynamicSQL mapper = openSession.getMapper(EmployeeMapperDynamicSQL.class);
-			Employee employee = new Employee();
-			employee.setId(1);
+//			Employee employee = new Employee();
+//			employee.setId(1);
 //			employee.setEmail("jack@126.com");
-			employee.setLastName("Admin");
+//			employee.setLastName("Admin");
 			
 			/*List<Employee> emps = mapper.getEmpsByConditionIf(employee);
 			for (Employee emp : emps) {
@@ -269,9 +270,17 @@ public class MyBatisTest {
 				System.out.println(emp);
 			}*/
 			
-			mapper.updateEmp(employee);
-			openSession.commit();
+			/*mapper.updateEmp(employee);
+			openSession.commit();*/
 			
+			List<Integer> ids = new  ArrayList<Integer>();
+			ids.add(1);
+			ids.add(2);
+			List<Employee> list = mapper.getEmpsByConditionForeach(ids);
+			
+			for (Employee emp : list) {
+				System.out.println(emp);
+			}
 			
 		}finally {
 			openSession.close();

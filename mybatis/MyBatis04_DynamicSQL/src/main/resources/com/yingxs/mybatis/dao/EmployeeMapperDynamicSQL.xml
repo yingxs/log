@@ -114,8 +114,30 @@
  	-->
  	
 	</update>
-
-
+	
+	<!-- 
+		List<Employee> getEmpsByConditionForeach(List<Integer> ids);
+		select * from tbl_employee  where id in(1,2,3,4)
+	 -->
+	<select id="getEmpsByConditionForeach" resultType="com.yingxs.mybatis.bean.Employee">
+		select * from tbl_employee  where id in
+		<!-- 
+			collection:指定要遍历的集合
+				list类型的参数会特殊处理封装在map中，map的key就叫list
+			item:将当前遍历出的元素赋值给指定的变量
+			separator:每个元素之间的分隔符
+			open:遍历的结果前面加一个前缀
+			close:遍历的结果后面加一个后缀
+			index:索引，遍历list的时候index就是索引，item就是当前值
+					  遍历map的时候index表示的就是map的key,item就是map的值
+			
+			#{变量名 }
+		 -->
+		 <foreach collection="list" item="item_id" separator="," open="(" close=")">
+		 	#{item_id}
+		 </foreach>
+		 
+	</select>
 
 
 
