@@ -168,7 +168,24 @@
 				select 'test_a_03' lastName , 'test_a_e03' email from dual
 			)
 	 -->	
-
+	
+	
+	<insert id="addEmps" databaseId="oracle">
+		<!-- oracle第一种批量方式 -->
+		<!-- 
+		<foreach collection="emps" item="emp" open="begin" close="end;">
+			insert into employees(employee_id,last_name,email)
+				values(employee_seq.nextval,#{emp.lastName},#{emp.email})
+		</foreach>
+		 -->
+		<!-- oracle第二种批量方式 -->
+		insert into employees(employee_id,last_name,email)
+			select employees_seq.nextval,lastName,email from(
+				<foreach collection="emps" item="emp" separator="union">
+					select #{emp.lastName} lastName , #{emp.email} email from dual
+				</foreach>
+			)		
+	</insert> 
 
 
 
