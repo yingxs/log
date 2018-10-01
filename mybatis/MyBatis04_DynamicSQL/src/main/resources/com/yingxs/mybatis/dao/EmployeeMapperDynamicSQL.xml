@@ -144,14 +144,17 @@
 	<!-- MySQL下批量保存：可以foreach遍历 mysql支持values(),(),()语法 -->
 	<!-- 
 	<insert id="addEmps">
-		insert into tbl_employee(last_name,email,gender,d_id)
+		insert into tbl_employee(
+			<include refid="insertColumn"></include>
+		)
 		values
 		<foreach collection="emps" item="emp" separator=",">
 			(#{emp.lastName},#{emp.email},#{emp.gender},#{emp.dept.id})
 		</foreach>
 	</insert>
- 	-->
- 	
+ 	 -->
+ 	 
+ 	 
  	<!-- Oracle批量保存  不支持values(),(),()语法  -->
 	<!-- 1.多个insert放在begin - end里面 	
 		begin
@@ -204,6 +207,18 @@
 		
 	</select>
 
+	<!-- 
+				
+	 -->
+	<sql id="insertColumn">
+		<if test="_databaseId=='oracle'">
+			employee_id,last_name,email
+		</if>
+		<if test="_databaseId=='mysql'">
+			last_name,email,gender,d_id
+		</if>
+	</sql>
+	
 
 
 
