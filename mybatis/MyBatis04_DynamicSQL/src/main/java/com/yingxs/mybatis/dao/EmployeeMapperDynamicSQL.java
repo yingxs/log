@@ -7,6 +7,9 @@ import org.apache.ibatis.annotations.Param;
 import com.yingxs.mybatis.bean.Employee;
 
 public interface EmployeeMapperDynamicSQL {
+	
+	List<Employee> getEmpsTestInnerParameter(Employee employee);
+	
 	//	携带了哪个字段条件就带上这个字段的值
 	List<Employee> getEmpsByConditionIf(Employee employee);
 	
