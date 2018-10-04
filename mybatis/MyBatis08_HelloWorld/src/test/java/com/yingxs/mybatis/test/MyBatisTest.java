@@ -24,7 +24,11 @@ public class MyBatisTest {
 	
 	/**
 	 * 1.获取sqlSessionFactory
+	 * 		解析文件的每一个信息保存在Configuration中，包含Configuration的DefaultSessionFactory
+	 * 		mappedStatement代表一个增删改查的详细信息
 	 * 2.获取sqlSession对象
+	 * 		返回一个DefaultSQlSession对象，包含了Executor和Configuration
+	 * 		这一步创建Executor对象
 	 * 3.获取接口的代理对象
 	 * 4.执行增删改查方法
 	 * @throws IOException
