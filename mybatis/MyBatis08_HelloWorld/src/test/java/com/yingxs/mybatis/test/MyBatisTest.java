@@ -30,6 +30,8 @@ public class MyBatisTest {
 	 * 		返回一个DefaultSQlSession对象，包含了Executor和Configuration
 	 * 		这一步创建Executor对象
 	 * 3.获取接口的代理对象
+	 * 		getMapper使用MapperProxyFactory创建一个MapperProxy的代理对象
+	 * 		代理对象里面包含了DefaultSQlSession
 	 * 4.执行增删改查方法
 	 * @throws IOException
 	 */
