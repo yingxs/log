@@ -28,7 +28,7 @@ public class MyFirstPlugin implements Interceptor {
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
 
-		System.out.println("拦截方法  :"+invocation.getMethod());
+		System.out.println("插件1--拦截方法  :"+invocation.getMethod());
 		
 		//放行 执行目标方法
 		Object proceed = invocation.proceed();
@@ -42,7 +42,7 @@ public class MyFirstPlugin implements Interceptor {
 	 */
 	@Override
 	public Object plugin(Object target) {
-		System.out.println("插件包装对象  :"+target);
+		System.out.println("插件1--插件包装对象  :"+target);
 		//	可以借助plugin的wrap方法来使用当前的Interceptor包装我们的目标对象
 		Object wrap = Plugin.wrap(target, this);
 		//	返回当前target创建的动态代理
@@ -56,7 +56,7 @@ public class MyFirstPlugin implements Interceptor {
 	 */
 	@Override
 	public void setProperties(Properties properties) {
-		System.out.println("插件的配置信息 :"+properties);
+		System.out.println("插件1的配置信息 :"+properties);
 	}
 
 }
