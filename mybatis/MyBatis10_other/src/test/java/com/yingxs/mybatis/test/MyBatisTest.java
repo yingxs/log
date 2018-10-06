@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -117,14 +118,51 @@ public class MyBatisTest {
 				System.out.print(i+" ");
 			}
 			
-			
-			
 		}finally {
 			openSession.close();
 		}
 		
+	}
+	
+	
+	@Test
+	public void testBatch() throws IOException {
 		
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		
+		//可以执行批量操作的sqlSession
+		SqlSession openSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
+		
+		try {
+			EmployeeMapper mapper = openSession.getMapper(EmployeeMapper.class);
+			//循环执行即可
+			for(int i = 0 ;i < 10000 ; i++) {
+				mapper.addEmp(new Employee("a","b","1"));
+			}
+			openSession.commit();
+		}finally {
+			openSession.close();
+		}
 		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

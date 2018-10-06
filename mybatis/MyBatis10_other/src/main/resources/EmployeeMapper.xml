@@ -19,4 +19,10 @@
     select id,last_name,email,gender from tbl_employee
   </select>
   
+  <!-- Long addEmp(Employee employee); -->
+  <insert id="addEmp" >
+  	insert into tbl_employee(last_name,email,gender)
+  	values(#{lastName},#{email},#{gender})
+  </insert>
+  
 </mapper>

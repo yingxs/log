@@ -9,4 +9,7 @@ public interface EmployeeMapper {
 	public abstract  Employee getEmpId(Integer id);
 	
 	public abstract  List<Employee> getEmps();
+	
+	public abstract  Long addEmp(Employee employee);
+	
 }
