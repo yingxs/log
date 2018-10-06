@@ -8,6 +8,8 @@ import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
 /**
  * 	插件签名：
  * 		告诉MyBatis当前插件拦截哪个对象的哪个方法
@@ -29,7 +31,15 @@ public class MyFirstPlugin implements Interceptor {
 	public Object intercept(Invocation invocation) throws Throwable {
 
 		System.out.println("插件1--拦截方法  :"+invocation.getMethod());
-		
+		//偷梁换柱 表面查询1号员工，实际查询三号员工
+		Object target = invocation.getTarget();
+		System.out.println("拦截到的目标对象："+target);
+		//获取StatementHandler==>ParameterHandler==>parameterObject
+		MetaObject metaObject = SystemMetaObject.forObject(target);
+		Object value = metaObject.getValue("parameterHandler.parameterObject");
+		System.out.println("SQL语句的参数是："+value);
+		//修改sql语句要用的参数
+		metaObject.setValue("parameterHandler.parameterObject", 3);
 		//放行 执行目标方法
 		Object proceed = invocation.proceed();
 		//返回执行后的返回值
