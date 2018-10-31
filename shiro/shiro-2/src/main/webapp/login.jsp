@@ -9,6 +9,17 @@
 <body>
 
 	<h4>Login Page</h4>
+	<form action="shiro/login" method="post">
+	
+		username:<input typpe="text" name="username">
+		<br/><br/>
+	
+		password:<input typpe="password" name="password">
+		<br/><br/>
+	
+		<input type="submit" value="login">
+	
+	</form>
 
 </body>
 </html>

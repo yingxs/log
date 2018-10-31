@@ -9,6 +9,6 @@
 <body>
 
 	<h4>Login Page</h4>
-
+	<a href="shiro/logout">登出</a>
 </body>
 </html>
