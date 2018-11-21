@@ -2,6 +2,9 @@ package com.yingxs.mybatis.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.io.Resources;
@@ -146,6 +149,21 @@ public class MyBatisTest {
 		
 	}
 	
+	@Test
+	public void test02() throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		ArrayList<Integer> list = new ArrayList<>();
+		list.add(111);
+		list.add(222);
+		
+		Class clazz = Class.forName("java.util.ArrayList");
+		Method m = clazz.getMethod("add", Object.class);
+		m.invoke(list, "abc");
+		
+		System.out.println(list);
+		
+		
+		
+	}
 	
 	
 	
