@@ -1,7 +1,12 @@
 package com.yingxs.tianmao;
 
-import com.yingxs.it.shunfengkuaidi.AddressInfoI;
-import com.yingxs.it.shunfengkuaidi.impl.Sfkd;
+import java.util.List;
+
+import com.yingxs.shunfengkuaidi.Address;
+import com.yingxs.shunfengkuaidi.AddressInfoI;
+import com.yingxs.shunfengkuaidi.GetAllAreaResponse.Return;
+import com.yingxs.shunfengkuaidi.GetAllAreaResponse.Return.Entry;
+import com.yingxs.shunfengkuaidi.impl.Sfkd;
 
 public class RunMain {
 
@@ -16,9 +21,25 @@ public class RunMain {
 		//2.调用方法获取服务端web services远程代理实例
 		AddressInfoI addressInfoPort = sfkd.getAddressInfoPort();
 
-		String info = addressInfoPort.getAdressInfoByUserId("张三");
+		//String info = addressInfoPort.getAdressInfoByUserId("张三");
+		//System.out.println(info);
 		
-		System.out.println(info);
+		
+		//2.获取所有网点信息
+//		List<Address> Addresses = addressInfoPort.getAllAddress();
+//		for (Address address : Addresses) {
+//			System.out.println(address);;
+//		}
+		 
+		Return maps = addressInfoPort.getAllArea();
+		List<Entry> entrys = maps.getEntry();
+		for (Entry entry : entrys) {
+			System.out.println(entry.getKey()+":"+entry.getValue());
+			
+		}
+		
+		
+		
 		
 	}
 
