@@ -84,11 +84,4 @@ public class Address {
         this.name = value;
     }
 
-	@Override
-	public String toString() {
-		return "Address [code=" + code + ", name=" + name + "]";
-	}
-    
-    
-
 }

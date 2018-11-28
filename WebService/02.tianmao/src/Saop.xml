@@ -1,0 +1,52 @@
+<soap:Envelope
+	xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap:Body>
+		<ns2:getAdressInfoByUserId
+			xmlns:ns2="http://shunfengkuaidi.yingxs.com/">
+			<arg0>张三</arg0>
+		</ns2:getAdressInfoByUserId>
+	</soap:Body>
+</soap:Envelope>
+
+
+<soap:Envelope
+	xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap:Body>
+		<ns2:getAdressInfoByUserIdResponse
+			xmlns:ns2="http://shunfengkuaidi.yingxs.com/">
+			<return>[张三]:你的快递已经到达杭州萧山</return>
+		</ns2:getAdressInfoByUserIdResponse>
+	</soap:Body>
+</soap:Envelope>
+
+
+
+
+
+
+
+
+
+
+<soap:Envelope
+	xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap:Body>
+		<ns2:getAdressInfoByUserId
+			xmlns:ns2="http://shunfengkuaidi.yingxs.com/">
+			<arg0>张三</arg0>
+		</ns2:getAdressInfoByUserId>
+	</soap:Body>
+</soap:Envelope>
+
+
+
+<soap:Envelope
+	xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap:Body>
+		<ns2:getAdressInfoByUserIdResponse
+			xmlns:ns2="http://shunfengkuaidi.yingxs.com/">
+			<return>[张三]:你的快递已经到达杭州萧山</return>
+		</ns2:getAdressInfoByUserIdResponse>
+	</soap:Body>
+</soap:Envelope>
+
