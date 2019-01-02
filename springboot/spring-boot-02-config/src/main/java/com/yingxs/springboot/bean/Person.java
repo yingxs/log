@@ -2,6 +2,7 @@ package com.yingxs.springboot.bean;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -14,11 +15,12 @@ import java.util.Map;
  * prefix = "person" : 配置文件中哪个下面的所有属性进行一一映射
  *
  * 只有这个组件是容器中的组件，才能提供容器提供的@ConfigurationProperties功能
- *
+ * @ConfigurationProperties默认从全局配置文件中获取值
  *
  */
+@PropertySource(value = {"classpath:person.properties"})
 @Component
-//@ConfigurationProperties(prefix = "person")
+@ConfigurationProperties(prefix = "person")
 public class Person {
 
     /**
@@ -27,11 +29,11 @@ public class Person {
      * </bean>
      */
 
-    @Value("person.last-name")
+//    @Value("person.last-name")
     private String lastName;
-    @Value("#{11*2}")
+//    @Value("#{11*2}")
     private Integer age;
-    @Value("true")
+//    @Value("true")
     private Boolean boss;
     private Date birth;
 
