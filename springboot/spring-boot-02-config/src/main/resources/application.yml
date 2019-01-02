@@ -1,0 +1,12 @@
+#person:
+#  lastName: 王昊
+#  age: 18
+#  boss: false
+#  birth: 2019/1/2
+#  maps: {k1: v1,k2: v2}
+#  lists:
+#    - lisi
+#    - zhaoliu
+#  dog:
+#    name: 小狗
+#    age: 12
