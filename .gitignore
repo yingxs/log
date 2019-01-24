@@ -16,7 +16,7 @@ target/
 .classpath
 
 #idea
-.idea/workspace.xml
+*/.idea/*
 .idea/
 /idea/
 *.ipr
