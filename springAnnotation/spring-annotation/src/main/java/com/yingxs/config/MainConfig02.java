@@ -1,6 +1,7 @@
 package com.yingxs.config;
 
 import com.yingxs.bean.Color;
+import com.yingxs.bean.ColorFactoryBean;
 import com.yingxs.bean.Person;
 import com.yingxs.bean.Red;
 import com.yingxs.condition.LinuxCondition;
@@ -48,6 +49,12 @@ public class MainConfig02 {
     }
 
 
+
+
+    @Bean
+    public ColorFactoryBean colorFactoryBean(){
+        return new ColorFactoryBean();
+    }
 
 
 

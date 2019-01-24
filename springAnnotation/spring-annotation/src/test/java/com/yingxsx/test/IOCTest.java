@@ -18,6 +18,16 @@ public class IOCTest {
         printBeans(applicationContext);
         Blue bean = applicationContext.getBean(Blue.class);
         System.out.println(bean);
+
+        //工厂Bean获取的是调用getObject创建的对象
+        Object bean2 = applicationContext.getBean("colorFactoryBean");
+        Object bean3 = applicationContext.getBean("colorFactoryBean");
+        System.out.println("bean的类型："+bean2.getClass());
+        System.out.println(bean2==bean3);
+
+        //获取工厂Bean本身
+        Object bean4 = applicationContext.getBean("&colorFactoryBean");
+        System.out.println(bean4.getClass());
     }
 
     private void printBeans(AnnotationConfigApplicationContext applicationContext){
