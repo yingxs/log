@@ -1,5 +1,6 @@
 package com.yingxsx.test;
 
+import com.yingxs.bean.Blue;
 import com.yingxs.bean.Person;
 import com.yingxs.config.MainConfig;
 import com.yingxs.config.MainConfig02;
@@ -11,6 +12,20 @@ import java.util.Map;
 
 public class IOCTest {
     AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(MainConfig02.class);
+
+    @Test
+    public void testImport(){
+        printBeans(applicationContext);
+        Blue bean = applicationContext.getBean(Blue.class);
+        System.out.println(bean);
+    }
+
+    private void printBeans(AnnotationConfigApplicationContext applicationContext){
+        String[] definitionNames = applicationContext.getBeanDefinitionNames();
+        for(String name : definitionNames){
+            System.out.println(name);
+        }
+    }
 
 
     @Test

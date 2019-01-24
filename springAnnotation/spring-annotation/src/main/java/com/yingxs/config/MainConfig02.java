@@ -1,15 +1,19 @@
 package com.yingxs.config;
 
+import com.yingxs.bean.Color;
 import com.yingxs.bean.Person;
+import com.yingxs.bean.Red;
 import com.yingxs.condition.LinuxCondition;
+import com.yingxs.condition.MyImportBeanDefinitionRegistrar;
+import com.yingxs.condition.MyImportSelector;
 import com.yingxs.condition.WindowCondition;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.*;
+
 //类中组件同一设置，满足当前条件，这个类中配置的所有bean注册才能生效
 @Conditional({WindowCondition.class})
 @Configuration
+@Import({Color.class, Red.class, MyImportSelector.class, MyImportBeanDefinitionRegistrar.class})
+//导入组件，id默认是组件的全类名
 public class MainConfig02 {
 
 
