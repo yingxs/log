@@ -16,6 +16,7 @@ target/
 .classpath
 
 #idea
+.idea/workspace.xml
 .idea/
 /idea/
 *.ipr
@@ -32,5 +33,7 @@ target/
 # system ignore
 .DS_Store
 Thumbs.db
+
+
 
 
