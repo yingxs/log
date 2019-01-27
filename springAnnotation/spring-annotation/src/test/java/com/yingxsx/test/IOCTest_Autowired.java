@@ -1,5 +1,7 @@
 package com.yingxsx.test;
 
+import com.yingxs.bean.Boss;
+import com.yingxs.bean.Car;
 import com.yingxs.config.MainConfigOfAutowired;
 import com.yingxs.config.MainConfigOfLifeCycle;
 import com.yingxs.dao.BookDao;
@@ -16,7 +18,7 @@ public class IOCTest_Autowired {
     @Test
     public void test01(){
         //1.创建IOC容器
-        printBeans(applicationContext);
+       // printBeans(applicationContext);
         System.out.println("容器创建完成...");
 
         BookService bookService = applicationContext.getBean(BookService.class);
@@ -25,6 +27,14 @@ public class IOCTest_Autowired {
 
 //        BookDao bookDao = applicationContext.getBean(BookDao.class);
 //        System.out.println(bookDao);
+
+
+        Boss boss = applicationContext.getBean(Boss.class);
+        System.out.println(boss);
+
+        Car car = applicationContext.getBean(Car.class);
+        System.out.println(car);
+
 
         //关闭容器
         applicationContext.close();
