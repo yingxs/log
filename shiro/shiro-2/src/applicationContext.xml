@@ -28,6 +28,12 @@
     	3.1 直接配置实现了 org.apache.shiro.realm.Realm 接口的 bean
     -->     
     <bean id="jdbcRealm" class="com.yingxs.shiro.realms.ShiroRealm">
+  			<property name="credentialMatcher" >
+  					<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+  						<property name="hashAlgorithmName" value="MD5" ></property>
+  						<property name="hashIterations" value="1024" ></property>
+  					</bean>
+  			</property>
     </bean>
     
     
@@ -61,6 +67,8 @@
         <property name="filterChainDefinitions">
             <value>
                 /login.jsp = anon
+                /shiro/login=anon
+                /shiro/logout=logout
                 /** = authc
             </value>
         </property>

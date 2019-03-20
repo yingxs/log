@@ -8,5 +8,7 @@
 </head>
 <body>
 	list.jsp
+	
+	<a href="shiro/logout">LogOut</a>
 </body>
 </html>
