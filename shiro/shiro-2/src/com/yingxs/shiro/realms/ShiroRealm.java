@@ -9,6 +9,7 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthenticatingRealm;
+import org.apache.shiro.util.ByteSource;
 
 public class ShiroRealm extends AuthenticatingRealm {
 
@@ -31,13 +32,21 @@ public class ShiroRealm extends AuthenticatingRealm {
 		
 		// 6.根据用户情况构建AuthenticationInfo对象并返回；通常使用的实现类为SimpleAuthenticationInfo
 		
-		//1.principal 认证的实体信息可以是usernmae也可以是用户的实体类对象
+		// 1.principal 认证的实体信息可以是usernmae也可以是用户的实体类对象
 		Object principal = username;
-		//2.credentials 密码
-		Object credentials = "fc1709d0a95a6be30bc5926fdb7f22f4";
-		//3.realmName 当前realm对象的name 调用父类的getName()即可
+		// 2.credentials 密码
+		Object credentials = null;
+		if ("admin".equals(username)) {
+			credentials = "038bdaf98f2037b31f1e75b5b4c9b26e";
+		} else if("user".equals(username)) {
+			credentials = "098d2c478e9c11555ce2823231e02ec1";
+		}
+		// 3.realmName 当前realm对象的name 调用父类的getName()即可
 		String realmName = getName();
-		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, credentials, realmName);
+		// 4.盐值
+		ByteSource credentialsSalt = ByteSource.Util.bytes(username);
+		
+		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,credentials, credentialsSalt, realmName);
 
 		
 		return info;
@@ -46,7 +55,7 @@ public class ShiroRealm extends AuthenticatingRealm {
 	public static void main(String[] args) {
 		String hashAlgoritthmName="MD5";
 		Object credentials="123456";
-		Object salt = null;
+		Object salt = ByteSource.Util.bytes("user");
 		int hashIterations = 1024;
 		Object result = new SimpleHash(hashAlgoritthmName, credentials, salt, hashIterations);
 		System.out.println(result);
