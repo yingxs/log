@@ -7,10 +7,15 @@
     -->     
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="cacheManager" ref="cacheManager"/>
-   		 <!--   <property name="realm"  ref="jdbcRealm"></property>  -->
+   		 <!--     -->
         <property name="authenticator"  ref="authenticator"></property>
-     	
-     
+     	<property name="realms">
+			<list>
+	   			<!-- 多个Realm -->
+	    		<ref bean="jdbcRealm" />
+	    		<ref bean="secondRealm" />
+	    	</list>
+     	</property>
     </bean>
     
     
@@ -24,16 +29,11 @@
     
     <!-- 认证器 -->
     <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
-    	<property name="realms">
-	    	<list>
-	    			<!-- 多个Realm -->
-		    		<ref bean="jdbcRealm" />
-		    		<ref bean="secondRealm" />
-	    	</list>
-    	</property>
-    	<property name="authenticationStrategy">
-    		<bean class="org.apache.shiro.authc.pam.AllSuccessfulStrategy"></bean>
-    	</property>
+    	<!-- 
+	    	<property name="authenticationStrategy">
+	    		<bean class="org.apache.shiro.authc.pam.AllSuccessfulStrategy"></bean>
+	    	</property>
+    	 -->
     </bean>
     
     
@@ -92,6 +92,10 @@
                 /login.jsp = anon
                 /shiro/login=anon
                 /shiro/logout=logout
+                
+                /user.jsp = roles[user]
+                /admin.jsp = roles[admin]
+                
                 /** = authc
             </value>
         </property>
