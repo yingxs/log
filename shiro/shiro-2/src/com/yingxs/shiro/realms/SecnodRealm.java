@@ -38,17 +38,17 @@ public class SecnodRealm extends AuthenticatingRealm {
 		// 2.credentials 密码
 		Object credentials = null;
 		if ("admin".equals(username)) {
-			credentials = "ce2f6417c7e1d32c1d81a797ee0b499f87c5de06";
+			credentials = "ce2f6417c7e1d32c1d81a797ee0b499f87c5de06--";
 		} else if("user".equals(username)) {
-			credentials = "073d4c3ae812935f23cb3f2a71943f49e082a718";
+			credentials = "073d4c3ae812935f23cb3f2a71943f49e082a718--";
 		}
 		// 3.realmName 当前realm对象的name 调用父类的getName()即可
 		String realmName = getName();
 		// 4.盐值
 		ByteSource credentialsSalt = ByteSource.Util.bytes(username);
 		
-		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,credentials, credentialsSalt, realmName);
-
+		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo("secondRealmName",credentials, credentialsSalt, realmName);
+		System.out.println(info);
 		
 		return info;
 	}
