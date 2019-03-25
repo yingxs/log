@@ -126,6 +126,9 @@
 	
 	
 	
+	<bean id="shiroService"  class="com.yingxs.shiro.services.ShiroService" > </bean>
+	
+	
 	
 	
 </beans>
