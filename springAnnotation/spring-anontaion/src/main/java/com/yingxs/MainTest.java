@@ -7,6 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.yingxs.bean.Person;
 import com.yingxs.config.MainConfig;
+import com.yingxs.config.MainConfig2;
 
 public class MainTest {
 
@@ -48,7 +49,21 @@ public class MainTest {
 		for (String string : definitionNames) {
 			System.out.println(string);
 		}
-		
+	}
+	
+	@Test
+	public void test4() {
+		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(MainConfig2.class);
+//		// 获取容器中所有bena的name
+		System.out.println("容器创建完成");
+//		String[] definitionNames = applicationContext.getBeanDefinitionNames();
+//		for (String string : definitionNames) {
+//			System.out.println(string);
+//		}
+//		
+		Object bean = applicationContext.getBean("person");
+//		Object bean2 = applicationContext.getBean("person");
+//		System.out.println(bean == bean2);
 		
 	}
 	
