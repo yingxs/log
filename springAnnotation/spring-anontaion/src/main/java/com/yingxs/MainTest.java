@@ -1,9 +1,12 @@
 package com.yingxs;
 
+import java.util.Map;
+
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.env.ConfigurableEnvironment;
 
 import com.yingxs.bean.Person;
 import com.yingxs.config.MainConfig;
@@ -65,6 +68,23 @@ public class MainTest {
 //		Object bean2 = applicationContext.getBean("person");
 //		System.out.println(bean == bean2);
 		
+	}
+	@Test
+	public void test5() {
+		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(MainConfig2.class);
+		String[] nameForType = applicationContext.getBeanNamesForType(Person.class);
+	
+		ConfigurableEnvironment environment = applicationContext.getEnvironment();
+		String property = environment.getProperty("os.name");
+		System.out.println(property);
+		for (String name : nameForType) {
+			System.out.println(name);
+		}
+		
+		Map<String, Person> persons = applicationContext.getBeansOfType(Person.class);
+		for (String key : persons.keySet()) {
+			System.out.println(key+"===>"+persons.get(key));
+		}
 	}
 	
 	
