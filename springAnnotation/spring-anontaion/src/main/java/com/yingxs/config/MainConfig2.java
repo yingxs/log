@@ -3,10 +3,13 @@ package com.yingxs.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
+import com.yingxs.bean.Color;
 import com.yingxs.bean.Person;
+import com.yingxs.bean.Red;
 import com.yingxs.condition.LinuxCondition;
 import com.yingxs.condition.WindowsCondition;
 
@@ -18,6 +21,7 @@ import com.yingxs.condition.WindowsCondition;
  */
 @Conditional({WindowsCondition.class})
 @Configuration
+@Import({Color.class,Red.class,MyImportSelector.class,MyImportBeanDefinitionRegistrar.class})  //@Import导入组件，id默认是组件的全类名
 public class MainConfig2 {
 	
 	@Lazy
