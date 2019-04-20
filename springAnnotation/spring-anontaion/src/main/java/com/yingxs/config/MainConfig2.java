@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 import com.yingxs.bean.Color;
+import com.yingxs.bean.ColorFactoryBean;
 import com.yingxs.bean.Person;
 import com.yingxs.bean.Red;
 import com.yingxs.condition.LinuxCondition;
@@ -44,6 +45,16 @@ public class MainConfig2 {
 		return new Person("linus",48);
 		
 	}
+	
+	
+	@Bean
+	public ColorFactoryBean colorFactoryBean() {
+		return new ColorFactoryBean();
+	}
+	
+	
+	
+	
 	
 
 }

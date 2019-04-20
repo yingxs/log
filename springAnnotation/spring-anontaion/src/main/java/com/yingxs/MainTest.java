@@ -91,6 +91,14 @@ public class MainTest {
 	@Test
 	public void testImport() {
 		printBeans(applicationContext);
+		
+		// 工厂bean获取的是调用getObject创建的对象
+		Object bean = applicationContext.getBean("colorFactoryBean");
+		Object bean2 = applicationContext.getBean("colorFactoryBean");
+		//获取colorFactoryBean本身
+		Object bean3 = applicationContext.getBean("&colorFactoryBean");
+		System.out.println(bean==bean2);
+		System.out.println(bean3);
 	}
 	
 	private void printBeans(AnnotationConfigApplicationContext applicationContext ) {
