@@ -3,6 +3,7 @@ package com.yingxs;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.yingxs.bean.Boss;
 import com.yingxs.config.MainConfigOfAutowired;
 import com.yingxs.dao.BookDao;
 import com.yingxs.service.BookService;
@@ -16,12 +17,21 @@ public class IOCTest_Autowired {
 //		
 //		BookDao bookDao = applicationContext.getBean(BookDao.class);
 //		
-		System.out.println(bookService);
+//		System.out.println(bookService);
 //		
 //		System.out.println(bookDao);
 //		
-		printBeans(applicationContext);
+//		printBeans(applicationContext);
 //		applicationContext.close();
+		
+		
+		Boss boss = applicationContext.getBean(Boss.class);
+		System.out.println(boss);
+		
+		
+		
+		
+		
 	}
 	
 	
