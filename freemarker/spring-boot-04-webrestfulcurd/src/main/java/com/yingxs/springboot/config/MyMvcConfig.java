@@ -29,13 +29,13 @@ public class MyMvcConfig extends WebMvcConfigurerAdapter {
                 registry.addViewController("/main.html").setViewName("dashboard");
             }
 
-            //注册拦截器
-            @Override
-            public void addInterceptors(InterceptorRegistry registry) {
-                // springboot已经做好了静态资源映射 *.js *.css 静态资源可以正常访问
-                registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/**")
-                        .excludePathPatterns("/index.html","/","/user/login");
-            }
+//            //注册拦截器
+//            @Override
+//            public void addInterceptors(InterceptorRegistry registry) {
+//                // springboot已经做好了静态资源映射 *.js *.css 静态资源可以正常访问
+//                registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/**")
+//                        .excludePathPatterns("/index.html","/","/user/login","/webjars/**","/asserts/**");
+//            }
         };
         return adapter;
     }
