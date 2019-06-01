@@ -1,0 +1,95 @@
+<h1>引入图片</h1>
+    <img  src="assets/images/2.jpg" alt="酒馆" />
+    <img [src]="picUrl">
+
+
+<h1>循环数组 显示数组的索引(key)</h1>
+    <ul>
+      <li *ngFor="let item of list ; let key=index  ">
+        {{key}}--{{item.title}}
+      </li>
+
+    </ul>
+
+<h1>条件判断依据*ngIf</h1>
+
+    <div *ngIf="flag">
+      <img src="assets/images/2.jpg"  >
+    </div>
+    <div *ngIf="!flag">
+      <img src="assets/images/6.jpg"  >
+    </div>
+
+    <ul>
+      <li *ngFor="let item of list;let key=index">
+        <span *ngIf="key==1" class="red">{{key}}--{{item.title}}</span>
+        <span *ngIf="key!=1" >{{key}}--{{item.title}}</span>
+      </li>
+    </ul>
+
+    
+<h1>条件判断依据*ngSwitch</h1>
+  <span [ngSwitch]="orderStatus">
+  <p *ngSwitchCase="1">
+    已经支付
+  </p>
+  <p *ngSwitchCase="2">
+    支付并确认订单
+  </p>
+  <p *ngSwitchCase="3">
+    已经发货
+  </p>
+  <p *ngSwitchCase="4">
+      已收获
+    </p>
+  <p *ngSwitchDefault>
+    无效
+  </p>
+  </span>
+
+  <h1>属性[ngClass][ngStyle]</h1>
+  <div [ngClass]="{'red': false}">
+    ngclass演示
+  </div>
+  <div [ngClass]="{'red': flag,'blue':!flag}">
+    ngclass演示
+  </div>
+  <strong>循环数组，让数组的第一个元素的样式为red</strong>
+  <ul>
+    <li *ngFor="let item of list; let key=index" [ngClass]="{'red': key==0,'blue': key==1}">
+      {{key}}--{{item.title}}
+    </li>
+  </ul>
+  
+  <p style="color:red;" >我是一个p标签</p>
+  <p [ngStyle]="{'color': 'red'}" >我是一个p标签</p>
+  <p [ngStyle]="{'color': attr}" >我是一个p标签</p>
+
+
+    
+  <h1>管道</h1>
+  {{today | date:'yyyy-MM-dd HH:mm:ss'}}
+
+<h1>事件</h1>
+  <strong>{{title}}</strong>
+  <button (click)="run()">执行事件</button>
+
+  <button (click)="getData()">执行方法获取数据</button>
+
+  <button (click)="setData()">执行方法设置数据</button>
+  <button (click)="runEvent($event)">执行方法获取事件对象</button>
+<h1>表单事件</h1>
+keyDown
+<input type="text" (keydown)='keyDown($event)' />
+<br>
+keyuUp
+<input type="text" (keyup)='keyuUp($event)' />
+<br>
+  
+
+<h1>双向数据绑定--MVM--只针对表单</h1>
+  <input type="text" [(ngModel)]="keywords" > {{keywords}}
+  <br>
+  <button (click)='changeKeywords()'>改变keyword的值</button>
+  <br><br>
+  <button (click)='getKeywords()'>获取keyword的值</button>
