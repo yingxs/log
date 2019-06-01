@@ -1,0 +1,30 @@
+h2{
+    text-align: center;
+}
+
+.people_list{
+    width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #eee;
+
+
+    li {
+        height: 50px;
+        line-height: 50px;
+
+        .from_input{
+                width: 360px;
+                height: 28px;
+        }
+    }
+
+
+    button {
+        width: 100px;
+        height: 30px;
+        float: right;
+        margin-right: 50px;
+        margin-top: 120px;
+    }
+}
