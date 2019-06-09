@@ -7,7 +7,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import com.yingxs.security.browser.authentication.YingxsAuthenticationSuccessHandler;
 import com.yingxs.security.core.properties.SecurityProperties;
 
 @Configuration
@@ -15,6 +18,16 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private SecurityProperties securityProperties;
+	
+	
+	// 登录成功的处理器
+	@Autowired
+	private AuthenticationSuccessHandler yingxsAuthenticationSuccessHandler;
+	
+	// 登录失败的处理器
+	@Autowired
+	private AuthenticationFailureHandler yingxsAuthenticationFaiurelHandler;
+	
 	
 	
 	// 配置密码加密与解密方式
@@ -33,6 +46,10 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 		.loginPage("/authentication/require")
 		// 登录页面请求地址
 		.loginProcessingUrl("/authentication/form")
+		// 配置登录成功后的处理器
+		.successHandler(yingxsAuthenticationSuccessHandler)
+		// 配置登录失败后的处理器
+		.failureHandler(yingxsAuthenticationFaiurelHandler)
 //		http.httpBasic()
 		.and()
 		.authorizeRequests()
