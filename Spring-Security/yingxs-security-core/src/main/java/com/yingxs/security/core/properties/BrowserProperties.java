@@ -5,7 +5,11 @@ public class BrowserProperties {
 	// 默认登录页面
 	private String loginPage = "/yingxs-signIn.html";
 	
+	// 登录方式，跳转或返回JSON
 	private LoginType loginType = LoginType.JSON;
+	
+	
+	private int rememberMeSeconds = 3600 ;
 	
 	
 	
@@ -25,6 +29,16 @@ public class BrowserProperties {
 	public void setLoginPage(String loginPage) {
 		this.loginPage = loginPage;
 	}
+
+	public int getRememberMeSeconds() {
+		return rememberMeSeconds;
+	}
+
+	public void setRememberMeSeconds(int rememberMeSeconds) {
+		this.rememberMeSeconds = rememberMeSeconds;
+	}
+	
+	
 	
 	
 	

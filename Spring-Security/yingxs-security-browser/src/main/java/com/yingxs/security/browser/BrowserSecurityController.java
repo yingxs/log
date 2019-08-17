@@ -28,7 +28,9 @@ public class BrowserSecurityController  {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
+	// 缓存request
 	private RequestCache requestCache = new HttpSessionRequestCache();
+	// 请求跳转工具类
 	private RedirectStrategy redirectStrategy= new DefaultRedirectStrategy();
 	
 	@Autowired
@@ -36,6 +38,7 @@ public class BrowserSecurityController  {
  
 	/**
 	 * 当需要身份认证时，跳转到这里
+	 * 在此判断引发跳转的请求是html与否
 	 * @param request
 	 * @param response
 	 * @return
