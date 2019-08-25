@@ -4,7 +4,9 @@ public class BrowserProperties {
 	
 	// 默认登录页面
 	private String loginPage = "/yingxs-signIn.html";
-	
+	// 默认登录页面
+	private String signUpUrl = "/yingxs-signUp.html";
+		
 	// 登录方式，跳转或返回JSON
 	private LoginType loginType = LoginType.JSON;
 	
@@ -36,6 +38,14 @@ public class BrowserProperties {
 
 	public void setRememberMeSeconds(int rememberMeSeconds) {
 		this.rememberMeSeconds = rememberMeSeconds;
+	}
+
+	public String getSignUpUrl() {
+		return signUpUrl;
+	}
+
+	public void setSignUpUrl(String signUpUrl) {
+		this.signUpUrl = signUpUrl;
 	}
 	
 	

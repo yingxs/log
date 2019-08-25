@@ -12,7 +12,7 @@ public class QQUserInfo {
 	/**
 	 * 	返回码
 	 */
-	private String ret;
+	private Integer ret;
 	/**
 	 * 如果ret<0，会有相应的错误信息提示，返回数据全部用UTF-8编码。
 	 */
@@ -24,7 +24,15 @@ public class QQUserInfo {
 	/**
 	 * 不知道什么东西，文档上没写，但是实际api返回里有。
 	 */
-	private String is_lost;
+	private Integer is_lost;
+	
+	private String constellation;
+	
+	private String figureurl_qq;
+	
+	private String figureurl_type;
+	
+	
 	/**
 	 * 省(直辖市)
 	 */
@@ -87,10 +95,10 @@ public class QQUserInfo {
 	private String is_yellow_year_vip;
 	
 	
-	public String getRet() {
+	public Integer getRet() {
 		return ret;
 	}
-	public void setRet(String ret) {
+	public void setRet(Integer ret) {
 		this.ret = ret;
 	}
 	public String getMsg() {
@@ -105,10 +113,10 @@ public class QQUserInfo {
 	public void setOpenId(String openId) {
 		this.openId = openId;
 	}
-	public String getIs_lost() {
+	public Integer getIs_lost() {
 		return is_lost;
 	}
-	public void setIs_lost(String is_lost) {
+	public void setIs_lost(Integer is_lost) {
 		this.is_lost = is_lost;
 	}
 	public String getProvince() {
@@ -201,6 +209,26 @@ public class QQUserInfo {
 	public void setIs_yellow_year_vip(String is_yellow_year_vip) {
 		this.is_yellow_year_vip = is_yellow_year_vip;
 	}
+	public String getConstellation() {
+		return constellation;
+	}
+	public void setConstellation(String constellation) {
+		this.constellation = constellation;
+	}
+	public String getFigureurl_qq() {
+		return figureurl_qq;
+	}
+	public void setFigureurl_qq(String figureurl_qq) {
+		this.figureurl_qq = figureurl_qq;
+	}
+	public String getFigureurl_type() {
+		return figureurl_type;
+	}
+	public void setFigureurl_type(String figureurl_type) {
+		this.figureurl_type = figureurl_type;
+	}
+	
+	
 	
 	
 

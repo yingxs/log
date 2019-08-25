@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.social.security.SpringSocialConfigurer;
 
 import com.yingxs.security.core.authentication.mobile.AbstractChannelSecurityConfig;
 import com.yingxs.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
@@ -44,6 +45,11 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig{
 	
 	@Autowired
 	private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+	
+	@Autowired
+	private SpringSocialConfigurer yingxsSocialConfigurer;
+	
+	
 	
 	// 配置密码加密与解密方式
 	@Bean
@@ -80,6 +86,8 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig{
 				.and()
 			.apply(smsCodeAuthenticationSecurityConfig)
 				.and()
+			.apply(yingxsSocialConfigurer)     // 配置值引入社交账号登录的过滤器    默认处理/auth
+				.and()
 			.rememberMe()
 				.tokenRepository(persistentTokenRepository())
 				.tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
@@ -90,7 +98,9 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig{
 						SecurityConstants.DEFAULT_UNAUTHENTICATION_URL, 
 						SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
 						securityProperties.getBrowser().getLoginPage(),
-						SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*")
+						SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*",
+						securityProperties.getBrowser().getSignUpUrl(),
+						"/user/regist")
 						.permitAll()
 				.anyRequest()
 				.authenticated()
