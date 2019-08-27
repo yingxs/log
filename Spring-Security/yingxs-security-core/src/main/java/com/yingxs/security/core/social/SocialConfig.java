@@ -32,7 +32,7 @@ public class SocialConfig extends SocialConfigurerAdapter {
 	@Autowired
 	private SecurityProperties securityProperties;
 	
-	@Autowired
+	@Autowired(required = false)
 	private ConnectionSignUp connectionSignUp;
 	
 	@Override

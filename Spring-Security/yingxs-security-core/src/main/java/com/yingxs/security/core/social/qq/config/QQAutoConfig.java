@@ -15,7 +15,7 @@ import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
 
 import com.yingxs.security.core.properties.QQProperties;
 import com.yingxs.security.core.properties.SecurityProperties;
-import com.yingxs.security.core.social.qq.connet.QQConnectionFactory;
+import com.yingxs.security.core.social.qq.connect.QQConnectionFactory;
 
 /**
  * @author yingxs
@@ -31,7 +31,7 @@ public class QQAutoConfig extends SocialAutoConfigurerAdapter {
 	@Autowired
 	private DataSource dataSource;
 
-	@Autowired
+	@Autowired(required = false)
 	private ConnectionSignUp connectionSignUp;
 	
 	@Override

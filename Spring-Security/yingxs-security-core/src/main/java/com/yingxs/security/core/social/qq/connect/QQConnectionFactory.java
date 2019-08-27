@@ -1,4 +1,4 @@
-package com.yingxs.security.core.social.qq.connet;
+package com.yingxs.security.core.social.qq.connect;
 
 import org.springframework.social.connect.ApiAdapter;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;

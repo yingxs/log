@@ -7,23 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.session.InvalidSessionStrategy;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.social.security.SpringSocialConfigurer;
 
 import com.yingxs.security.core.authentication.mobile.AbstractChannelSecurityConfig;
 import com.yingxs.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.yingxs.security.core.properties.SecurityConstants;
 import com.yingxs.security.core.properties.SecurityProperties;
-import com.yingxs.security.core.validate.code.SmsCodeFilter;
-import com.yingxs.security.core.validate.code.ValidateCodeFilter;
 import com.yingxs.security.core.validate.code.ValidateCodeSecurityConfig;
 
 @Configuration
@@ -48,6 +44,13 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig{
 	
 	@Autowired
 	private SpringSocialConfigurer yingxsSocialConfigurer;
+	
+	
+	@Autowired(required = false)
+	private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
+	
+	@Autowired(required = false)
+	private InvalidSessionStrategy invalidSessionStrategy;
 	
 	
 	
@@ -92,6 +95,13 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig{
 				.tokenRepository(persistentTokenRepository())
 				.tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
 				.userDetailsService(userDetailsService)
+			.and()
+				.sessionManagement()
+				.invalidSessionStrategy(invalidSessionStrategy) // session过期的处理
+				.maximumSessions(securityProperties.getBrowser().getSession().getMaximumSession()) // 单用户最大session数量
+				.maxSessionsPreventsLogin(securityProperties.getBrowser().getSession().isMaxSessionPreventsLogin()) // 当达到最大session数之后，禁止登录
+				.expiredSessionStrategy(sessionInformationExpiredStrategy) // 干掉第一次登录的实现类，后面session踢掉前面的session
+				.and()
 				.and()
 			.authorizeRequests()
 				.antMatchers(
@@ -100,6 +110,7 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig{
 						securityProperties.getBrowser().getLoginPage(),
 						SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*",
 						securityProperties.getBrowser().getSignUpUrl(),
+						securityProperties.getBrowser().getSession().getSessionInvalidUrl(),
 						"/user/regist")
 						.permitAll()
 				.anyRequest()

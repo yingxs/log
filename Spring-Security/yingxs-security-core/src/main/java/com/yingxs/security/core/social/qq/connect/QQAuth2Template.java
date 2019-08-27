@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.yingxs.security.core.social.qq.connet;
+package com.yingxs.security.core.social.qq.connect;
 
 import java.nio.charset.Charset;
 
