@@ -1,15 +1,21 @@
 package com.yingxs.security.core.validate.code;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 /**
  * 验证码对象
  * @author admin
  *
  */
-public class ValidateCode {
+public class ValidateCode implements Serializable {
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String code;
 	
 	private LocalDateTime expireTime;

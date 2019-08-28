@@ -11,6 +11,10 @@ import com.yingxs.security.core.validate.code.ValidateCode;
  */
 public class ImageCode extends ValidateCode {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private BufferedImage image;
 	
 
