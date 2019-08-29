@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
+import com.yingxs.security.browser.logout.YingxsLogoutSuccessHandler;
 import com.yingxs.security.browser.session.YingxsExpiredSessionStrategy;
 import com.yingxs.security.browser.session.YingxsInvalidSessionStrategy;
 import com.yingxs.security.core.properties.SecurityProperties;
@@ -34,6 +36,12 @@ public class BrowserSecurityBeanConfig {
 	@ConditionalOnMissingBean(SessionInformationExpiredStrategy.class)
 	public SessionInformationExpiredStrategy sessionInformationExpiredStrategy(){
 		return new YingxsExpiredSessionStrategy(securityProperties.getBrowser().getSession().getSessionInvalidUrl());
+	}
+	
+	@Bean //退出成功默认处理器
+	@ConditionalOnMissingBean(LogoutSuccessHandler.class)
+	public LogoutSuccessHandler logoutSuccessHandler(){
+		return new YingxsLogoutSuccessHandler(securityProperties.getBrowser().getSignOutUrl());
 	}
 	
 }

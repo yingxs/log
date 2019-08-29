@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.session.InvalidSessionStrategy;
@@ -46,11 +47,14 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig{
 	private SpringSocialConfigurer yingxsSocialConfigurer;
 	
 	
-	@Autowired(required = false)
+	@Autowired 
 	private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
 	
-	@Autowired(required = false)
+	@Autowired 
 	private InvalidSessionStrategy invalidSessionStrategy;
+	
+	@Autowired 
+	private LogoutSuccessHandler  logoutSuccessHandler;
 	
 	
 	
@@ -103,6 +107,11 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig{
 				.expiredSessionStrategy(sessionInformationExpiredStrategy) // 干掉第一次登录的实现类，后面session踢掉前面的session
 				.and()
 				.and()
+			.logout()
+				.logoutUrl("/signOut")
+				.logoutSuccessHandler(logoutSuccessHandler)
+				.deleteCookies("JSESSIONID") //删除浏览器cookie
+				.and()
 			.authorizeRequests()
 				.antMatchers(
 						SecurityConstants.DEFAULT_UNAUTHENTICATION_URL, 
@@ -111,6 +120,7 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig{
 						SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*",
 						securityProperties.getBrowser().getSignUpUrl(),
 						securityProperties.getBrowser().getSession().getSessionInvalidUrl(),
+						securityProperties.getBrowser().getSignOutUrl(),
 						"/user/regist")
 						.permitAll()
 				.anyRequest()

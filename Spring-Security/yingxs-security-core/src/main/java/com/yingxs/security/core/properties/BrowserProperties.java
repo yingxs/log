@@ -6,9 +6,15 @@ public class BrowserProperties {
 	private String loginPage = "/yingxs-signIn.html";
 	// 默认登录页面
 	private String signUpUrl = "/yingxs-signUp.html";
+	
+	//登录失败跳转的url	
+	private String signOutUrl ;
 		
 	// 登录方式，跳转或返回JSON
 	private LoginType loginType = LoginType.JSON;
+	
+	
+	
 	
 	
 	private int rememberMeSeconds = 3600 ;
@@ -55,6 +61,15 @@ public class BrowserProperties {
 	public void setSession(SessionProperties session) {
 		this.session = session;
 	}
+
+	public String getSignOutUrl() {
+		return signOutUrl;
+	}
+
+	public void setSignOutUrl(String signOutUrl) {
+		this.signOutUrl = signOutUrl;
+	}
+	
 	
 	
 	
