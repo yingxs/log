@@ -18,14 +18,14 @@ public class AbstractChannelSecurityConfig  extends WebSecurityConfigurerAdapter
 	protected AuthenticationSuccessHandler yingxsAuthenticationSuccessHandler;
 	
 	@Autowired
-	protected AuthenticationFailureHandler imoocAuthenticationFailureHandler;
+	protected AuthenticationFailureHandler yingxsAuthenticationFailureHandler;
 	
 	protected void applyPasswordAuthenticationConfig(HttpSecurity http) throws Exception {
 		http.formLogin()
 			.loginPage(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
 			.loginProcessingUrl(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM)
 			.successHandler(yingxsAuthenticationSuccessHandler)
-			.failureHandler(imoocAuthenticationFailureHandler);
+			.failureHandler(yingxsAuthenticationFailureHandler);
 	}
 	
 }

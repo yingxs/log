@@ -18,7 +18,7 @@ import org.springframework.security.web.util.UrlUtils;
 import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yingxs.security.browser.support.SimpleResponse;
+import com.yingxs.security.core.support.SimpleResponse;
 
 /**
  * @author yingxs

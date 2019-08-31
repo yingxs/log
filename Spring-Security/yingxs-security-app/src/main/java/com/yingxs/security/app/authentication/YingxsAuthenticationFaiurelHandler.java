@@ -1,4 +1,4 @@
-package com.yingxs.security.browser.authentication;
+package com.yingxs.security.app.authentication;
 
 import java.io.IOException;
 

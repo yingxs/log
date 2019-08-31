@@ -58,13 +58,7 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig{
 	
 	
 	
-	// 配置密码加密与解密方式
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		
-		return new BCryptPasswordEncoder();
-		
-	}
+	
 	
 	
 	// 配置TokenRepository

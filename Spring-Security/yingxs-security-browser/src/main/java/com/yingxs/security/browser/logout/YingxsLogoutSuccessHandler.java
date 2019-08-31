@@ -13,8 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yingxs.security.browser.support.SimpleResponse;
-import com.yingxs.security.core.properties.SecurityProperties;
+import com.yingxs.security.core.support.SimpleResponse;
 
 /**
  * 默认的登录成功处理器
