@@ -1,5 +1,6 @@
 package com.yingxs.security.core.validate.code;
 
+import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yingxs.security.core.support.SimpleResponse;
+
 @RestController
 public class ValidateCodeController {
 	
@@ -20,6 +25,10 @@ public class ValidateCodeController {
 	
 	@Autowired
 	private Map<String,ValidateCodeProcessor> validateCodeProcessor;
+	
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	@GetMapping("/code/{type}")
 	public void createCode(HttpServletRequest request,HttpServletResponse response,@PathVariable String type)  {

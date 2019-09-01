@@ -12,6 +12,7 @@ import com.yingxs.security.app.authentication.YingxsAuthenticationSuccessHandler
 import com.yingxs.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.yingxs.security.core.properties.SecurityConstants;
 import com.yingxs.security.core.properties.SecurityProperties;
+import com.yingxs.security.core.validate.code.ValidateCodeSecurityConfig;
 
 @Configuration
 @EnableResourceServer
@@ -20,6 +21,8 @@ public class YingxsResourceServerConfig extends ResourceServerConfigurerAdapter 
 	@Autowired
 	private SecurityProperties securityProperties;
 	
+	@Autowired
+	private ValidateCodeSecurityConfig validateCodeSecurityConfig;
 	
 	@Autowired
 	private YingxsAuthenticationSuccessHandler yingxsAuthenticationSuccessHandler;
@@ -39,8 +42,8 @@ public class YingxsResourceServerConfig extends ResourceServerConfigurerAdapter 
 			.successHandler(yingxsAuthenticationSuccessHandler)
 			.failureHandler(yingxsAuthenticationFailureHandler);
 			
-			http //.apply(validateCodeSecurityConfig)
-				 //	.and()
+			http .apply(validateCodeSecurityConfig)
+				 .and()
 				.apply(smsCodeAuthenticationSecurityConfig)
 					.and()
 				.apply(yingxsSocialConfigurer)     // 配置值引入社交账号登录的过滤器    默认处理/auth
