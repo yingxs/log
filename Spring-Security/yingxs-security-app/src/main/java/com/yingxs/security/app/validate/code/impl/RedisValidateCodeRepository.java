@@ -1,4 +1,4 @@
-package com.yingxs.security.app.calidate.code.impl;
+package com.yingxs.security.app.validate.code.impl;
 
 import java.util.concurrent.TimeUnit;
 

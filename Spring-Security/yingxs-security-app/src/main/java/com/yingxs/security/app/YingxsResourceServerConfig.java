@@ -9,6 +9,7 @@ import org.springframework.social.security.SpringSocialConfigurer;
 
 import com.yingxs.security.app.authentication.YingxsAuthenticationFaiurelHandler;
 import com.yingxs.security.app.authentication.YingxsAuthenticationSuccessHandler;
+import com.yingxs.security.app.social.openId.OpenIdAuthenticationSecurityConfig;
 import com.yingxs.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.yingxs.security.core.properties.SecurityConstants;
 import com.yingxs.security.core.properties.SecurityProperties;
@@ -32,6 +33,9 @@ public class YingxsResourceServerConfig extends ResourceServerConfigurerAdapter 
 	private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
 	
 	@Autowired
+	private OpenIdAuthenticationSecurityConfig openIdAuthenticationSecurityConfig;
+	
+	@Autowired
 	private SpringSocialConfigurer yingxsSocialConfigurer;
 
 	 @Override
@@ -47,6 +51,8 @@ public class YingxsResourceServerConfig extends ResourceServerConfigurerAdapter 
 				.apply(smsCodeAuthenticationSecurityConfig)
 					.and()
 				.apply(yingxsSocialConfigurer)     // 配置值引入社交账号登录的过滤器    默认处理/auth
+					.and()
+				.apply(openIdAuthenticationSecurityConfig)
 					.and()
 				.authorizeRequests()
 					.antMatchers(

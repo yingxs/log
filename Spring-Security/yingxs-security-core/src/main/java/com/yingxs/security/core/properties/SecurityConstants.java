@@ -27,6 +27,7 @@ public interface SecurityConstants {
 	 * 默认的手机验证码登录请求处理url
 	 */
 	public static final String DEFAULT_LOGIN_PROCESSING_URL_MOBILE = "/authentication/mobile";
+	
 	/**
 	 * 默认登录页面
 	 * 
@@ -50,4 +51,19 @@ public interface SecurityConstants {
 	 * session 失效默认的跳转地址
 	 */
 	public static final String DEFAULT_SESSION_INVALID_URL = "/yingxs-session-invalid.html";
+	
+	/**
+	 * 	默认的openId参数名
+	 */
+	public static final String DEFAULT_PARAMETER_NAME_OPENID = "openId";
+	/**
+	 * 	默认的providerId参数名
+	 */
+	public static final String DEFAULT_PARAMETER_NAME_PROVIDERID = "providerId";
+	
+	/**
+	 * 默认的手机验证码登录请求处理url
+	 */
+	public static final String DEFAULT_LOGIN_PROCESSING_URL_OPENID = "/authentication/openid";
+	
 }
