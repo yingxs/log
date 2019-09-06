@@ -31,6 +31,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.yingxs.dto.User;
 import com.yingxs.dto.UserQuueryCondition;
+import com.yingxs.security.app.social.AppSignUpUtils;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -43,6 +44,9 @@ public class UserController {
 	@Autowired
 	private ProviderSignInUtils providerSignInUtils;
 	
+	
+	@Autowired
+	private AppSignUpUtils  appSignUpUtils;
 
 	@GetMapping("/springTest")
 	public void test() {
@@ -58,7 +62,8 @@ public class UserController {
 		
 		// 不管是注册用户哈是绑定用户，都会拿到一个用户的唯一标识
 		String userId = user.getUsername();
-		providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
+//		providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
+		appSignUpUtils.doPostSignUp(new ServletWebRequest(request),userId);
 	}
 	
 	

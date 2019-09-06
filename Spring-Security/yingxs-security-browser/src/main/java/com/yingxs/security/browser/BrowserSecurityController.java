@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 
-import com.yingxs.security.browser.support.SocialUserInfo;
 import com.yingxs.security.core.properties.SecurityProperties;
 import com.yingxs.security.core.support.SimpleResponse;
+import com.yingxs.security.core.support.SocialUserInfo;
 
 @RestController
 public class BrowserSecurityController  {

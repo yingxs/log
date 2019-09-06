@@ -1,4 +1,4 @@
-package com.yingxs.security.browser.support;
+package com.yingxs.security.core.support;
 
 public class SocialUserInfo {
 	
