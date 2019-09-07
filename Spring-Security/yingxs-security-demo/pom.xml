@@ -12,13 +12,13 @@
 
 	<dependencies>
 	
-	  	 <!--
+	  	<!--
 		<dependency>
 	  		<groupId>com.yingxs</groupId>
 	  		<artifactId>yingxs-security-browser</artifactId>
 	  		<version>${yingxs.security.version}</version>
 	  	</dependency>
-	 	-->
+	 	 -->
 		<dependency>
 	  		<groupId>com.yingxs</groupId>
 	  		<artifactId>yingxs-security-app</artifactId>
