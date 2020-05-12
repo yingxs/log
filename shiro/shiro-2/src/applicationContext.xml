@@ -86,7 +86,9 @@
         <property name="loginUrl" value="/login.jsp"/>
         <property name="successUrl" value="/list.jsp"/>
         <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
-        
+		<property name="filterChainDefinitionMap"  ref="filterChainDefinitionMap"></property>
+
+<!--         
         <property name="filterChainDefinitions">
             <value>
                 /login.jsp = anon
@@ -99,6 +101,8 @@
                 /** = authc
             </value>
         </property>
+ -->        
+        
         <!--  
         	配置哪些页面需要受保护. 
         	以及访问这些页面需要的权限. 
@@ -123,7 +127,10 @@
         </property>
         -->
     </bean>
-	
+    
+    <!-- 配置Bean 这个Bean就是一个Map 通过实例工厂方法 -->
+	<bean id="filterChainDefinitionMap"  factory-bean="filterChainDefinitionMapBuilder"  factory-method="buildFilterChainDefinitionMap" ></bean>
+	<bean id="filterChainDefinitionMapBuilder"    class="com.yingxs.shiro.handler.filterChainDefinitionMapBuilder"></bean>
 	
 	
 	<bean id="shiroService"  class="com.yingxs.shiro.services.ShiroService" > </bean>

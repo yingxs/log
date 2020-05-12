@@ -20,8 +20,12 @@ public class YingxsSpringSocialConfigurer extends SpringSocialConfigurer {
 	@Override
 	protected <T> T postProcess(T object) {
 		
+		// 获取父类的处理结果
 		SocialAuthenticationFilter filter = (SocialAuthenticationFilter) super.postProcess(object);
+		
+		// 设置过滤器处理的路径
 		filter.setFilterProcessesUrl(filterProcessesUrl);
+		
 		if (socialAuthenticationFilterPostProcessor != null) {
 			socialAuthenticationFilterPostProcessor.process(filter);
 		}

@@ -54,7 +54,7 @@ public class YingxsAuthorizationServerConfig extends AuthorizationServerConfigur
 				builder.withClient(client.getClientId())
 					.secret(client.getClientSecret())
 					.accessTokenValiditySeconds(client.getAccessTokenValiditySeconds()) //令牌有效时间 单位秒
-					.authorizedGrantTypes( "refresh_token","password")  // 支持的授权模式
+					.authorizedGrantTypes( "refresh_token","password","authorization_code")  // 支持的授权模式
 					.scopes("all","read","write");
 			}
 		}

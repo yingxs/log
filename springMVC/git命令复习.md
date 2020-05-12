@@ -64,3 +64,100 @@ git diff --cached maint 暂存区与第一版比较
 
 
 
+## 分支操作
+
+* 创建分支
+
+  * git branch  <branchname>
+
+* 查看所有分支
+
+  * git branch
+
+* 查看所有分支的HEAD提交
+
+  * git branch -v
+
+* 合并分支
+
+  * git merge <branchname>
+
+    ```git
+    (master) git merge hotfix     将hotfix合并到master分支上
+    ```
+
+* 删除分支
+
+  * git branch -d <branchname>
+* 切换分支
+
+  * git checkout <branchname>
+* 创建并切换分支
+
+  * git checkout  -b <branchname>
+* 修改分支名称
+  * git branch -m old_name new_name
+  * git branch -M old_name new_name   # 强制
+* 删除分支
+  * git branch -d <branchname>
+  * git branch -D <branchname>
+* 列出远程分支
+
+  * git branch -r
+* 查看已合并的分支
+  * git branch --merged
+  * git branch --no-merged
+* 列出远程合并的分支
+
+  * git branch -r merged
+* 取出远程foo分支
+
+  * git checkout -t origin/foo
+* 推送分支
+
+  * (iss53) git push -u origin foo
+* 删除远程分支
+  * git push origin <space>:<remote branch>
+  * git fetch -p
+* 合并分支 拒绝fast forward 产生合并commit
+
+  * git merge - -no-ff
+
+## 冲突的发生情况
+
+1. 在不同得到分支上，修改了同一个文件；
+2. 不同的人，修改了同一个文件
+3. 不同的仓库，修改了同一个文件
+4. 冲突只在合并分支的时候才会发生
+5. 解决冲突，重新提交，commit时不给message
+6. 冲突信息的格式
+
+
+
+
+
+## git stash
+
+1. 保存进度
+
+   ```git
+   git stash
+   ```
+
+2. 弹出进度
+
+   ```git
+   gitg  stash pop
+   ```
+
+3. 查看stash列表
+
+   ```git
+   git stash list
+   ```
+
+4. 删除stash列表
+
+   ```
+   git stash clear
+   ```

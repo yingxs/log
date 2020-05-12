@@ -1,19 +1,20 @@
 package com.yingxs.day03.activiti;
 
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.ProcessEngines;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
+import org.activiti.engine.*;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 
 /**
  * 单个流程的实例挂起与激活
+ * 当流程实例已经处于挂起状态，如果此时执行该流程
+ * 会抛出ActivitiException异常：Cannot complete a suspended task
  *
  */
 public class SuspendProcessInstance2 {
 
-
+    // 单个流程的实例挂起与激活
+    /*
     public static void main(String[] args) {
         // 1.得到ProcessEngine对象
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
@@ -41,6 +42,34 @@ public class SuspendProcessInstance2 {
             System.out.println("流程实例 " + processInstanceId + " 挂起");
 
         }
+
+    }*/
+
+
+    /**
+     * 当流程实例已经处于挂起状态，如果此时执行该流程
+     *会抛出ActivitiException异常：Cannot complete a suspended task
+     * @param args
+     */
+    public static void main(String[] args) {
+        // 1.得到ProcessEngine对象
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+
+        // 2.得到TaskService对象
+        TaskService taskService = processEngine.getTaskService();
+
+        // 3.查询当前用户任务
+        Task task = taskService.createTaskQuery()
+                .processDefinitionKey("holiday")
+                .taskAssignee("zhangsan")
+                .singleResult();
+
+
+        // 4.处理任务
+        taskService.complete(task.getId());
+
+        // 5.输出任务Id
+        System.out.println(task.getId());
 
     }
 
