@@ -30,8 +30,11 @@
     <!-- 基于注解的事务管理 -->
     <tx:annotation-driven  transaction-manager="dataSourceTransactionManager"/>
 
-    <!-- 配置 SqlSessionFactoryBean -->
-    <bean id="sqlSessionFactoryBean"  class="org.mybatis.spring.SqlSessionFactoryBean">
+    <!-- 配置 SqlSessionFactoryBean
+        MyBatis提供的: org.mybatis.spring.SqlSessionFactoryBean
+        MyBatis-Plus提供的: com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean
+    -->
+    <bean id="sqlSessionFactoryBean"  class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
         <!-- 数据源 -->
         <property name="dataSource" ref="dataSource"></property>
         <property name="configLocation" value="classpath:mybatis-config.xml"></property>
