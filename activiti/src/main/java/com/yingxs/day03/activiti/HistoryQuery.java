@@ -15,17 +15,24 @@ public class HistoryQuery {
 
 
     public static void main(String[] args) {
+        // 1.得到ProcessEn对象
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+
+        // 2.得到HistoryService
         HistoryService historyService = processEngine.getHistoryService();
+
+        // 3.得到HistoricActivityInstanceQuery对象
         HistoricActivityInstanceQuery historicActivityInstanceQuery = historyService.createHistoricActivityInstanceQuery();
         // 流程实例id
         historicActivityInstanceQuery.processInstanceId("2501");
 
+        // 4.执行查询
         List<HistoricActivityInstance> list = historicActivityInstanceQuery
                 .orderByHistoricActivityInstanceStartTime()
                 .asc()
                 .list();
 
+        // 5.遍历查询结果
         for (HistoricActivityInstance instance : list) {
             System.out.println(instance.getActivityId());
             System.out.println(instance.getActivityName());
