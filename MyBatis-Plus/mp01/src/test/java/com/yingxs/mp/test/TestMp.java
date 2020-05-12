@@ -27,6 +27,7 @@ public class TestMp {
         Employee employee = new Employee(null,"mp","yingxs.com",1,22);
         System.out.println(employee);
         System.out.println(employeeMapper.insert(employee));
+        System.out.println(employee);
     }
 
 

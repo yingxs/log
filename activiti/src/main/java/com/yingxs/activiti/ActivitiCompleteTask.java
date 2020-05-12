@@ -29,8 +29,8 @@ public class ActivitiCompleteTask {
 
         // 3.查询当前用户任务
         Task task = taskService.createTaskQuery()
-                .processDefinitionKey("holiday")
-                .taskAssignee("wangwu")
+                .processDefinitionKey("holiday2")
+                .taskAssignee("zhangsan")
                 .singleResult();
 
 

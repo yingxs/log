@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
  *
  */
 @Data
-@AllArgsConstructor
+@AllArgsConstructor()
 @NoArgsConstructor
 //@TableName("tbl_employee")
 public class Employee {
@@ -31,7 +31,7 @@ public class Employee {
     private Integer age;
 
     // 写入数据库时 忽略该字段
-    @TableField(exist = false)
-    private Double salary;
+//    @TableField(exist = false)
+//    private Double salary;
 
 }

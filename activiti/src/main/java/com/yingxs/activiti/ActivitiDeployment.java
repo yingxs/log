@@ -18,7 +18,7 @@ import java.util.zip.ZipInputStream;
 public class ActivitiDeployment {
 
     // 流程定义的部署  zip包方式 有时流程制作出来要上传到服务器，zip文件更便于上传
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         // 1.创建ProcessEngine对象
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
 
@@ -39,10 +39,9 @@ public class ActivitiDeployment {
         System.out.println(deployment.getName());
         System.out.println(deployment.getId());
 
-    }
+    }*/
 
     // 流程定义的部署
-    /*
     public static void main(String[] args) {
         // 1.创建ProcessEngine对象
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
@@ -51,8 +50,8 @@ public class ActivitiDeployment {
         RepositoryService repositoryService = processEngine.getRepositoryService();
         // 3.进行部署
         Deployment deployment = repositoryService.createDeployment()
-                .addClasspathResource("diagram/holiday.bpmn")
-                .addClasspathResource("diagram/holiday.png")
+                .addClasspathResource("diagram/holiday2.bpmn")
+                .addClasspathResource("diagram/holiday2.png")
                 .name("请假申请单流程")
                 .deploy();
 
@@ -60,6 +59,6 @@ public class ActivitiDeployment {
         System.out.println(deployment.getName());
         System.out.println(deployment.getId());
 
-    }*/
+    }
 
 }
