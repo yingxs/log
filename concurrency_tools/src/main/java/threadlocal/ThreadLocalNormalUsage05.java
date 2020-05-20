@@ -10,11 +10,7 @@ import java.util.concurrent.Executors;
  */
 public class ThreadLocalNormalUsage05 {
 
-
-
     public static ExecutorService threadPool = Executors.newFixedThreadPool(10);
-
-
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -31,9 +27,6 @@ public class ThreadLocalNormalUsage05 {
 
         }
         threadPool.shutdown();
-
-
-
     }
     public String dete (int seconds) {
         Date date = new Date(1000 * seconds);
@@ -53,10 +46,7 @@ class ThreadSafeFormatter {
         }
     };
 
-
     // 与上方写法等效
     public static  ThreadLocal<SimpleDateFormat> dateFormatThreadLocal2 =
             ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"));
-
-
 }
